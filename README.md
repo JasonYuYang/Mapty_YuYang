@@ -1,2 +1,2 @@
 # Mapty_rebuilded
-Rebuild Mapty from Jonas Schmedtmann   
+Rebuild Mapty Web app from Jonas Schmedtmann   
