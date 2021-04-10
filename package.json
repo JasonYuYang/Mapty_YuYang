@@ -1,0 +1,22 @@
+{
+  "name": "mapty_rebuilded",
+  "version": "1.0.0",
+  "description": "Rebuild Mapty Web app from Jonas Schmedtmann",
+  "main": "script.js",
+  "scripts": {
+    "compile:sass": "node-sass sass/main.scss css/style.css -w"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/JasonYang840723/Mapty_rebuilded.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/JasonYang840723/Mapty_rebuilded/issues"
+  },
+  "homepage": "https://github.com/JasonYang840723/Mapty_rebuilded#readme",
+  "devDependencies": {
+    "node-sass": "^5.0.0"
+  }
+}
