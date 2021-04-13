@@ -59,23 +59,18 @@ a:visited {
 
 .dropdown {
   position: absolute;
-  left: 10rem;
+  left: 0;
+  top: 0;
   background-color: #42484d;
   width: 10rem;
   height: 10rem;
   border-radius: 2px;
-  box-shadow: 0 0.1rem 2rem 0 rgba(36, 36, 36, 0.5);
+  box-shadow: 0 0.1rem 2rem 0 rgba(39, 39, 39, 0.5);
   display: flex;
   flex-direction: column;
   align-items: start;
   cursor: pointer;
   padding: 0.5rem 0.8rem; }
-  .dropdown__icon {
-    width: 2rem;
-    height: 2rem;
-    opacity: 0.5; }
-    .dropdown__icon:hover {
-      color: #00c46a; }
   .dropdown__items {
     display: flex;
     list-style: none;
@@ -83,6 +78,13 @@ a:visited {
     margin-top: 0.5rem; }
     .dropdown__items:hover {
       color: #00c46a; }
+  .dropdown__icon {
+    width: 2rem;
+    height: 2rem;
+    opacity: 0.5;
+    fill: #aaa; }
+    .dropdown__icon:hover {
+      fill: #2d3439; }
   .dropdown__icon-name {
     margin-left: 0.8rem; }
 
