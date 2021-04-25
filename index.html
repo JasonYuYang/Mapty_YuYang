@@ -36,11 +36,31 @@
   <body>
     <div class="sidebar">
       <img src="img/logo.png" alt="Logo" class="logo" />
-      <div class="sidebar__btn">
-        <svg class="sidebar__btn--expand">
-          <use xlink:href="img/sprite.svg#icon-chevron-thin-right"></use>
-        </svg>
+      <div class="sort_btns">
+        <div class="sidebar__btn">
+          <svg class="sidebar__btn--expand">
+            <use xlink:href="img/sprite.svg#icon-chevron-thin-right"></use>
+          </svg>
+        </div>
+        <div class="sort__section">
+          <div class="sort__section sort__section--state">
+            <span>Sorted By:&nbsp;</span>
+          </div>
+          <div class="sort__section sort__section--number">
+            <span>Number of workouts:&nbsp;</span>
+          </div>
+          <div class="sort__section sort__section--options">
+            <ul class="sort__options">
+              <li><a href="">Running</a></li>
+              <li><a href="">Cycling</a></li>
+              <li><a href="">Speed</a></li>
+              <li><a href="">Duration</a></li>
+              <li><a href="">Distance</a></li>
+            </ul>
+          </div>
+        </div>
       </div>
+
       <ul class="workouts">
         <form class="form hidden">
           <div class="form__row">
@@ -85,83 +105,112 @@
           </div>
           <button class="form__btn">OK</button>
         </form>
-
-        <li class="workout workout--running" data-id="1234567890">
-          <h2 class="workout__title">Running on April 14</h2>
-            <svg class="workout__icon--expand">
-              <use xlink:href="img/sprite.svg#icon-dots-three-horizontal"></use>
-            </svg>
-          <div class="workout__details">
-            <span class="workout__icon">🏃‍♂️</span>
-            <span class="workout__value">5.2</span>
-            <span class="workout__unit">km</span>
-          </div>
-          <div class="workout__details">
-            <span class="workout__icon">⏱</span>
-            <span class="workout__value">24</span>
-            <span class="workout__unit">min</span>
-          </div>
-          <div class="workout__details">
-            <span class="workout__icon">⚡️</span>
-            <span class="workout__value">4.6</span>
-            <span class="workout__unit">min/km</span>
-          </div>
-          <div class="workout__details">
-            <span class="workout__icon">🦶🏼</span>
-            <span class="workout__value">178</span>
-            <span class="workout__unit">spm</span>
-          </div>
-        </li>
-
-        <li class="workout workout--cycling" data-id="1234567891">
-          <h2 class="workout__title">Cycling on April 5</h2>
-          <svg class="workout__icon--expand">
-            <use xlink:href="img/sprite.svg#icon-dots-three-horizontal"></use>
-          </svg>
-          <div class="workout__details">
-            <span class="workout__icon">🚴‍♀️</span>
-            <span class="workout__value">27</span>
-            <span class="workout__unit">km</span>
-          </div>
-          <div class="workout__details">
-            <span class="workout__icon">⏱</span>
-            <span class="workout__value">95</span>
-            <span class="workout__unit">min</span>
-          </div>
-          <div class="workout__details">
-            <span class="workout__icon">⚡️</span>
-            <span class="workout__value">16</span>
-            <span class="workout__unit">km/h</span>
-          </div>
-          <div class="workout__details">
-            <span class="workout__icon">⛰</span>
-            <span class="workout__value">223</span>
-            <span class="workout__unit">m</span>
-          </div>
-        </li>
-
-        
-          
-
-          
-
-        <ul class="dropdown">
-            <li class="dropdown__items" >
+        <div class="workout__container">
+          <ul class="dropdown hidden" id="dropdown">
+            <li class="dropdown__items">
               <svg class="dropdown__icon" id="icon_item">
                 <use xlink:href="img/sprite.svg#icon-new-message"></use>
               </svg>
               <span class="dropdown__icon-name">Edit</span>
             </li>
             <li class="dropdown__items">
-                  <svg class="dropdown__icon" id="icon_item">
-                  <use xlink:href="img/sprite.svg#icon-trash"></use>
-                  </svg>
-                <span class="dropdown__icon-name">Delete</span>
+              <svg class="dropdown__icon" id="icon_item">
+                <use xlink:href="img/sprite.svg#icon-trash"></use>
+              </svg>
+              <span class="dropdown__icon-name">Delete</span>
             </li>
-        </ul>
-      
-      
+            <li class="dropdown__items">
+              <svg class="dropdown__icon" id="icon_item">
+                <use xlink:href="img/sprite.svg#icon-star-full"></use>
+              </svg>
+              <span class="dropdown__icon-name">
+                Add to
+                <br />
+                Favorites
+              </span>
+            </li>
+          </ul>
+          <li class="workout workout--running" data-id="1234567890">
+            <h2 class="workout__title">Running on April 14</h2>
+            <svg class="workout__icon--expand">
+              <use xlink:href="img/sprite.svg#icon-dots-three-horizontal"></use>
+            </svg>
 
+            <div class="workout__details">
+              <span class="workout__icon">🏃‍♂️</span>
+              <span class="workout__value">5.2</span>
+              <span class="workout__unit">km</span>
+            </div>
+            <div class="workout__details">
+              <span class="workout__icon">⏱</span>
+              <span class="workout__value">24</span>
+              <span class="workout__unit">min</span>
+            </div>
+            <div class="workout__details">
+              <span class="workout__icon">⚡️</span>
+              <span class="workout__value">4.6</span>
+              <span class="workout__unit">min/km</span>
+            </div>
+            <div class="workout__details">
+              <span class="workout__icon">🦶🏼</span>
+              <span class="workout__value">178</span>
+              <span class="workout__unit">spm</span>
+            </div>
+          </li>
+        </div>
+        <div class="workout__container">
+          <ul class="dropdown hidden" id="dropdown">
+            <li class="dropdown__items">
+              <svg class="dropdown__icon" id="icon_item">
+                <use xlink:href="img/sprite.svg#icon-new-message"></use>
+              </svg>
+              <span class="dropdown__icon-name">Edit</span>
+            </li>
+            <li class="dropdown__items">
+              <svg class="dropdown__icon" id="icon_item">
+                <use xlink:href="img/sprite.svg#icon-trash"></use>
+              </svg>
+              <span class="dropdown__icon-name">Delete</span>
+            </li>
+            <li class="dropdown__items">
+              <svg class="dropdown__icon" id="icon_item">
+                <use xlink:href="img/sprite.svg#icon-star-full"></use>
+              </svg>
+              <span class="dropdown__icon-name">
+                Add to
+                <br />
+                Favorites
+              </span>
+            </li>
+          </ul>
+          <li class="workout workout--cycling" data-id="1234567891">
+            <h2 class="workout__title">Cycling on April 5</h2>
+            <svg class="workout__icon--expand">
+              <use xlink:href="img/sprite.svg#icon-dots-three-horizontal"></use>
+            </svg>
+            <div class="workout__details">
+              <span class="workout__icon">🚴‍♀️</span>
+              <span class="workout__value">27</span>
+              <span class="workout__unit">km</span>
+            </div>
+            <div class="workout__details">
+              <span class="workout__icon">⏱</span>
+              <span class="workout__value">95</span>
+              <span class="workout__unit">min</span>
+            </div>
+            <div class="workout__details">
+              <span class="workout__icon">⚡️</span>
+              <span class="workout__value">16</span>
+              <span class="workout__unit">km/h</span>
+            </div>
+            <div class="workout__details">
+              <span class="workout__icon">⛰</span>
+              <span class="workout__value">223</span>
+              <span class="workout__unit">m</span>
+            </div>
+          </li>
+        </div>
+      </ul>
       <p class="copyright">
         &copy; Copyright by
         <a
@@ -173,7 +222,6 @@
         as your own.
       </p>
     </div>
-    
 
     <div id="map"></div>
   </body>

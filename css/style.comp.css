@@ -34,7 +34,7 @@ a:visited {
   flex-direction: column;
   position: relative; }
   .sidebar__btn {
-    width: 3.5rem;
+    width: 3rem;
     height: 100%;
     background-color: #42484d;
     left: 100%;
@@ -44,17 +44,11 @@ a:visited {
     justify-content: flex-end;
     border-right: 5px solid #42484d;
     border-radius: 0 1.25rem 1.25rem 0; }
-  .sidebar .sidebar__btn--expand {
-    width: 8rem;
-    height: 8rem;
-    margin-left: 0.3rem;
+  .sidebar__btn--expand {
+    width: 3rem;
+    height: 3rem;
     align-self: center;
-    opacity: 40%;
-    cursor: pointer;
-    transition: all 0.2s; }
-    .sidebar .sidebar__btn--expand:hover {
-      fill: #00c46a;
-      transform: rotate(540deg) scale(1.4); }
+    opacity: 40%; }
   .sidebar__hidden {
     transform: translateX(-100%); }
 
@@ -62,6 +56,39 @@ a:visited {
   height: 5.2rem;
   align-self: center;
   margin-bottom: 4rem; }
+
+.dropdown {
+  position: absolute;
+  left: 0;
+  top: 0;
+  background-color: #42484d;
+  height: auto;
+  width: 20rem;
+  border-radius: 2px;
+  box-shadow: 0 0.1rem 2rem 0 rgba(39, 39, 39, 0.5);
+  display: flex;
+  flex-direction: column;
+  align-items: start;
+  cursor: pointer;
+  padding: 0.5rem 1.5rem; }
+  .dropdown__items {
+    display: flex;
+    list-style: none;
+    justify-content: center;
+    margin-top: 0.5rem; }
+    .dropdown__items:hover #icon_item, .dropdown__items:hover {
+      fill: #00c46a;
+      color: #00c46a; }
+  .dropdown__icon {
+    width: 2rem !important;
+    height: 2rem !important;
+    opacity: 0.5;
+    fill: #aaa; }
+  .dropdown__icon-name {
+    margin-left: 0.8rem; }
+
+#icon_star:hover {
+  fill: #ffb545; }
 
 .workouts {
   list-style: none;
@@ -72,22 +99,16 @@ a:visited {
 .workouts::-webkit-scrollbar {
   width: 0; }
 
-#workout__container {
-  position: relative;
-  overflow: visible; }
-
 .workout {
   background-color: #42484d;
   border-radius: 5px;
   padding: 1.5rem 2.25rem;
   margin-bottom: 1.75rem;
-  position: relative;
   cursor: grab;
   display: grid;
   grid-template-columns: auto auto 1fr 1fr;
   gap: 0.75rem 1.5rem;
-  justify-content: space-between;
-  z-index: 2; }
+  justify-content: space-between; }
   .workout--running {
     border-left: 5px solid #00c46a; }
   .workout--cycling {
@@ -97,17 +118,13 @@ a:visited {
     font-weight: 600;
     grid-column: 1 / 4; }
   .workout__icon--expand {
-    display: block;
     grid-column: 4/5;
     grid-row: 1/2;
     justify-self: end;
     width: 2rem;
     height: 2rem;
     opacity: 0.5;
-    cursor: pointer;
-    position: relative; }
-    .workout__icon--expand:hover {
-      fill: #ececec; }
+    cursor: pointer; }
   .workout__details {
     display: flex;
     align-items: baseline; }
@@ -124,40 +141,6 @@ a:visited {
     color: #aaa;
     text-transform: uppercase;
     font-weight: 800; }
-
-.dropdown {
-  position: absolute;
-  left: 82%;
-  top: 24%;
-  background-color: #42484d;
-  height: auto;
-  width: 10rem;
-  border-radius: 2px;
-  box-shadow: 0 1rem 2rem 0 #272727;
-  display: flex;
-  flex-direction: column;
-  align-items: start;
-  cursor: pointer;
-  padding: 0.5rem 1.5rem;
-  z-index: 199;
-  backface-visibility: hidden; }
-  .dropdown__items {
-    display: flex;
-    list-style: none;
-    justify-content: center;
-    margin-top: 0.5rem; }
-    .dropdown__items:hover #icon_item, .dropdown__items:hover {
-      fill: #00c46a;
-      color: #00c46a; }
-  .dropdown__icon {
-    width: 2rem !important;
-    height: 2rem !important;
-    opacity: 0.5;
-    fill: #aaa; }
-  .dropdown__icon-name {
-    margin-left: 0.8rem; }
-  .dropdown.hidden {
-    display: none; }
 
 .form {
   background-color: #42484d;
