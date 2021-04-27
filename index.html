@@ -4,7 +4,7 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta http-equiv="X-UA-Compatible" content="ie=edge" />
-    <link rel="shortcut icon" type="image/png" href="/icon.png" />
+    <link rel="shortcut icon" type="image/png" href="src/img/icon.png" />
 
     <link
       defer
@@ -12,7 +12,7 @@
       rel="stylesheet"
     />
 
-    <link defer rel="stylesheet" href="css/style.css" />
+    <link defer rel="stylesheet" href="src/sass/main.scss" />
 
     <link
       defer
@@ -30,18 +30,12 @@
     ></script>
 
     <!-- <script defer src="other.js"></script> -->
-    <script defer src="script.js"></script>
+    <script defer src="src/js/controller.js"></script>
     <title>mapty // Map your workouts</title>
   </head>
   <body>
     <div class="sidebar">
-      <img src="img/logo.png" alt="Logo" class="logo" />
-
-      <div class="sidebar__btn">
-        <svg class="sidebar__btn--expand">
-          <use xlink:href="img/sprite.svg#icon-chevron-thin-right"></use>
-        </svg>
-      </div>
+      <img src="src/img/logo.png" alt="Logo" class="logo" />
       <div class="sort__section">
         <div class="sort__section sort__section--state">
           <span>Workout type : All</span>
@@ -56,6 +50,36 @@
             <li><a href="">Duration</a></li>
             <li><a href="">Distance</a></li>
           </ul>
+          <div class="sort__hamburger">
+            <input
+              type="checkbox"
+              class="sort__hamburger--checkbox"
+              id="sort-toggle"
+            />
+            <label for="sort-toggle" class="sort__hamburger--button">
+              <span class="sort__hamburger--icon">&nbsp;</span>
+            </label>
+            <div class="sort__hamburger--background">&nbsp;</div>
+            <nav class="sort__hamburger--nav sort__hamburger--nav-active">
+              <ul class="sort__hamburger--list">
+                <li class="sort__section--item">
+                  <a href="#1" class="sort__hamburger--link">All types</a>
+                </li>
+                <li class="sort__section--item">
+                  <a href="#2" class="sort__hamburger--link"> 🏃‍♂️ Running</a>
+                </li>
+                <li class="sort__section--item">
+                  <a href="#3" class="sort__hamburger--link"> 🚴‍♀ Cycling</a>
+                </li>
+                <li class="sort__section--item">
+                  <a href="#4" class="sort__hamburger--link"> ⭐Favorites</a>
+                </li>
+              </ul>
+            </nav>
+          </div>
+          <div class="sort__section__reset--button">
+            <a href="#" class="reset">reset</a>
+          </div>
         </div>
       </div>
 
@@ -107,19 +131,19 @@
           <ul class="dropdown hidden" id="dropdown">
             <li class="dropdown__items">
               <svg class="dropdown__icon" id="icon_item">
-                <use xlink:href="img/sprite.svg#icon-new-message"></use>
+                <use xlink:href="src/img/sprite.svg#icon-new-message"></use>
               </svg>
               <span class="dropdown__icon-name">Edit</span>
             </li>
             <li class="dropdown__items">
               <svg class="dropdown__icon" id="icon_item">
-                <use xlink:href="img/sprite.svg#icon-trash"></use>
+                <use xlink:href="src/img/sprite.svg#icon-trash"></use>
               </svg>
               <span class="dropdown__icon-name">Delete</span>
             </li>
             <li class="dropdown__items">
               <svg class="dropdown__icon" id="icon_item">
-                <use xlink:href="img/sprite.svg#icon-star-full"></use>
+                <use xlink:href="src/img/sprite.svg#icon-star-full"></use>
               </svg>
               <span class="dropdown__icon-name">
                 Add to
@@ -131,7 +155,9 @@
           <li class="workout workout--running" data-id="1234567890">
             <h2 class="workout__title">Running on April 14</h2>
             <svg class="workout__icon--expand">
-              <use xlink:href="img/sprite.svg#icon-dots-three-horizontal"></use>
+              <use
+                xlink:href="src/img/sprite.svg#icon-dots-three-horizontal"
+              ></use>
             </svg>
 
             <div class="workout__details">
@@ -160,19 +186,19 @@
           <ul class="dropdown hidden" id="dropdown">
             <li class="dropdown__items">
               <svg class="dropdown__icon" id="icon_item">
-                <use xlink:href="img/sprite.svg#icon-new-message"></use>
+                <use xlink:href="src/img/sprite.svg#icon-new-message"></use>
               </svg>
               <span class="dropdown__icon-name">Edit</span>
             </li>
             <li class="dropdown__items">
               <svg class="dropdown__icon" id="icon_item">
-                <use xlink:href="img/sprite.svg#icon-trash"></use>
+                <use xlink:href="src/img/sprite.svg#icon-trash"></use>
               </svg>
               <span class="dropdown__icon-name">Delete</span>
             </li>
             <li class="dropdown__items">
               <svg class="dropdown__icon" id="icon_item">
-                <use xlink:href="img/sprite.svg#icon-star-full"></use>
+                <use xlink:href="src/img/sprite.svg#icon-star-full"></use>
               </svg>
               <span class="dropdown__icon-name">
                 Add to
@@ -184,7 +210,9 @@
           <li class="workout workout--cycling" data-id="1234567891">
             <h2 class="workout__title">Cycling on April 5</h2>
             <svg class="workout__icon--expand">
-              <use xlink:href="img/sprite.svg#icon-dots-three-horizontal"></use>
+              <use
+                xlink:href="src/img/sprite.svg#icon-dots-three-horizontal"
+              ></use>
             </svg>
             <div class="workout__details">
               <span class="workout__icon">🚴‍♀️</span>
