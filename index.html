@@ -86,6 +86,22 @@
       <ul class="workouts">
         <form class="form hidden">
           <div class="form__row">
+            <label class="form__label--route">From</label>
+            <select class="form__input form__input--route">
+              <option>Current Position</option>
+              <option>Click on Map</option>
+            </select>
+          </div>
+          <div class="form__row">
+            <label class="form__label--route">To</label>
+            <input
+              type="text"
+              class="form__input form__input--route"
+              placeholder="destination"
+            />
+          </div>
+
+          <div class="form__row">
             <label class="form__label">Type</label>
             <select class="form__input form__input--type">
               <option value="running">Running</option>
