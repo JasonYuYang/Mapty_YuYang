@@ -8,8 +8,9 @@ class mapView {
 
   render(mapData) {
     this.#mapData = mapData;
+    console.log(this.#mapData.currentPosition);
     this.#map = L.map('map').setView(
-      [25.0132304, 121.3957876],
+      this.#mapData.currentPosition,
       this.#mapZoomLevel
     );
     L.tileLayer('https://{s}.tile.openstreetmap.fr/hot/{z}/{x}/{y}.png', {
@@ -17,7 +18,7 @@ class mapView {
         '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
     }).addTo(this.#map);
     //Appear Marker at current position
-    this.renderMarker([25.0132304, 121.3957876]);
+    this.renderMarker(this.#mapData.currentPosition);
     //Handling click on Map
   }
   renderMarker(coords) {
@@ -25,7 +26,7 @@ class mapView {
       iconUrl: logoIcon,
       iconSize: [29, 43],
       iconAnchor: [14.5, 43],
-      popupAnchor: [-7.5, -92],
+      popupAnchor: [0, -43],
     });
     this.#markerOptions = { icon: this.#myIcon, opacity: 0.8 };
 

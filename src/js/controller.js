@@ -7,7 +7,7 @@ import 'regenerator-runtime/runtime';
 
 const controlMap = async () => {
   // get current position
-  model.getPosition();
+  await model.getPosition();
   //render Map
   mapView.render(model.state.map);
   // console.log(model.state.map);
