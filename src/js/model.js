@@ -16,12 +16,4 @@ export const getPosition = async () => {
       console.err(err);
     }
   });
-  currentPositionPromises
-    .then(position => {
-      console.log(position);
-      state.map.currentPosition = position;
-    })
-    .catch(err => {
-      console.error(err);
-    });
 };

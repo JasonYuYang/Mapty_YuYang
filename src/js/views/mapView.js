@@ -1,10 +1,13 @@
-import logoIcon from 'url:../../img/marker.png';
+// import logoIcon from 'url:../../img/marker.png';
+import * as config from './config';
+
 class mapView {
   #map;
   #mapData;
   #mapZoomLevel = 13;
   #myIcon;
-  #markerOptions;
+  #startIcon;
+  #clickCount = 0;
 
   render(mapData) {
     this.#mapData = mapData;
@@ -17,20 +20,38 @@ class mapView {
       attribution:
         '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
     }).addTo(this.#map);
-    //Appear Marker at current position
+    //Render Marker at current position
     this.renderMarker(this.#mapData.currentPosition);
-    //Handling click on Map
+    //Handle click on Map
+    this.#map.on('dbclick', this.showForm);
   }
-  renderMarker(coords) {
-    this.#myIcon = L.icon({
-      iconUrl: logoIcon,
-      iconSize: [29, 43],
-      iconAnchor: [14.5, 43],
-      popupAnchor: [0, -43],
-    });
-    this.#markerOptions = { icon: this.#myIcon, opacity: 0.8 };
+  showForm = mapE => {
+    const form = document.querySelector('.form');
+    //Handling double click on Map
+    let timeout;
+    this.#clickCount++;
+    if (this.#clickCount == 1) {
+      timeout = setTimeout(() => {
+        this.#clickCount = 0;
+      }, 250);
+    } else if (this.#clickCount == 2) {
+      clearTimeout(timeout);
+      form.classList.remove('hidden');
+      console.log(mapE);
+      this.#clickCount = 0;
+    }
 
-    L.marker(coords, this.#markerOptions)
+    // map.addEventListener('dbclick', mapE => {
+    //   console.log(mapE);
+    //
+    // });
+  };
+
+  renderMarker = coords => {
+    this.#myIcon = L.icon(config.myIconOption);
+    this.#startIcon = L.divIcon(config.startIconOption);
+
+    L.marker(coords, { icon: this.#startIcon, opacity: 0.8 })
       .addTo(this.#map)
       .bindPopup(
         L.popup({
@@ -42,7 +63,7 @@ class mapView {
       )
       .setPopupContent(`Your Position`)
       .openPopup();
-  }
+  };
 }
 
 export default new mapView();

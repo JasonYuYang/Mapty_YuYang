@@ -10,8 +10,6 @@ const controlMap = async () => {
   await model.getPosition();
   //render Map
   mapView.render(model.state.map);
-  // console.log(model.state.map);
-  console.log(model.state.map.currentPosition);
 };
 
 const init = () => {
@@ -30,3 +28,4 @@ const inputCadence = document.querySelector('.form__input--cadence');
 const inputStart = document.querySelector('.start');
 const inputEnd = document.querySelector('.end');
 const inputElevation = document.querySelector('.form__input--elevation');
+const map = document.querySelector('#map');
