@@ -327,7 +327,7 @@ a:visited {
 .startIcon {
   &--in {
     position: relative;
-    background-color: $--color-brand--1;
+    background-color: #ff9c08ad;
     z-index: -1;
     border-radius: 50%;
     padding: 1.5rem;
@@ -339,23 +339,23 @@ a:visited {
       top: 50%;
       left: 50%;
       padding: 20%;
-      background-color: $--color-brand--2;
+      background-color: #00c46a;
       border-radius: 50%;
       z-index: 10;
-      animation: InfiniteScale 4s infinite ease-in-out;
+      animation: InfiniteScale 2s infinite ease-in-out;
       transform-origin: center;
     }
   }
 }
 @keyframes InfiniteScale {
   0% {
-    transform: translate(-50%, -50%) scale(1);
+    transform: translate(-50%, -50%) scale(0.8);
   }
   50% {
     transform: translate(-50%, -50%) scale(1.5);
   }
   100% {
-    transform: translate(-50%, -50%) scale(1);
+    transform: translate(-50%, -50%) scale(0.8);
   }
 }
 .running-popup .leaflet-popup-content-wrapper {

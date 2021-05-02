@@ -1,31 +1,35 @@
-// import logoIcon from 'url:../../img/marker.png';
+import logoIcon from 'url:../../img/marker.png';
 import * as config from './config';
 
 class mapView {
-  #map;
+  #map = document.querySelector('#map');
   #mapData;
   #mapZoomLevel = 13;
-  #myIcon;
-  #startIcon;
   #clickCount = 0;
 
-  render(mapData) {
+  loadMap(mapData) {
     this.#mapData = mapData;
-    console.log(this.#mapData.currentPosition);
     this.#map = L.map('map').setView(
       this.#mapData.currentPosition,
       this.#mapZoomLevel
     );
-    L.tileLayer('https://{s}.tile.openstreetmap.fr/hot/{z}/{x}/{y}.png', {
+    // L.tileLayer('https://{s}.tile.openstreetmap.fr/hot/{z}/{x}/{y}.png', {
+    //   attribution:
+    //     '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+    // }).addTo(this.#map);
+
+    L.tileLayer('http://{s}.tile.osm.org/{z}/{x}/{y}.png', {
       attribution:
-        '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+        '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors',
     }).addTo(this.#map);
-    //Render Marker at current position
-    this.renderMarker(this.#mapData.currentPosition);
+
+    // Render Marker at current position
+    // this.renderMarker(0, this.#mapData.currentPosition);
     //Handle click on Map
-    this.#map.on('dbclick', this.showForm);
+    this.#map.on('click', this.showForm);
   }
-  showForm = mapE => {
+
+  showForm = async mapE => {
     const form = document.querySelector('.form');
     //Handling double click on Map
     let timeout;
@@ -37,33 +41,86 @@ class mapView {
     } else if (this.#clickCount == 2) {
       clearTimeout(timeout);
       form.classList.remove('hidden');
-      console.log(mapE);
+      //Update DestinationCoords to #mapData
+      const { lat, lng } = mapE.latlng;
+      const DestinationCoords = [lat, lng];
+      this.#mapData.DestinationCoords = DestinationCoords;
+      // this.renderMarker(this.#mapData.DestinationCoords, 1);
+      this.renderPath(this.#mapData);
       this.#clickCount = 0;
     }
-
-    // map.addEventListener('dbclick', mapE => {
-    //   console.log(mapE);
-    //
-    // });
   };
+  renderPath = data => {
+    const routeControl = L.Routing.control({
+      waypoints: [
+        L.latLng(data.currentPosition[0], data.currentPosition[1]),
+        L.latLng(data.DestinationCoords[0], data.DestinationCoords[1]),
+      ],
+      // createMarker: function (index, waypoint, n) {
+      //   console.log(index, waypoint, n);
+      //   let selectedMarker = null;
+      //   if (index == 0) {
+      //     selectedMarker = config.startIcon;
+      //   } else if (index == n - 1) {
+      //     selectedMarker = config.myIcon;
+      //   }
 
-  renderMarker = coords => {
-    this.#myIcon = L.icon(config.myIconOption);
-    this.#startIcon = L.divIcon(config.startIconOption);
+      //   const customMarker = L.marker(waypoint.laLng, {
+      //     icon: selectedMarker,
+      //     opacity: 0.8,
+      //   });
 
-    L.marker(coords, { icon: this.#startIcon, opacity: 0.8 })
-      .addTo(this.#map)
-      .bindPopup(
-        L.popup({
-          maxWidth: 250,
-          minWidth: 100,
-          autoClose: false,
-          closeOnClick: false,
-        })
-      )
-      .setPopupContent(`Your Position`)
-      .openPopup();
+      //   return customMarker;
+      // },
+    });
+
+    routeControl.on('routesfound', function (e) {
+      let routes = e.routes;
+      let summary = routes[0].summary;
+      // alert distance and time in km and minutes
+      alert(
+        'Total distance is ' +
+          summary.totalDistance / 1000 +
+          ' km and total time is ' +
+          Math.round((summary.totalTime % 3600) / 60) +
+          ' minutes'
+      );
+    });
   };
+  // renderMarker = (index, waypoint, n) => {
+  //   let selectedMarker = null;
+  //   const myIconOption = {
+  //     iconUrl: logoIcon,
+  //     iconSize: [29, 43],
+  //     iconAnchor: [14.5, 43],
+  //     popupAnchor: [0, -43],
+  //   };
+  //   this.#myIcon = L.icon(myIconOption);
+  //   this.#startIcon = L.divIcon(config.startIconOption);
+  //   if (index == 0) {
+  //     selectedMarker = this.#startIcon;
+  //   } else if (index == n - 1) {
+  //     selectedMarker = this.#myIcon;
+  //   }
+
+  //   let customMarker = L.marker(waypoint.laLng, {
+  //     icon: selectedMarker,
+  //     opacity: 0.8,
+  //   })
+  //     .addTo(this.#map)
+  //     .bindPopup(
+  //       L.popup({
+  //         maxWidth: 250,
+  //         minWidth: 100,
+  //         autoClose: false,
+  //         closeOnClick: false,
+  //       })
+  //     )
+  //     .setPopupContent(`Your Position`)
+  //     .openPopup();
+
+  //   return customMarker;
+  // };
 }
 
 export default new mapView();
