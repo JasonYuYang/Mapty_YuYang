@@ -43,7 +43,7 @@
 109C:\Users\user\Desktop\Mapty\Mapty_rebuilded\node_modules\string_decoder\node_modules\safe-buffer\package.json121436361000000000 0
 75C:\Users\user\Desktop\Mapty\Mapty_rebuilded\node_modules\.package-lock.json132643490279705363 0
 97C:\Users\user\Desktop\Mapty\Mapty_rebuilded\node_modules\core-js\es\reflect\prevent-extensions.js121436361000000000 0
-48C:\Users\user\Desktop\Mapty\Mapty_rebuilded\dist132644145864060872 1
+48C:\Users\user\Desktop\Mapty\Mapty_rebuilded\dist132645192062729458 1
 89C:\Users\user\Desktop\Mapty\Mapty_rebuilded\node_modules\core-js\es\string\virtual\big.js121436361000000000 0
 89C:\Users\user\Desktop\Mapty\Mapty_rebuilded\node_modules\available-typed-arrays\README.md121436361000000000 0
 91C:\Users\user\Desktop\Mapty\Mapty_rebuilded\node_modules\vm-browserify\example\run\entry.js121436361000000000 0
@@ -84,7 +84,7 @@
 74C:\Users\user\Desktop\Mapty\Mapty_rebuilded\node_modules\es6-object-assign132641671299958598 1
 69C:\Users\user\Desktop\Mapty\Mapty_rebuilded\node_modules\setimmediate132641671202529277 1
 71C:\Users\user\Desktop\Mapty\Mapty_rebuilded\node_modules\des.js\.jscsrc121436361000000000 0
-54C:\Users\user\Desktop\Mapty\Mapty_rebuilded\index.html132643579090804407 0
+54C:\Users\user\Desktop\Mapty\Mapty_rebuilded\index.html132645146301421943 0
 86C:\Users\user\Desktop\Mapty\Mapty_rebuilded\node_modules\core-js\es\string\trim-end.js121436361000000000 0
 95C:\Users\user\Desktop\Mapty\Mapty_rebuilded\node_modules\@parcel\transformer-babel\package.json121436361000000000 0
 89C:\Users\user\Desktop\Mapty\Mapty_rebuilded\node_modules\highlight.js\styles\routeros.css131406724530000000 0
@@ -115,7 +115,7 @@
 90C:\Users\user\Desktop\Mapty\Mapty_rebuilded\node_modules\svgo\plugins\removeXMLProcInst.js121436361000000000 0
 73C:\Users\user\Desktop\Mapty\Mapty_rebuilded\node_modules\caniuse-api\dist132641671301524410 1
 111C:\Users\user\Desktop\Mapty\Mapty_rebuilded\node_modules\osrm-text-instructions\languages\abbreviations\uk.json121436361000000000 0
-62C:\Users\user\Desktop\Mapty\Mapty_rebuilded\src\sass\main.scss132643580180411875 0
+62C:\Users\user\Desktop\Mapty\Mapty_rebuilded\src\sass\main.scss132645154343262829 0
 73C:\Users\user\Desktop\Mapty\Mapty_rebuilded\node_modules\uncss\src\lib.js121436361000000000 0
 100C:\Users\user\Desktop\Mapty\Mapty_rebuilded\node_modules\@nodelib\fs.scandir\out\providers\common.js121436361000000000 0
 68C:\Users\user\Desktop\Mapty\Mapty_rebuilded\node_modules\array-equal132641671284729343 1
@@ -125,7 +125,7 @@
 78C:\Users\user\Desktop\Mapty\Mapty_rebuilded\node_modules\inflight\package.json131208043980000000 0
 81C:\Users\user\Desktop\Mapty\Mapty_rebuilded\node_modules\util-deprecate\README.md130614195410000000 0
 51C:\Users\user\Desktop\Mapty\Mapty_rebuilded\src\img132641669770491262 1
-67C:\Users\user\Desktop\Mapty\Mapty_rebuilded\src\js\views\mapView.js132644137664011369 0
+67C:\Users\user\Desktop\Mapty\Mapty_rebuilded\src\js\views\mapView.js132645192058092408 0
 94C:\Users\user\Desktop\Mapty\Mapty_rebuilded\node_modules\public-encrypt\node_modules\bn.js\lib132641671206139620 1
 93C:\Users\user\Desktop\Mapty\Mapty_rebuilded\node_modules\es-abstract\2020\Number\bitwiseOR.js121436361000000000 0
 114C:\Users\user\Desktop\Mapty\Mapty_rebuilded\node_modules\caniuse-lite\data\features\url-scroll-to-text-fragment.js121436361000000000 0
@@ -265,7 +265,7 @@
 71C:\Users\user\Desktop\Mapty\Mapty_rebuilded\node_modules\is-date-object132641671355440149 1
 88C:\Users\user\Desktop\Mapty\Mapty_rebuilded\node_modules\object.assign\implementation.js121436361000000000 0
 105C:\Users\user\Desktop\Mapty\Mapty_rebuilded\node_modules\regenerate-unicode-properties\Script\Armenian.js121436361000000000 0
-56C:\Users\user\Desktop\Mapty\Mapty_rebuilded\src\js\views132642613276984574 1
+56C:\Users\user\Desktop\Mapty\Mapty_rebuilded\src\js\views132644335479744306 1
 79C:\Users\user\Desktop\Mapty\Mapty_rebuilded\node_modules\lodash\fp\toPairsIn.js121436361000000000 0
 106C:\Users\user\Desktop\Mapty\Mapty_rebuilded\node_modules\postcss-selector-parser\dist\__tests__\classes.js121436361000000000 0
 85C:\Users\user\Desktop\Mapty\Mapty_rebuilded\node_modules\lodash\fp\assignInAllWith.js121436361000000000 0
@@ -289,7 +289,7 @@
 64C:\Users\user\Desktop\Mapty\Mapty_rebuilded\src\js\controller.js132643278589634183 0
 99C:\Users\user\Desktop\Mapty\Mapty_rebuilded\node_modules\core-js-compat\node_modules\semver\LICENSE121436361000000000 0
 72C:\Users\user\Desktop\Mapty\Mapty_rebuilded\node_modules\is-plain-object132641671257811367 1
-59C:\Users\user\Desktop\Mapty\Mapty_rebuilded\src\js\model.js132643597067345222 0
+59C:\Users\user\Desktop\Mapty\Mapty_rebuilded\src\js\model.js132644913662283415 0
 102C:\Users\user\Desktop\Mapty\Mapty_rebuilded\node_modules\caniuse-lite\data\features\css-paged-media.js121436361000000000 0
 80C:\Users\user\Desktop\Mapty\Mapty_rebuilded\node_modules\lodash\isArrayBuffer.js121436361000000000 0
 66C:\Users\user\Desktop\Mapty\Mapty_rebuilded\node_modules\ansi-html132641671302362169 1
@@ -299,7 +299,7 @@
 115C:\Users\user\Desktop\Mapty\Mapty_rebuilded\node_modules\leaflet-routing-machine\test\lib\jasmine-2.0.0\jasmine.css121436361000000000 0
 78C:\Users\user\Desktop\Mapty\Mapty_rebuilded\node_modules\svgo\plugins\_path.js121436361000000000 0
 91C:\Users\user\Desktop\Mapty\Mapty_rebuilded\node_modules\@parcel\core\test\fixtures\plugins132641671539278270 1
-66C:\Users\user\Desktop\Mapty\Mapty_rebuilded\src\js\views\config.js132644094989827825 0
+66C:\Users\user\Desktop\Mapty\Mapty_rebuilded\src\js\views\config.js132644936489471255 0
 79C:\Users\user\Desktop\Mapty\Mapty_rebuilded\node_modules\path-parse\.travis.yml131780102490000000 0
 104C:\Users\user\Desktop\Mapty\Mapty_rebuilded\node_modules\es-abstract\2015\CanonicalNumericIndexString.js121436361000000000 0
 88C:\Users\user\Desktop\Mapty\Mapty_rebuilded\node_modules\minimist\test\parse_modified.js121436361000000000 0
@@ -3616,7 +3616,7 @@
 116C:\Users\user\Desktop\Mapty\Mapty_rebuilded\node_modules\postcss-modules-scope\node_modules\postcss\lib\container.js121436361000000000 0
 126C:\Users\user\Desktop\Mapty\Mapty_rebuilded\node_modules\unset-value\node_modules\has-value\node_modules\isobject\package.json131060919600000000 0
 75C:\Users\user\Desktop\Mapty\Mapty_rebuilded\node_modules\unquote\.npmignore131580427310000000 0
-68C:\Users\user\Desktop\Mapty\Mapty_rebuilded\dist\marker.bde9fa7a.png132644145854017730 0
+68C:\Users\user\Desktop\Mapty\Mapty_rebuilded\dist\marker.bde9fa7a.png132645192061851803 0
 103C:\Users\user\Desktop\Mapty\Mapty_rebuilded\node_modules\posthtml-parser\coverage\sort-arrow-sprite.png121436361000000000 0
 72C:\Users\user\Desktop\Mapty\Mapty_rebuilded\node_modules\unquote\LICENSE131580428010000000 0
 92C:\Users\user\Desktop\Mapty\Mapty_rebuilded\node_modules\es-abstract\2019\thisStringValue.js121436361000000000 0
@@ -14629,7 +14629,7 @@
 81C:\Users\user\Desktop\Mapty\Mapty_rebuilded\node_modules\cosmiconfig\CHANGELOG.md121436361000000000 0
 93C:\Users\user\Desktop\Mapty\Mapty_rebuilded\node_modules\core-js\modules\esnext.math.iaddh.js121436361000000000 0
 73C:\Users\user\Desktop\Mapty\Mapty_rebuilded\node_modules\cosmiconfig\dist132641671367717307 1
-68C:\Users\user\Desktop\Mapty\Mapty_rebuilded\dist\sprite.49386faf.svg132644145854017730 0
+68C:\Users\user\Desktop\Mapty\Mapty_rebuilded\dist\sprite.49386faf.svg132645192061851803 0
 76C:\Users\user\Desktop\Mapty\Mapty_rebuilded\node_modules\cosmiconfig\LICENSE121436361000000000 0
 81C:\Users\user\Desktop\Mapty\Mapty_rebuilded\node_modules\cosmiconfig\package.json121436361000000000 0
 78C:\Users\user\Desktop\Mapty\Mapty_rebuilded\node_modules\cosmiconfig\README.md121436361000000000 0
@@ -15527,7 +15527,7 @@
 90C:\Users\user\Desktop\Mapty\Mapty_rebuilded\node_modules\core-js\features\instance\some.js121436361000000000 0
 92C:\Users\user\Desktop\Mapty\Mapty_rebuilded\node_modules\core-js\features\instance\splice.js121436361000000000 0
 97C:\Users\user\Desktop\Mapty\Mapty_rebuilded\node_modules\core-js\features\instance\starts-with.js121436361000000000 0
-66C:\Users\user\Desktop\Mapty\Mapty_rebuilded\dist\main.324701ef.css132644145863851451 0
+66C:\Users\user\Desktop\Mapty\Mapty_rebuilded\dist\main.324701ef.css132645192061851803 0
 94C:\Users\user\Desktop\Mapty\Mapty_rebuilded\node_modules\core-js\features\instance\trim-end.js121436361000000000 0
 96C:\Users\user\Desktop\Mapty\Mapty_rebuilded\node_modules\core-js\features\instance\trim-right.js121436361000000000 0
 92C:\Users\user\Desktop\Mapty\Mapty_rebuilded\node_modules\core-js\features\instance\values.js121436361000000000 0
@@ -18385,9 +18385,9 @@
 67C:\Users\user\Desktop\Mapty\Mapty_rebuilded\node_modules\.bin\which132641671789369126 0
 71C:\Users\user\Desktop\Mapty\Mapty_rebuilded\node_modules\.bin\which.cmd132641671789369126 0
 71C:\Users\user\Desktop\Mapty\Mapty_rebuilded\node_modules\.bin\which.ps1132641671789369126 0
-71C:\Users\user\Desktop\Mapty\Mapty_rebuilded\dist\controller.0351ba98.js132644145863871382 0
-75C:\Users\user\Desktop\Mapty\Mapty_rebuilded\dist\controller.0351ba98.js.map132644145863981085 0
-66C:\Users\user\Desktop\Mapty\Mapty_rebuilded\dist\icon.f8a107a6.png132644145854007742 0
-59C:\Users\user\Desktop\Mapty\Mapty_rebuilded\dist\index.html132644145863861404 0
-66C:\Users\user\Desktop\Mapty\Mapty_rebuilded\dist\logo.d16bec08.png132644145854017730 0
-70C:\Users\user\Desktop\Mapty\Mapty_rebuilded\dist\main.324701ef.css.map132644145863971112 0
+71C:\Users\user\Desktop\Mapty\Mapty_rebuilded\dist\controller.0351ba98.js132645192062689567 0
+75C:\Users\user\Desktop\Mapty\Mapty_rebuilded\dist\controller.0351ba98.js.map132645192062709508 0
+66C:\Users\user\Desktop\Mapty\Mapty_rebuilded\dist\icon.f8a107a6.png132645192061841828 0
+59C:\Users\user\Desktop\Mapty\Mapty_rebuilded\dist\index.html132645192062071226 0
+66C:\Users\user\Desktop\Mapty\Mapty_rebuilded\dist\logo.d16bec08.png132645192061851803 0
+70C:\Users\user\Desktop\Mapty\Mapty_rebuilded\dist\main.324701ef.css.map132645192062470166 0

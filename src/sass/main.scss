@@ -327,35 +327,41 @@ a:visited {
 .startIcon {
   &--in {
     position: relative;
-    background-color: #ff9c08ad;
-    z-index: -1;
+    width: 0.5rem;
+    height: 0.5rem;
+    background-color: #00c46a;
     border-radius: 50%;
-    padding: 1.5rem;
-    &::after {
+    border: solid 0.2rem #fff;
+    padding: 0.8rem;
+
+    &::before {
+      padding: 1.5rem;
+      background-color: #ff9c08ad;
       position: absolute;
       content: '';
-      width: 20%;
-      height: 20%;
       top: 50%;
       left: 50%;
-      padding: 20%;
-      background-color: #00c46a;
       border-radius: 50%;
-      z-index: 10;
-      animation: InfiniteScale 2s infinite ease-in-out;
+      z-index: -1;
+      animation: InfiniteScale 1s linear infinite;
       transform-origin: center;
     }
   }
 }
 @keyframes InfiniteScale {
   0% {
-    transform: translate(-50%, -50%) scale(0.8);
+    opacity: 0.3;
+    transform: translate(-50%, -50%) scale(0.1);
   }
+
   50% {
-    transform: translate(-50%, -50%) scale(1.5);
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1);
   }
+
   100% {
-    transform: translate(-50%, -50%) scale(0.8);
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(3);
   }
 }
 .running-popup .leaflet-popup-content-wrapper {

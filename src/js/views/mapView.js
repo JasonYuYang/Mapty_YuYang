@@ -1,5 +1,6 @@
 import logoIcon from 'url:../../img/marker.png';
 import * as config from './config';
+import { AJAX } from '../helper';
 
 class mapView {
   #map = document.querySelector('#map');
@@ -7,24 +8,25 @@ class mapView {
   #mapZoomLevel = 13;
   #clickCount = 0;
 
+  #accessToken;
+
   loadMap(mapData) {
     this.#mapData = mapData;
-    this.#map = L.map('map').setView(
-      this.#mapData.currentPosition,
-      this.#mapZoomLevel
-    );
-    // L.tileLayer('https://{s}.tile.openstreetmap.fr/hot/{z}/{x}/{y}.png', {
-    //   attribution:
-    //     '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
-    // }).addTo(this.#map);
-
-    L.tileLayer('http://{s}.tile.osm.org/{z}/{x}/{y}.png', {
-      attribution:
-        '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors',
-    }).addTo(this.#map);
-
+    mapboxgl.accessToken =
+      'pk.eyJ1IjoiamFzb25jb2Rpbmc3MjMiLCJhIjoiY2tvN2FlcmF6MW1raDJvbHJhN2ptMG01NCJ9.ZDZ7zl030QE1REiaDIYWnQ';
+    this.#accessToken = mapboxgl.accessToken;
+    this.#map = new mapboxgl.Map({
+      container: 'map',
+      style: 'mapbox://styles/mapbox/streets-v11',
+      center: this.#mapData.currentPosition,
+      zoom: this.#mapZoomLevel,
+    });
+    // Add zoom and rotation controls to the map.
+    this.#map.addControl(new mapboxgl.NavigationControl());
+    //Disable double click zoom in
+    this.#map.doubleClickZoom.disable();
     // Render Marker at current position
-    // this.renderMarker(0, this.#mapData.currentPosition);
+    this.renderMarker(this.#mapData.currentPosition);
     //Handle click on Map
     this.#map.on('click', this.showForm);
   }
@@ -32,7 +34,8 @@ class mapView {
   showForm = async mapE => {
     const form = document.querySelector('.form');
     //Handling double click on Map
-    let timeout;
+
+    let timeout = [];
     this.#clickCount++;
     if (this.#clickCount == 1) {
       timeout = setTimeout(() => {
@@ -40,87 +43,84 @@ class mapView {
       }, 250);
     } else if (this.#clickCount == 2) {
       clearTimeout(timeout);
+
       form.classList.remove('hidden');
-      //Update DestinationCoords to #mapData
-      const { lat, lng } = mapE.latlng;
-      const DestinationCoords = [lat, lng];
+      console.log('dbclick');
+      console.log(mapE.lngLat);
+      // Update DestinationCoords to #mapData
+      const { lng, lat } = mapE.lngLat;
+      const DestinationCoords = [lng, lat];
       this.#mapData.DestinationCoords = DestinationCoords;
-      // this.renderMarker(this.#mapData.DestinationCoords, 1);
-      this.renderPath(this.#mapData);
+      this.renderMarker(this.#mapData.DestinationCoords);
+      this.renderPath(
+        this.#mapData.currentPosition,
+        this.#mapData.DestinationCoords
+      );
       this.#clickCount = 0;
     }
   };
-  renderPath = data => {
-    const routeControl = L.Routing.control({
-      waypoints: [
-        L.latLng(data.currentPosition[0], data.currentPosition[1]),
-        L.latLng(data.DestinationCoords[0], data.DestinationCoords[1]),
-      ],
-      // createMarker: function (index, waypoint, n) {
-      //   console.log(index, waypoint, n);
-      //   let selectedMarker = null;
-      //   if (index == 0) {
-      //     selectedMarker = config.startIcon;
-      //   } else if (index == n - 1) {
-      //     selectedMarker = config.myIcon;
-      //   }
-
-      //   const customMarker = L.marker(waypoint.laLng, {
-      //     icon: selectedMarker,
-      //     opacity: 0.8,
-      //   });
-
-      //   return customMarker;
-      // },
-    });
-
-    routeControl.on('routesfound', function (e) {
-      let routes = e.routes;
-      let summary = routes[0].summary;
-      // alert distance and time in km and minutes
-      alert(
-        'Total distance is ' +
-          summary.totalDistance / 1000 +
-          ' km and total time is ' +
-          Math.round((summary.totalTime % 3600) / 60) +
-          ' minutes'
-      );
-    });
+  renderPath = (start, end) => {
+    const url = `https://api.mapbox.com/directions/v5/mapbox/cycling/${
+      start[0]
+    },${start[1]};${end[0]},${end[1]}?geometries=geojson&access_token=${
+      this.#accessToken
+    }`;
+    // make an XHR request https://developer.mozilla.org/en-US/docs/Web/API/XMLHttpRequest
+    var req = new XMLHttpRequest();
+    req.open('GET', url, true);
+    req.onload = () => {
+      var json = JSON.parse(req.response);
+      var data = json.routes[0];
+      var route = data.geometry.coordinates;
+      var geojson = {
+        type: 'Feature',
+        properties: {},
+        geometry: {
+          type: 'LineString',
+          coordinates: route,
+        },
+      };
+      // if the route already exists on the map, reset it using setData
+      if (this.#map.getSource('route')) {
+        this.#map.getSource('route').setData(geojson);
+      } else {
+        // otherwise, make a new request
+        this.#map.addLayer({
+          id: 'route',
+          type: 'line',
+          source: {
+            type: 'geojson',
+            data: {
+              type: 'Feature',
+              properties: {},
+              geometry: {
+                type: 'LineString',
+                coordinates: geojson,
+              },
+            },
+          },
+          layout: {
+            'line-join': 'round',
+            'line-cap': 'round',
+          },
+          paint: {
+            'line-color': '#3887be',
+            'line-width': 5,
+            'line-opacity': 0.75,
+          },
+        });
+      }
+      // add turn instructions here at the end
+    };
+    req.send();
   };
-  // renderMarker = (index, waypoint, n) => {
-  //   let selectedMarker = null;
-  //   const myIconOption = {
-  //     iconUrl: logoIcon,
-  //     iconSize: [29, 43],
-  //     iconAnchor: [14.5, 43],
-  //     popupAnchor: [0, -43],
-  //   };
-  //   this.#myIcon = L.icon(myIconOption);
-  //   this.#startIcon = L.divIcon(config.startIconOption);
-  //   if (index == 0) {
-  //     selectedMarker = this.#startIcon;
-  //   } else if (index == n - 1) {
-  //     selectedMarker = this.#myIcon;
-  //   }
 
-  //   let customMarker = L.marker(waypoint.laLng, {
-  //     icon: selectedMarker,
-  //     opacity: 0.8,
-  //   })
-  //     .addTo(this.#map)
-  //     .bindPopup(
-  //       L.popup({
-  //         maxWidth: 250,
-  //         minWidth: 100,
-  //         autoClose: false,
-  //         closeOnClick: false,
-  //       })
-  //     )
-  //     .setPopupContent(`Your Position`)
-  //     .openPopup();
-
-  //   return customMarker;
-  // };
+  renderMarker = coords => {
+    // Set options
+    const startIcon = document.createElement('div');
+    startIcon.className = 'startIcon--in';
+    new mapboxgl.Marker(startIcon).setLngLat(coords).addTo(this.#map);
+  };
 }
 
 export default new mapView();

@@ -8,7 +8,7 @@ export const getPosition = async () => {
       if (navigator.geolocation) {
         navigator.geolocation.getCurrentPosition(position => {
           const { latitude, longitude } = position.coords;
-          const coords = [latitude, longitude];
+          const coords = [longitude, latitude];
           state.map.currentPosition = coords;
           resolve(coords);
         });
