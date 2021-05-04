@@ -1,4 +1,4 @@
-import logoIcon from 'url:../../img/marker.png';
+import logoIcon from 'url:../../img/logo.png';
 import * as config from './config';
 import { AJAX } from '../helper';
 
@@ -7,8 +7,8 @@ class mapView {
   #mapData;
   #mapZoomLevel = 13;
   #clickCount = 0;
-
   #accessToken;
+  #myMarker;
 
   loadMap(mapData) {
     this.#mapData = mapData;
@@ -21,14 +21,23 @@ class mapView {
       center: this.#mapData.currentPosition,
       zoom: this.#mapZoomLevel,
     });
-    // Add zoom and rotation controls to the map.
-    this.#map.addControl(new mapboxgl.NavigationControl());
-    //Disable double click zoom in
-    this.#map.doubleClickZoom.disable();
-    // Render Marker at current position
-    this.renderMarker(this.#mapData.currentPosition);
+
     //Handle click on Map
     this.#map.on('click', this.showForm);
+    this.#map.on('load', () => {
+      // Add zoom and rotation controls to the map.
+      this.#map.addControl(new mapboxgl.NavigationControl());
+      //Disable double click zoom in
+      this.#map.doubleClickZoom.disable();
+      // Render Marker at current position
+      this.renderMarker(this.#mapData.currentPosition, 0);
+      // make an initial directions request that
+      // starts and ends at the same location
+      this.renderPath(
+        this.#mapData.currentPosition,
+        this.#mapData.currentPosition
+      );
+    });
   }
 
   showForm = async mapE => {
@@ -45,13 +54,14 @@ class mapView {
       clearTimeout(timeout);
 
       form.classList.remove('hidden');
-      console.log('dbclick');
+
       console.log(mapE.lngLat);
+
       // Update DestinationCoords to #mapData
       const { lng, lat } = mapE.lngLat;
       const DestinationCoords = [lng, lat];
       this.#mapData.DestinationCoords = DestinationCoords;
-      this.renderMarker(this.#mapData.DestinationCoords);
+      this.renderMarker(this.#mapData.DestinationCoords, 1);
       this.renderPath(
         this.#mapData.currentPosition,
         this.#mapData.DestinationCoords
@@ -59,67 +69,91 @@ class mapView {
       this.#clickCount = 0;
     }
   };
-  renderPath = (start, end) => {
+  renderPath = async (start, end) => {
     const url = `https://api.mapbox.com/directions/v5/mapbox/cycling/${
       start[0]
     },${start[1]};${end[0]},${end[1]}?geometries=geojson&access_token=${
       this.#accessToken
     }`;
     // make an XHR request https://developer.mozilla.org/en-US/docs/Web/API/XMLHttpRequest
-    var req = new XMLHttpRequest();
-    req.open('GET', url, true);
-    req.onload = () => {
-      var json = JSON.parse(req.response);
-      var data = json.routes[0];
-      var route = data.geometry.coordinates;
-      var geojson = {
-        type: 'Feature',
-        properties: {},
-        geometry: {
-          type: 'LineString',
-          coordinates: route,
-        },
-      };
-      // if the route already exists on the map, reset it using setData
-      if (this.#map.getSource('route')) {
-        this.#map.getSource('route').setData(geojson);
-      } else {
-        // otherwise, make a new request
-        this.#map.addLayer({
-          id: 'route',
-          type: 'line',
-          source: {
-            type: 'geojson',
-            data: {
-              type: 'Feature',
-              properties: {},
-              geometry: {
-                type: 'LineString',
-                coordinates: geojson,
-              },
+    const data = await AJAX(url, 'Failed to render Path!!');
+    console.log(data);
+    const geojson = {
+      type: 'Feature',
+      properties: {},
+      geometry: {
+        type: 'LineString',
+        coordinates: data.routes[0].geometry.coordinates,
+      },
+    };
+    // if the route already exists on the map, reset it using setData
+    if (this.#map.getSource('route')) {
+      this.#map.getSource('route').setData(geojson);
+    } else {
+      // otherwise, make a new request
+      this.#map.addLayer({
+        id: 'route',
+        type: 'line',
+        source: {
+          type: 'geojson',
+          data: {
+            type: 'Feature',
+            properties: {},
+            geometry: {
+              type: 'LineString',
+              coordinates: geojson,
             },
           },
-          layout: {
-            'line-join': 'round',
-            'line-cap': 'round',
-          },
-          paint: {
-            'line-color': '#3887be',
-            'line-width': 5,
-            'line-opacity': 0.75,
-          },
-        });
-      }
-      // add turn instructions here at the end
-    };
-    req.send();
+        },
+        layout: {
+          'line-join': 'round',
+          'line-cap': 'round',
+        },
+        paint: {
+          'line-color': '#3887be',
+          'line-width': 5,
+          'line-opacity': 0.75,
+        },
+      });
+    }
+    // add turn instructions here at the end
   };
 
-  renderMarker = coords => {
-    // Set options
-    const startIcon = document.createElement('div');
-    startIcon.className = 'startIcon--in';
-    new mapboxgl.Marker(startIcon).setLngLat(coords).addTo(this.#map);
+  renderMarker = (coords, index) => {
+    // Current position Icon
+    if (index == 0) {
+      const startIcon = document.createElement('div');
+      startIcon.className = 'startIcon--in';
+      new mapboxgl.Marker(startIcon).setLngLat(coords).addTo(this.#map);
+    } else {
+      if (!this.#myMarker) {
+        this.updateMyMarker(coords);
+      } else {
+        this.#myMarker.remove();
+        this.updateMyMarker(coords);
+      }
+    }
+  };
+  updateMyMarker = coords => {
+    let MyIcon = document.createElement('div');
+    MyIcon.className = 'myIcon';
+
+    this.#myMarker = new mapboxgl.Marker({
+      element: MyIcon,
+      draggable: true,
+      offset: [0, -20],
+    })
+      .setLngLat(coords)
+      .addTo(this.#map);
+
+    this.#myMarker.on('dragend', () => {
+      let lngLet = this.#myMarker.getLngLat();
+      this.#mapData.DestinationCoords = [lngLet.lng, lngLet.lat];
+      this.renderPath(
+        this.#mapData.currentPosition,
+        this.#mapData.DestinationCoords
+      );
+    });
   };
 }
 
