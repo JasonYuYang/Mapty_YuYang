@@ -110,7 +110,7 @@
             <label class="form__label--route">From</label>
             <select class="form__input form__input--route start">
               <option>Current Position</option>
-              <option>Click on Map</option>
+              <option>Selected New Start point</option>
             </select>
           </div>
           <div class="form__row">
@@ -118,7 +118,8 @@
             <input
               type="text"
               class="form__input form__input--route end"
-              placeholder="destination"
+              placeholder="Destination"
+              readonly
             />
           </div>
 
@@ -135,6 +136,7 @@
               type="text"
               class="form__input form__input--distance"
               placeholder="km"
+              readonly
             />
           </div>
           <div class="form__row">
@@ -248,6 +250,7 @@
           </li>
         </ul>
       </ul>
+
       <p class="copyright">
         &copy; Copyright by
         <a
@@ -259,7 +262,15 @@
         as your own.
       </p>
     </div>
-
+    <div class="overlay hidden"></div>
+    <div class="error__window hidden">
+      <svg id="icon-cross">
+        <use xlink:href="src/img/sprite.svg#icon-cross"></use>
+      </svg>
+      <h2 class="error__heading">⚠️ Error ⚠️</h2>
+      <p class="error__text"></p>
+      <a class="btn btn--red btn--animated error__btn">Try Again</a>
+    </div>
     <div id="map"></div>
   </body>
 </html>

@@ -45,7 +45,8 @@ export const getLocation = async () => {
     state.workoutData.locationName = data.osmtags.name;
     state.workoutData.locationIn = data.osmtags.is_in;
   } catch (err) {
+    // err =
+    //   'Please try to reload the page again. Unfortunately,the geocode api I am using now can not read all datas at once and I am not willing to pay for the API. Error occurs from this reason.';
     console.error(err);
-    return '';
   }
 };

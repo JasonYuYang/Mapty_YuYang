@@ -1,14 +1,16 @@
 import logoIcon from 'url:../../img/logo.png';
 import * as config from './config';
 import { AJAX } from '../helper';
+import View from './Views';
 
-class mapView {
+class mapView extends View {
   #map = document.querySelector('#map');
   #mapData;
   #mapZoomLevel = 13;
   #clickCount = 0;
   #accessToken;
   #myMarker;
+  #pathData;
 
   loadMap(mapData) {
     this.#mapData = mapData;
@@ -41,9 +43,8 @@ class mapView {
   }
 
   showForm = async mapE => {
-    const form = document.querySelector('.form');
     //Handling double click on Map
-
+    const form = document.querySelector('.form');
     let timeout = [];
     this.#clickCount++;
     if (this.#clickCount == 1) {
@@ -52,9 +53,7 @@ class mapView {
       }, 250);
     } else if (this.#clickCount == 2) {
       clearTimeout(timeout);
-
       form.classList.remove('hidden');
-
       console.log(mapE.lngLat);
 
       // Update DestinationCoords to #mapData
@@ -62,12 +61,26 @@ class mapView {
       const DestinationCoords = [lng, lat];
       this.#mapData.DestinationCoords = DestinationCoords;
       this.renderMarker(this.#mapData.DestinationCoords, 1);
-      this.renderPath(
+      await this.renderPath(
         this.#mapData.currentPosition,
         this.#mapData.DestinationCoords
       );
+      this.showDataOnInput();
       this.#clickCount = 0;
     }
+  };
+  showDataOnInput = () => {
+    const inputDistance = document.querySelector('.form__input--distance');
+    const inputDestinationCoords = document.querySelector('.end');
+    console.log(inputDistance);
+    console.log(inputDestinationCoords);
+    console.log(this.#pathData.routes[0].distance);
+    inputDistance.placeholder = `${(
+      this.#pathData.routes[0].distance / 1000
+    ).toFixed(2)}km`;
+    inputDestinationCoords.placeholder = `(${this.#mapData.DestinationCoords[1].toFixed(
+      3
+    )} , ${this.#mapData.DestinationCoords[0].toFixed(3)})`;
   };
   renderPath = async (start, end) => {
     const url = `https://api.mapbox.com/directions/v5/mapbox/cycling/${
@@ -75,15 +88,14 @@ class mapView {
     },${start[1]};${end[0]},${end[1]}?geometries=geojson&access_token=${
       this.#accessToken
     }`;
-    // make an XHR request https://developer.mozilla.org/en-US/docs/Web/API/XMLHttpRequest
-    const data = await AJAX(url, 'Failed to render Path!!');
-    console.log(data);
+    this.#pathData = await AJAX(url, 'Failed to render Path!!');
+    console.log(this.#pathData);
     const geojson = {
       type: 'Feature',
       properties: {},
       geometry: {
         type: 'LineString',
-        coordinates: data.routes[0].geometry.coordinates,
+        coordinates: this.#pathData.routes[0].geometry.coordinates,
       },
     };
     // if the route already exists on the map, reset it using setData

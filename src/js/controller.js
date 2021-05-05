@@ -1,32 +1,28 @@
 'use strict';
 import * as model from './model';
 import mapView from './views/mapView';
+import formView from './views/formView';
 import icons from 'url:../img/sprite.svg';
 import 'core-js/stable';
 import 'regenerator-runtime/runtime';
 
 const controlMap = async () => {
-  // get current position
-  await model.getPosition();
-  await model.getLocation();
-  //render Map
-  mapView.loadMap(model.state.map);
-};
+  try {
+    // get current position
+    await model.getPosition();
+    await model.getLocation();
 
+    //render Map
+    mapView.loadMap(model.state.map);
+  } catch (err) {
+    mapView.renderError(err);
+  }
+};
+// const controlForm = (){
+
+// };
 const init = () => {
   controlMap();
+  // formView.addHandlerForm(controlForm)
 };
 init();
-
-//////////////////////////////////////////////////////////////////////////////////////////////////////
-// APPLICATION ARCHITECTURE
-const form = document.querySelector('.form');
-const containerWorkouts = document.querySelector('.workouts');
-const inputType = document.querySelector('.form__input--type');
-const inputDistance = document.querySelector('.form__input--distance');
-const inputDuration = document.querySelector('.form__input--duration');
-const inputCadence = document.querySelector('.form__input--cadence');
-const inputStart = document.querySelector('.start');
-const inputEnd = document.querySelector('.end');
-const inputElevation = document.querySelector('.form__input--elevation');
-const map = document.querySelector('#map');
