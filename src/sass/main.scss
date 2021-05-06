@@ -214,11 +214,13 @@ a:visited {
 .form {
   background-color: $--color-dark--2;
   border-radius: 5px;
-  padding: 1.5rem 2.75rem;
+  padding: 1.5rem 2.75rem 1rem;
   margin-bottom: 1.75rem;
 
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: 1fr minmax(0, 1fr);
+  grid-template-rows: 1fr 1fr 1fr;
+
   gap: 0.5rem 2.5rem;
 
   /* Match height and activity boxes */
@@ -288,6 +290,32 @@ a:visited {
 
   &__btn {
     display: none;
+  }
+
+  .error__message {
+    display: none;
+    transition: all 0.5s;
+    font-size: 1rem;
+    font-family: inherit;
+    font-weight: 700;
+    margin-left: 1.5rem;
+    word-spacing: 0.1rem;
+    &--duration {
+      grid-column: 1/2;
+      grid-row: 4/5;
+    }
+    &--cad_ele {
+      grid-column: 2/3;
+      grid-row: 4/5;
+    }
+    &--duration.error {
+      color: $--color-brand--1;
+      display: block;
+    }
+    &--cad_ele.error {
+      color: $--color-brand--1;
+      display: block;
+    }
   }
 }
 

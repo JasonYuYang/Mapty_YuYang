@@ -105,12 +105,12 @@
       </div>
 
       <ul class="workouts">
-        <form class="form hidden">
+        <form class="form hidden" id="form" autocomplete="off">
           <div class="form__row">
             <label class="form__label--route">From</label>
             <select class="form__input form__input--route start">
               <option>Current Position</option>
-              <option>Selected New Start point</option>
+              <option>Select New Start point</option>
             </select>
           </div>
           <div class="form__row">
@@ -142,15 +142,17 @@
           <div class="form__row">
             <label class="form__label">Duration</label>
             <input
+              id="duration"
               type="text"
               class="form__input form__input--duration"
               placeholder="min"
             />
           </div>
-
+          <small class="error__message error__message--duration"></small>
           <div class="form__row">
             <label class="form__label">Cadence</label>
             <input
+              id="cadence"
               type="text"
               class="form__input form__input--cadence"
               placeholder="step/min"
@@ -159,11 +161,13 @@
           <div class="form__row form__row--hidden">
             <label class="form__label">Elev Gain</label>
             <input
+              id="elevation"
               type="text"
               class="form__input form__input--elevation"
               placeholder="meters"
             />
           </div>
+          <small class="error__message error__message--cad_ele"></small>
           <button class="form__btn">OK</button>
         </form>
 

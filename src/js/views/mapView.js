@@ -54,7 +54,7 @@ class mapView extends View {
     } else if (this.#clickCount == 2) {
       clearTimeout(timeout);
       form.classList.remove('hidden');
-      console.log(mapE.lngLat);
+      // console.log(mapE.lngLat);
 
       // Update DestinationCoords to #mapData
       const { lng, lat } = mapE.lngLat;
@@ -72,9 +72,7 @@ class mapView extends View {
   showDataOnInput = () => {
     const inputDistance = document.querySelector('.form__input--distance');
     const inputDestinationCoords = document.querySelector('.end');
-    console.log(inputDistance);
-    console.log(inputDestinationCoords);
-    console.log(this.#pathData.routes[0].distance);
+    this.#mapData.pathDistance = this.#pathData.routes[0].distance;
     inputDistance.placeholder = `${(
       this.#pathData.routes[0].distance / 1000
     ).toFixed(2)}km`;
@@ -89,7 +87,6 @@ class mapView extends View {
       this.#accessToken
     }`;
     this.#pathData = await AJAX(url, 'Failed to render Path!!');
-    console.log(this.#pathData);
     const geojson = {
       type: 'Feature',
       properties: {},
@@ -166,6 +163,9 @@ class mapView extends View {
         this.#mapData.DestinationCoords
       );
     });
+  };
+  SubmitMapData = () => {
+    return this.#mapData;
   };
 }
 
