@@ -1,4 +1,3 @@
-import logoIcon from 'url:../../img/logo.png';
 import * as config from './config';
 import { AJAX } from '../helper';
 import View from './Views';
@@ -10,13 +9,16 @@ class mapView extends View {
   #clickCount = 0;
   #accessToken;
   #myMarker;
+  #startMarker;
   #pathData;
+  #StartPositionType = document.querySelector('.form__input--route-type');
 
-  loadMap(mapData) {
+  loadMap = async mapData => {
     this.#mapData = mapData;
     mapboxgl.accessToken =
       'pk.eyJ1IjoiamFzb25jb2Rpbmc3MjMiLCJhIjoiY2tvN2FlcmF6MW1raDJvbHJhN2ptMG01NCJ9.ZDZ7zl030QE1REiaDIYWnQ';
     this.#accessToken = mapboxgl.accessToken;
+    this.renderLoadingSpinner(this.#map);
     this.#map = new mapboxgl.Map({
       container: 'map',
       style: 'mapbox://styles/mapbox/streets-v11',
@@ -26,7 +28,7 @@ class mapView extends View {
 
     //Handle click on Map
     this.#map.on('click', this.showForm);
-    this.#map.on('load', () => {
+    this.#map.on('load', async () => {
       // Add zoom and rotation controls to the map.
       this.#map.addControl(new mapboxgl.NavigationControl());
       //Disable double click zoom in
@@ -35,12 +37,24 @@ class mapView extends View {
       this.renderMarker(this.#mapData.currentPosition, 0);
       // make an initial directions request that
       // starts and ends at the same location
-      this.renderPath(
+      await this.renderPath(
         this.#mapData.currentPosition,
         this.#mapData.currentPosition
       );
+      this.#StartPositionType.addEventListener('change', async () => {
+        if (this.#StartPositionType.selectedIndex == 1) {
+          this.renderMarker(this.#mapData.currentPosition, 1);
+        } else {
+          this.#startMarker.remove();
+          await this.renderPath(
+            this.#mapData.currentPosition,
+            this.#mapData.DestinationCoords
+          );
+          this.showDataOnInput();
+        }
+      });
     });
-  }
+  };
 
   showForm = async mapE => {
     //Handling double click on Map
@@ -60,7 +74,7 @@ class mapView extends View {
       const { lng, lat } = mapE.lngLat;
       const DestinationCoords = [lng, lat];
       this.#mapData.DestinationCoords = DestinationCoords;
-      this.renderMarker(this.#mapData.DestinationCoords, 1);
+      this.renderMarker(this.#mapData.DestinationCoords, 2);
       await this.renderPath(
         this.#mapData.currentPosition,
         this.#mapData.DestinationCoords
@@ -134,6 +148,8 @@ class mapView extends View {
       const startIcon = document.createElement('div');
       startIcon.className = 'startIcon--in';
       new mapboxgl.Marker(startIcon).setLngLat(coords).addTo(this.#map);
+    } else if (index == 1) {
+      this.updateStartMarker(coords);
     } else {
       if (!this.#myMarker) {
         this.updateMyMarker(coords);
@@ -143,8 +159,28 @@ class mapView extends View {
       }
     }
   };
+  updateStartMarker = coords => {
+    const startMarker = document.createElement('div');
+    startMarker.className = 'startMarker';
+    this.#startMarker = new mapboxgl.Marker({
+      element: startMarker,
+      draggable: true,
+      offset: [0, -20],
+    })
+      .setLngLat(coords)
+      .addTo(this.#map);
+    this.#startMarker.on('dragend', async () => {
+      let lngLet = this.#startMarker.getLngLat();
+      this.#mapData.startPositionCoords = [lngLet.lng, lngLet.lat];
+      await this.renderPath(
+        this.#mapData.startPositionCoords,
+        this.#mapData.DestinationCoords
+      );
+      this.showDataOnInput();
+    });
+  };
   updateMyMarker = coords => {
-    let MyIcon = document.createElement('div');
+    const MyIcon = document.createElement('div');
     MyIcon.className = 'myIcon';
 
     this.#myMarker = new mapboxgl.Marker({
@@ -155,13 +191,22 @@ class mapView extends View {
       .setLngLat(coords)
       .addTo(this.#map);
 
-    this.#myMarker.on('dragend', () => {
+    this.#myMarker.on('dragend', async () => {
       let lngLet = this.#myMarker.getLngLat();
       this.#mapData.DestinationCoords = [lngLet.lng, lngLet.lat];
-      this.renderPath(
-        this.#mapData.currentPosition,
-        this.#mapData.DestinationCoords
-      );
+      if (this.#StartPositionType.selectedIndex == 1) {
+        await this.renderPath(
+          this.#mapData.startPositionCoords,
+          this.#mapData.DestinationCoords
+        );
+        this.showDataOnInput();
+      } else {
+        await this.renderPath(
+          this.#mapData.currentPosition,
+          this.#mapData.DestinationCoords
+        );
+        this.showDataOnInput();
+      }
     });
   };
   SubmitMapData = () => {

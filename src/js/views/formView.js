@@ -1,14 +1,22 @@
 class formView {
   #form = document.getElementById('form');
   #duration = document.querySelector('.form__input--duration');
-  #selection = document
-    .querySelector('.form__input--cadence')
-    .closest('.form__row')
-    .classList.contains('form__row--hidden')
-    ? document.querySelector('.form__input--elevation')
-    : document.querySelector('.form__input--cadence');
+  #inputElevation = document.querySelector('.form__input--elevation');
+  #inputCadence = document.querySelector('.form__input--cadence');
+  #inputType = document.querySelector('.form__input--type');
+  #selection = document.querySelector('.form__input--cadence');
 
   addHandlerForm(handler) {
+    this.#inputType.addEventListener('change', () => {
+      this.#selection = document
+        .querySelector('.form__input--cadence')
+        .closest('.form__row')
+        .classList.contains('form__row--hidden')
+        ? document.querySelector('.form__input--cadence')
+        : document.querySelector('.form__input--elevation');
+      this.toggleElevationField();
+      this.formValidation();
+    });
     window.addEventListener('keypress', e => {
       if (e.key === 'Enter') {
         e.preventDefault();
@@ -22,15 +30,16 @@ class formView {
   }
 
   formValidation = () => {
-    if (
-      this.checkRequired(this.#duration)
-        ? this.checkRequired(this.#selection)
-        : this.checkRequired(this.#selection) && false
-    ) {
-      return this.checkInput(this.#duration)
-        ? this.checkInput(this.#selection)
-        : this.checkInput(this.#selection) && false;
+    let checkDuration;
+    let checkSelection;
+    if (this.checkRequired(this.#duration)) {
+      checkDuration = this.checkInput(this.#duration);
     }
+
+    if (this.checkRequired(this.#selection)) {
+      checkSelection = this.checkInput(this.#selection);
+    }
+    return checkDuration && checkSelection;
   };
   // Show input error message
   showError = (input, message) => {
@@ -40,13 +49,19 @@ class formView {
     errorEl.classList.add('error');
     errorEl.innerText = message;
   };
-
+  removeError = input => {
+    let id =
+      input.id == 'elevation' || input.id == 'cadence' ? 'cad_ele' : input.id;
+    const errorEl = document.querySelector(`.error__message--${id}`);
+    errorEl.classList.remove('error');
+  };
   // Check required fields
   checkRequired = input => {
     let isRequired = false;
     if (input.value.trim() === '') {
       this.showError(input, `${this.getFieldName(input)}  is  required !!`);
     } else {
+      this.removeError(input);
       isRequired = true;
     }
     return isRequired;
@@ -62,12 +77,21 @@ class formView {
       );
       return false;
     } else {
+      this.removeError(input);
       return true;
     }
   }
   // Get fieldname
   getFieldName = input => {
     return input.id.charAt(0).toUpperCase() + input.id.slice(1);
+  };
+  toggleElevationField = () => {
+    this.#inputElevation
+      .closest('.form__row')
+      .classList.toggle('form__row--hidden');
+    this.#inputCadence
+      .closest('.form__row')
+      .classList.toggle('form__row--hidden');
   };
 }
 export default new formView();

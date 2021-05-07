@@ -18,9 +18,9 @@ const controlMap = async () => {
     mapView.renderError(err);
   }
 };
-const controlForm = () => {};
+
 const init = () => {
   controlMap();
-  formView.addHandlerForm(controlForm);
+  formView.addHandlerForm();
 };
 init();

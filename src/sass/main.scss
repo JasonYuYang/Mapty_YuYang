@@ -341,6 +341,7 @@ a:visited {
   flex: 1;
   height: 100vh;
   background-color: $--color-light--1;
+  position: relative;
 }
 
 /* Popup width is defined in JS using options */
@@ -390,6 +391,12 @@ a:visited {
   background-image: url(../img/icon.png);
   background-size: 100%;
 }
+.startMarker {
+  width: 4rem;
+  height: 4rem;
+  background-image: url(../img/startMarker.png);
+  background-size: 100%;
+}
 @keyframes InfiniteScale {
   0% {
     opacity: 0.3;
@@ -404,6 +411,59 @@ a:visited {
   100% {
     opacity: 0;
     transform: translate(-50%, -50%) scale(3);
+  }
+}
+.spinner {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+
+  &__Icon {
+    width: 10rem;
+    height: 10rem;
+    -webkit-animation-name: spinner;
+    -webkit-animation-timing-function: linear;
+    -webkit-animation-iteration-count: infinite;
+    -webkit-animation-duration: 2s;
+    animation-name: spinner;
+    animation-timing-function: linear;
+    animation-iteration-count: infinite;
+    animation-duration: 2s;
+    -webkit-transform-style: preserve-3d;
+    -moz-transform-style: preserve-3d;
+    -ms-transform-style: preserve-3d;
+    transform-style: preserve-3d;
+  }
+
+  &__text {
+    transform: translateX(-10%);
+    margin-top: 1rem;
+    font-size: 2rem;
+    font-family: inherit;
+    font-weight: 700;
+  }
+}
+
+/* WebKit and Opera browsers */
+@-webkit-keyframes spinner {
+  from {
+    -webkit-transform: rotateY(0deg);
+  }
+  to {
+    -webkit-transform: rotateY(-360deg);
+  }
+} /* all other browsers */
+@keyframes spinner {
+  from {
+    -moz-transform: rotateY(0deg);
+    -ms-transform: rotateY(0deg);
+    transform: rotateY(0deg);
+  }
+  to {
+    -moz-transform: rotateY(-360deg);
+    -ms-transform: rotateY(-360deg);
+    transform: rotateY(-360deg);
   }
 }
 .overlay {
