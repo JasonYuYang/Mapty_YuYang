@@ -111,11 +111,12 @@ a:visited {
   padding: 1.5rem 2.25rem;
   margin-bottom: 1.75rem;
   position: relative;
-  cursor: grab;
   display: grid;
-  grid-template-columns: auto auto 1fr 1fr;
+  grid-template-columns: 1fr 1fr 1fr 1fr;
+  grid-template-rows: 1fr 1fr auto;
   gap: 0.75rem 1.5rem;
-  justify-content: space-between;
+  // justify-content: space-between;
+  transition: all 0.5s;
   // overflow: auto;
 
   &--running {
@@ -124,15 +125,51 @@ a:visited {
   &--cycling {
     border-left: 5px solid $--color-brand--1;
   }
-
+  &__data {
+    grid-column: 1/-1;
+    display: grid;
+    grid-template-columns: auto 1fr auto;
+    justify-content: space-between;
+  }
   &__title {
     font-size: 1.7rem;
     font-weight: 600;
-    grid-column: 1 / 4;
+    grid-column: 1/4;
+    cursor: pointer;
+    &:hover {
+      color: $--color-brand--2;
+      .workout__favorite span {
+        color: $--color-brand--1;
+      }
+    }
+  }
+  &__favorite {
+    position: relative;
+    display: inline-block;
+    background-color: $--color-light--1;
+    height: 2rem;
+    width: 2rem;
+    border-radius: 50%;
+    margin-right: 1rem;
+    transform: translateY(0.5rem);
+    box-shadow: 0 1rem 3rem 2rem rgba(#000, 0.1);
+    span {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      font-size: 2rem;
+      color: $--color-dark--2;
+      cursor: pointer;
+
+      &:hover {
+        color: $--color-brand--1;
+      }
+    }
   }
   &__icon--expand {
     display: block;
-    grid-column: 4/5;
+    grid-column: 4/-1;
     grid-row: 1/2;
     justify-self: end;
     width: 2rem;
@@ -147,17 +184,62 @@ a:visited {
       box-shadow: 0 1rem 3rem 2rem rgba(#000, 0.1);
     }
   }
-
+  &__address {
+    display: flex;
+    align-items: center;
+    justify-self: center;
+    &--details {
+      display: flex;
+      flex-direction: column;
+    }
+  }
   &__details {
     display: flex;
     align-items: baseline;
+    &.align--center {
+      align-items: center;
+      justify-self: center;
+    }
   }
-
+  &__in {
+    font-size: 1rem;
+  }
+  &__street {
+    font-size: 1.5rem;
+    margin-right: 1rem;
+  }
+  .weather__icon {
+    img {
+      display: inline-block;
+      max-height: 2rem;
+      width: 3rem;
+      height: auto;
+      object-fit: cover;
+      margin-right: 0.8rem;
+    }
+  }
+  &__timer {
+    margin-left: 2rem;
+    svg {
+      width: 2rem;
+      height: 2rem;
+      fill: $--color-light--1;
+      margin-right: 0.8rem;
+    }
+  }
   &__icon {
     font-size: 1.8rem;
     margin-right: 0.2rem;
     height: 0.28rem;
-    grid-column: 1/2;
+    grid-row: 2/3;
+    grid-column: 2/3;
+    display: flex;
+    img {
+      width: 2.5rem;
+      height: 2.5rem;
+      align-self: center;
+      margin-right: 0.5rem;
+    }
   }
 
   &__value {
@@ -170,6 +252,13 @@ a:visited {
     color: $--color-light--1;
     text-transform: uppercase;
     font-weight: 800;
+  }
+
+  &:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 0.4rem 2rem rgba(#000, 0.2);
+    background-color: $--color-light--2;
+    color: $--color-dark--1;
   }
 }
 
@@ -340,7 +429,7 @@ a:visited {
 #map {
   flex: 1;
   height: 100vh;
-  background-color: $--color-light--1;
+  background-color: $--color-light--2;
   position: relative;
 }
 
@@ -390,12 +479,14 @@ a:visited {
   height: 4rem;
   background-image: url(../img/icon.png);
   background-size: 100%;
+  cursor: pointer;
 }
 .startMarker {
   width: 4rem;
   height: 4rem;
   background-image: url(../img/startMarker.png);
   background-size: 100%;
+  cursor: pointer;
 }
 @keyframes InfiniteScale {
   0% {
@@ -416,12 +507,13 @@ a:visited {
 .spinner {
   position: absolute;
   top: 50%;
-  left: 50%;
+  left: 55%;
   transform: translate(-50%, -50%);
+  backface-visibility: hidden;
 
   &__Icon {
-    width: 10rem;
-    height: 10rem;
+    width: 8rem;
+    height: 8rem;
     -webkit-animation-name: spinner;
     -webkit-animation-timing-function: linear;
     -webkit-animation-iteration-count: infinite;
@@ -437,12 +529,18 @@ a:visited {
   }
 
   &__text {
-    transform: translateX(-10%);
+    transform: translateX(-25%);
     margin-top: 1rem;
     font-size: 2rem;
     font-family: inherit;
-    font-weight: 700;
+    font-weight: 600;
+    color: $--color-brand--1;
+    backface-visibility: hidden;
+    display: block;
   }
+}
+.spinner.hidden {
+  display: none;
 }
 
 /* WebKit and Opera browsers */
@@ -479,6 +577,27 @@ a:visited {
 
 .overlay.hidden {
   display: none;
+}
+.icon-spinner8 {
+  display: block;
+  margin: 2rem auto;
+  height: 3rem;
+  width: 3rem;
+  fill: $--color-brand--2;
+  transition: all 0.5s;
+  animation: rotate 2s infinite linear;
+}
+.icon-spinner8.hidden {
+  display: none;
+}
+@keyframes rotate {
+  0% {
+    transform: rotate(0);
+  }
+
+  100% {
+    transform: rotate(360deg);
+  }
 }
 .error {
   &__window {
@@ -527,9 +646,48 @@ a:visited {
   width: 5rem !important;
   height: 5rem !important;
 }
-.running-popup .leaflet-popup-content-wrapper {
-  border-left: 5px solid $--color-brand--2;
+.mapboxgl-popup-close-button {
+  display: none;
 }
-.cycling-popup .leaflet-popup-content-wrapper {
+.mapboxgl-popup-content-wrapper {
+  height: auto;
+  max-width: 30rem;
+}
+.mapboxgl-popup-content {
+  padding: 0 0 0 !important;
+  border: none !important;
+  background-color: $--color-dark--2 !important;
+}
+.mapboxgl-popup-content .cycling-popup {
+  font: 500 1rem/1.5rem 'Source Sans Pro', 'Helvetica Neue', Sans-serif;
   border-left: 5px solid $--color-brand--1;
+  padding: 1rem 1rem;
+  background-color: $--color-dark--2;
+  border-radius: 5px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: auto;
+  color: $--color-light--2;
+}
+.mapboxgl-popup-content .running-popup {
+  font: 500 1rem/1.5rem 'Source Sans Pro', 'Helvetica Neue', Sans-serif;
+  width: auto;
+  color: $--color-light--2;
+  border-left: 5px solid $--color-brand--2;
+  padding: 1rem 1rem;
+  background-color: $--color-dark--2;
+  border-radius: 5px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.mapboxgl-popup-content .running-popup > *:not(:first-child) {
+  margin-top: 0.5rem;
+}
+.mapboxgl-popup-content .cycling-popup > *:not(:first-child) {
+  margin-top: 0.5rem;
+}
+.mapboxgl-popup-tip {
+  border-top-color: $--color-dark--2 !important;
 }

@@ -4,12 +4,15 @@ import View from './Views';
 
 class mapView extends View {
   #map = document.querySelector('#map');
+  #containerWorkouts = document.querySelector('.workouts');
   #mapData;
   #mapZoomLevel = 13;
   #clickCount = 0;
   #accessToken;
   #myMarker;
   #startMarker;
+  #preserveMarker;
+  #startMarkerPop;
   #pathData;
   #StartPositionType = document.querySelector('.form__input--route-type');
 
@@ -18,10 +21,9 @@ class mapView extends View {
     mapboxgl.accessToken =
       'pk.eyJ1IjoiamFzb25jb2Rpbmc3MjMiLCJhIjoiY2tvN2FlcmF6MW1raDJvbHJhN2ptMG01NCJ9.ZDZ7zl030QE1REiaDIYWnQ';
     this.#accessToken = mapboxgl.accessToken;
-    this.renderLoadingSpinner(this.#map);
     this.#map = new mapboxgl.Map({
       container: 'map',
-      style: 'mapbox://styles/mapbox/streets-v11',
+      style: 'mapbox://styles/jasoncoding723/ckohe0oxp2n5e17nz9i4awgix',
       center: this.#mapData.currentPosition,
       zoom: this.#mapZoomLevel,
     });
@@ -46,6 +48,8 @@ class mapView extends View {
           this.renderMarker(this.#mapData.currentPosition, 1);
         } else {
           this.#startMarker.remove();
+          this.#startMarker = undefined;
+          delete this.#mapData.startPositionCoords;
           await this.renderPath(
             this.#mapData.currentPosition,
             this.#mapData.DestinationCoords
@@ -57,6 +61,9 @@ class mapView extends View {
   };
 
   showForm = async mapE => {
+    if (this.#startMarkerPop) {
+      this.#startMarkerPop.remove();
+    }
     //Handling double click on Map
     const form = document.querySelector('.form');
     let timeout = [];
@@ -75,10 +82,18 @@ class mapView extends View {
       const DestinationCoords = [lng, lat];
       this.#mapData.DestinationCoords = DestinationCoords;
       this.renderMarker(this.#mapData.DestinationCoords, 2);
-      await this.renderPath(
-        this.#mapData.currentPosition,
-        this.#mapData.DestinationCoords
-      );
+      if (this.#startMarker) {
+        await this.renderPath(
+          this.#mapData.startPositionCoords,
+          this.#mapData.DestinationCoords
+        );
+      } else {
+        await this.renderPath(
+          this.#mapData.currentPosition,
+          this.#mapData.DestinationCoords
+        );
+      }
+
       this.showDataOnInput();
       this.#clickCount = 0;
     }
@@ -140,9 +155,11 @@ class mapView extends View {
       });
     }
     // add turn instructions here at the end
+    this.#mapData.pathStart = start;
+    this.#mapData.pathEnd = end;
   };
 
-  renderMarker = (coords, index) => {
+  renderMarker = async (coords, index) => {
     // Current position Icon
     if (index == 0) {
       const startIcon = document.createElement('div');
@@ -152,14 +169,15 @@ class mapView extends View {
       this.updateStartMarker(coords);
     } else {
       if (!this.#myMarker) {
-        this.updateMyMarker(coords);
+        await this.updateMyMarker(coords);
       } else {
         this.#myMarker.remove();
-        this.updateMyMarker(coords);
+        this.#myMarker = undefined;
+        await this.updateMyMarker(coords);
       }
     }
   };
-  updateStartMarker = coords => {
+  updateStartMarker = async coords => {
     const startMarker = document.createElement('div');
     startMarker.className = 'startMarker';
     this.#startMarker = new mapboxgl.Marker({
@@ -169,6 +187,7 @@ class mapView extends View {
     })
       .setLngLat(coords)
       .addTo(this.#map);
+    this.#mapData.startPositionCoords = coords;
     this.#startMarker.on('dragend', async () => {
       let lngLet = this.#startMarker.getLngLat();
       this.#mapData.startPositionCoords = [lngLet.lng, lngLet.lat];
@@ -179,7 +198,7 @@ class mapView extends View {
       this.showDataOnInput();
     });
   };
-  updateMyMarker = coords => {
+  updateMyMarker = async coords => {
     const MyIcon = document.createElement('div');
     MyIcon.className = 'myIcon';
 
@@ -209,8 +228,106 @@ class mapView extends View {
       }
     });
   };
-  SubmitMapData = () => {
-    return this.#mapData;
+  preserveMarker = async coords => {
+    const MyIcon = document.createElement('div');
+    MyIcon.className = 'myIcon';
+    this.#preserveMarker = new mapboxgl.Marker({
+      element: MyIcon,
+      offset: [0, -20],
+    })
+      .setLngLat(coords)
+      .addTo(this.#map);
+    await this.renderPath(
+      this.#mapData.currentPosition,
+      this.#mapData.currentPosition
+    );
+  };
+  removeStartMarker = async () => {
+    if (this.#startMarker) {
+      this.#startMarker.remove();
+      this.#startMarker = undefined;
+      await this.renderPath(
+        this.#mapData.currentPosition,
+        this.#mapData.currentPosition
+      );
+    }
+  };
+  addpopupToMarker = (workout, index) => {
+    let coords = index == 0 ? workout.startCoords : workout.endCoords;
+    const StartMarkup = `<div class="${workout.type}-popup"> 
+        <div>
+          ${workout.type == 'running' ? '🏃‍♂️ ' : '🚴‍♀️ '}
+         ${workout.type.charAt(0).toUpperCase() + workout.type.slice(1)}
+          <span> on </apan>
+          ${workout.time.dateNow}
+        </div>
+        <div class="in">${workout.locationName.startLocationIn}</div>
+        <div class="street">${workout.locationName.startLocationStreet}</div>
+        <div class="time"><span>Start at </span>${workout.time.timeNow}</div>
+      </div>`;
+    const EndMarkup = `<div class="${workout.type}-popup">
+    <div>
+    ${workout.type == 'running' ? '🏃‍♂️ ' : '🚴‍♀️ '}
+      ${workout.type.charAt(0).toUpperCase() + workout.type.slice(1)}
+      <span> on </span>
+      ${workout.time.dateEnd}
+    </div>
+    <div class="in">${workout.locationName.endLocationIn}</div>
+    <div class="street">${workout.locationName.endLocationStreet}</div>
+    <div class="time"><span>Arrived at </span>${workout.time.timeEnd}</div>
+    </div>`;
+    let Markup = index == 0 ? StartMarkup : EndMarkup;
+    let popup = new mapboxgl.Popup({
+      offset: [0, -40],
+      closeOnClick: false,
+    })
+      .setLngLat(coords)
+      .setHTML(Markup)
+      .addTo(this.#map);
+
+    if (index == 1) {
+      this.#preserveMarker.remove();
+      const MyIcon = document.createElement('div');
+      MyIcon.className = 'myIcon';
+      this.#preserveMarker = new mapboxgl.Marker({
+        element: MyIcon,
+        offset: [0, -20],
+      })
+        .setLngLat(coords)
+        .setPopup(popup)
+        .addTo(this.#map);
+      this.#preserveMarker.togglePopup();
+    }
+    if (index == 0) {
+      // this.#startMarker.remove();
+      const startMarker = document.createElement('div');
+      startMarker.className = 'startMarker';
+      this.#startMarkerPop = new mapboxgl.Marker({
+        element: startMarker,
+        offset: [0, -20],
+      })
+        .setLngLat(coords)
+        .setPopup(popup)
+        .addTo(this.#map);
+
+      this.#startMarkerPop.togglePopup();
+    }
+  };
+  moveToPopRoute = async (e, workouts) => {
+    if (this.#map);
+    const workoutEl = e.target.closest('.workout');
+    if (!workoutEl) return;
+    const workout = workouts.find(work => work.id === workoutEl.dataset.id);
+    let bound = [workout.startCoords, workout.endCoords];
+    if (this.#startMarkerPop) {
+      this.#startMarkerPop.remove();
+    }
+    this.addpopupToMarker(workout, 0);
+    await this.renderPath(workout.startCoords, workout.endCoords);
+
+    this.#map.fitBounds(bound, {
+      padding: { top: 50, bottom: 100, left: 50, right: 50 },
+    });
   };
 }
 

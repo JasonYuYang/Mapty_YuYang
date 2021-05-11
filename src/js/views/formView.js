@@ -6,28 +6,27 @@ class formView {
   #inputType = document.querySelector('.form__input--type');
   #selection = document.querySelector('.form__input--cadence');
 
-  addHandlerForm(handler) {
+  addHandlerForm = handler => {
     this.#inputType.addEventListener('change', () => {
-      this.#selection = document
-        .querySelector('.form__input--cadence')
-        .closest('.form__row')
-        .classList.contains('form__row--hidden')
-        ? document.querySelector('.form__input--cadence')
-        : document.querySelector('.form__input--elevation');
+      this.#selection =
+        this.#inputType.value == 'running'
+          ? this.#inputCadence
+          : this.#inputElevation;
       this.toggleElevationField();
       this.formValidation();
     });
-    window.addEventListener('keypress', e => {
+    window.addEventListener('keypress', async e => {
       if (e.key === 'Enter') {
         e.preventDefault();
         if (this.formValidation()) {
           this.#form.classList.add('hidden');
-          handler();
+
+          await handler();
           this.#form.reset();
         }
       }
     });
-  }
+  };
 
   formValidation = () => {
     let checkDuration;
@@ -92,6 +91,13 @@ class formView {
     this.#inputCadence
       .closest('.form__row')
       .classList.toggle('form__row--hidden');
+  };
+  getInputvalue = () => {
+    const inputValue = {};
+    inputValue[this.#selection.id] = this.#selection.value;
+    inputValue[this.#duration.id] = this.#duration.value;
+    inputValue.type = this.#inputType.value;
+    return inputValue;
   };
 }
 export default new formView();

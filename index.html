@@ -34,6 +34,7 @@
       href="https://api.mapbox.com/mapbox-gl-js/v2.2.0/mapbox-gl.css"
       rel="stylesheet"
     />
+
     <script
       defer
       src="https://api.mapbox.com/mapbox-gl-js/v2.2.0/mapbox-gl.js"
@@ -109,7 +110,10 @@
           <div class="form__row">
             <label class="form__label--route">From</label>
             <select
-              class="form__input form__input--route form__input--route-type start"
+              class="
+                form__input form__input--route form__input--route-type
+                start
+              "
             >
               <option>Current Position</option>
               <option>Drag to new Start Point</option>
@@ -173,38 +177,11 @@
           <button class="form__btn">OK</button>
         </form>
 
-        <li class="workout workout--running" data-id="1234567890">
-          <h2 class="workout__title">Running on April 14</h2>
-          <svg class="workout__icon--expand">
-            <use
-              xlink:href="src/img/sprite.svg#icon-dots-three-horizontal"
-            ></use>
-          </svg>
-
-          <div class="workout__details">
-            <span class="workout__icon">🏃‍♂️</span>
-            <span class="workout__value">5.2</span>
-            <span class="workout__unit">km</span>
-          </div>
-          <div class="workout__details">
-            <span class="workout__icon">⏱</span>
-            <span class="workout__value">24</span>
-            <span class="workout__unit">min</span>
-          </div>
-          <div class="workout__details">
-            <span class="workout__icon">⚡️</span>
-            <span class="workout__value">4.6</span>
-            <span class="workout__unit">min/km</span>
-          </div>
-          <div class="workout__details">
-            <span class="workout__icon">🦶🏼</span>
-            <span class="workout__value">178</span>
-            <span class="workout__unit">spm</span>
-          </div>
-        </li>
-
-        <li class="workout workout--cycling" data-id="1234567891">
-          <h2 class="workout__title">Cycling on April 5</h2>
+        <!-- <li class="workout workout--cycling" data-id="1234567891">
+          <h2 class="workout__title">
+            <div class="workout__favorite"><span>&#9733;</span></div>
+            Cycling on April 5
+          </h2>
           <svg class="workout__icon--expand">
             <use
               xlink:href="src/img/sprite.svg#icon-dots-three-horizontal"
@@ -230,7 +207,35 @@
             <span class="workout__value">223</span>
             <span class="workout__unit">m</span>
           </div>
-        </li>
+          <div class="workout__data">
+            <div class="workout__address">
+              <span class="workout__icon"><img src="src/img/icon.png" /></span>
+              <div class="workout__address--details">
+                <span class="workout__street">民豐路</span>
+                <span class="workout__in">台北市性疫區</span>
+              </div>
+            </div>
+            <div class="workout__details align--center">
+              <span class="weather__icon"
+                ><img
+                  src="http://openweathermap.org/img/wn/04n@2x.png"
+                  height="10px"
+              /></span>
+              <span class="workout__value">24</span>
+              <span class="workout__unit">°C</span>
+            </div>
+
+            <div class="workout__details align--center">
+              <span class="workout__timer"
+                ><svg>
+                  <use xlink:href="src/img/sprite.svg#icon-clock"></use></svg
+              ></span>
+              <span class="workout__value">4:23</span>
+              <span class="workout__unit">pm</span>
+            </div>
+          </div>
+        </li> -->
+
         <ul class="dropdown" id="dropdown">
           <li class="dropdown__items">
             <svg class="dropdown__icon" id="icon_item">
@@ -243,16 +248,6 @@
               <use xlink:href="src/img/sprite.svg#icon-trash"></use>
             </svg>
             <span class="dropdown__icon-name">Delete</span>
-          </li>
-          <li class="dropdown__items">
-            <svg class="dropdown__icon" id="icon_item">
-              <use xlink:href="src/img/sprite.svg#icon-star-full"></use>
-            </svg>
-            <span class="dropdown__icon-name">
-              Add to
-              <br />
-              Favorites
-            </span>
           </li>
         </ul>
       </ul>
@@ -277,6 +272,32 @@
       <p class="error__text"></p>
       <a class="btn btn--red btn--animated error__btn">Try Again</a>
     </div>
+    <!-- <div class="overlay--black"></div>
+    <svg class="icon-spinner8">
+      <use xlink:href="src/img/sprite.svg#icon-spinner8"></use>
+    </svg> -->
     <div id="map"></div>
+    <!-- <div>
+      <div>
+        <p>Start</p>
+        ${workout.type}
+        <p>on</p>
+        ${workout.time.dateNow}
+      </div>
+      <div>${workout.startLocationIn}</div>
+      <div>${workout.startLocationStreet}</div>
+      <div>${workout.time.timeNow}</div>
+    </div> -->
+    <!-- <div>
+      <div>
+        <p>Finished</p>
+        ${workout.type}
+        <p>on</p>
+        ${workout.time.dateEnd}
+      </div>
+      <div>${workout.endLocationIn}</div>
+      <div>${workout.endLocationStreet}</div>
+      <div>${workout.time.timeEnd}</div>
+    </div> -->
   </body>
 </html>

@@ -1,6 +1,7 @@
 import 'core-js/stable';
 import 'regenerator-runtime/runtime';
-import icon from 'url:../../img/icon.png';
+import img from 'url:../../img/icon.png';
+import icons from 'url:../../img/sprite.svg';
 
 export default class View {
   _textEl = document.querySelector('.error__text');
@@ -11,12 +12,20 @@ export default class View {
   renderLoadingSpinner(parentElement) {
     const markup = `
       <div class='spinner'>
-      <img class="spinner__Icon" src=${icon}>
-      <p class="spinner__text">Loading Map...</p>
+        <img class="spinner__Icon" src=${img}>
+        <p class="spinner__text">Map your workout
+      </p>
       </div>
     `;
     this._clear(parentElement);
     parentElement.insertAdjacentHTML('afterbegin', markup);
+  }
+  renderSpinner(parentElement) {
+    const markup = `
+      <svg class="icon-spinner8">
+        <use xlink:href="${icons}#icon-spinner8"></use>
+      </svg>`;
+    parentElement.insertAdjacentHTML('afterend', markup);
   }
   renderError(errMsg) {
     this._textEl.innerHTML = errMsg;
@@ -35,5 +44,15 @@ export default class View {
   }
   _clear(parentElement) {
     parentElement.innerHTML = '';
+  }
+  removeSpinner() {
+    const spinnerLoading = document.querySelector('.spinner');
+    const spinner = document.querySelector('.icon-spinner8');
+    if (spinnerLoading) {
+      spinnerLoading.remove();
+    }
+    if (spinner) {
+      spinner.remove();
+    }
   }
 }
