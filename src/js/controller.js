@@ -48,17 +48,20 @@ const controlForm = async () => {
     mapView.renderError(err);
   }
 };
-const controlWorkout = async e => {
+const controlWorkout = e => {
   try {
     mapView.moveToPopRoute(e, model.workouts);
   } catch (err) {
     mapView.renderError(err);
   }
 };
-
+const controlFavorites = e => {
+  model.addFavorites(e, model.workouts, model.favorites);
+};
 const init = async () => {
   await controlMap();
   formView.addHandlerForm(controlForm);
   workoutsView.addHandlerWorkout(controlWorkout);
+  workoutsView.addHandlerFavorite(controlFavorites);
 };
 init();

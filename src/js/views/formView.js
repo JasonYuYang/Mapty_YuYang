@@ -1,3 +1,4 @@
+import { timeout } from '../helper';
 class formView {
   #form = document.getElementById('form');
   #duration = document.querySelector('.form__input--duration');
@@ -20,8 +21,8 @@ class formView {
         e.preventDefault();
         if (this.formValidation()) {
           this.#form.classList.add('hidden');
-
-          await handler();
+          await Promise.race([handler(), timeout(10)]);
+          console.log('hi');
           this.#form.reset();
         }
       }

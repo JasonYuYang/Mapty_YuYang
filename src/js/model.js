@@ -2,6 +2,7 @@ import { async } from 'regenerator-runtime';
 import { AJAX } from './helper.js';
 export const state = { map: {}, weatherData: {}, locationName: {}, time: {} };
 export const workouts = [];
+export const favorites = [];
 
 export const getPosition = async () => {
   return new Promise((resolve, reject) => {
@@ -159,3 +160,28 @@ export class Cycling extends Workout {
     return this.speed;
   }
 }
+
+export const addFavorites = (e, workouts, favorites) => {
+  const workoutEl = e.target.closest('.workout');
+  if (!workoutEl) return;
+  if (
+    e.target.classList.contains('workout__title') ||
+    e.target.classList.contains('workout__favorite') ||
+    e.target.tagName === 'SPAN'
+  ) {
+    const workout = workouts.find(work => work.id === workoutEl.dataset.id);
+    const workoutTitle = e.target.closest('.workout__title');
+    if (workoutTitle.classList.contains('bookmark')) {
+      workout.favorites = false;
+      workoutTitle.classList.remove('bookmark');
+      const workoutIndex = favorites.findIndex(
+        work => work.id === workoutEl.dataset.id
+      );
+      favorites.splice(workoutIndex, 1);
+    } else {
+      workoutTitle.classList.add('bookmark');
+      workout.favorites = true;
+      favorites.push(workout);
+    }
+  }
+};

@@ -15,6 +15,7 @@ class mapView extends View {
   #startMarkerPop;
   #pathData;
   #StartPositionType = document.querySelector('.form__input--route-type');
+  #inputCadence = document.querySelector('.form__input--cadence');
 
   loadMap = async mapData => {
     this.#mapData = mapData;
@@ -61,6 +62,8 @@ class mapView extends View {
   };
 
   showForm = async mapE => {
+    //Prevent click before form rest
+    if (this.#inputCadence.value) return;
     if (this.#startMarkerPop) {
       this.#startMarkerPop.remove();
     }

@@ -1,4 +1,4 @@
-// import { TIMEOUT_SEC } from './config.js';
+import { TIMEOUT_SEC } from './views/config';
 export const AJAX = async function (url, errMsg) {
   try {
     const res = await fetch(url);
@@ -8,4 +8,11 @@ export const AJAX = async function (url, errMsg) {
   } catch (err) {
     throw err;
   }
+};
+export const timeout = function (s) {
+  return new Promise(function (_, reject) {
+    setTimeout(function () {
+      reject(new Error(`Request took too long! Timeout after ${s} second`));
+    }, s * 1000);
+  });
 };

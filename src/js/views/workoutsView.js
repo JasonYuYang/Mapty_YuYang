@@ -10,7 +10,12 @@ class workoutsView {
   #map = document.querySelector('#map');
 
   addHandlerWorkout = handler => {
-    this.#containerWorkouts.addEventListener('click', async e => {
+    this.#containerWorkouts.addEventListener('click', e => {
+      handler(e);
+    });
+  };
+  addHandlerFavorite = handler => {
+    this.#containerWorkouts.addEventListener('click', e => {
       handler(e);
     });
   };
