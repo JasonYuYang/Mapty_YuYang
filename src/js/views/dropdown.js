@@ -11,7 +11,7 @@ class dropdown {
       handler(e);
     });
   };
-  // Access to fetch at 'https://geocode.xyz/ has been blocked by CORS policy: No 'Access-Control-Allow-Origin' header is present on the requested resource. If an opaque response serves your needs, set the request's mode to 'no-cors' to fetch the resource with CORS disabled.
+
   showDropdown = e => {
     const workoutEl = e.target.closest('.workout');
     if (!workoutEl) return;
@@ -21,7 +21,6 @@ class dropdown {
     ) {
       //Hide dropdown from previous workout card
       this.hideDropdown();
-      console.log('hi');
       const dropdown = workoutEl.querySelector('.dropdown');
       dropdown.classList.remove('hidden');
       //   const editItem = dropdown.querySelector('.edit');

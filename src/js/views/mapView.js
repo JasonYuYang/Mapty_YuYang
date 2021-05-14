@@ -4,7 +4,6 @@ import View from './Views';
 
 class mapView extends View {
   #map = document.querySelector('#map');
-
   #mapData;
   #mapZoomLevel = 13;
   #clickCount = 0;
@@ -16,7 +15,10 @@ class mapView extends View {
   #pathData;
   #StartPositionType = document.querySelector('.form__input--route-type');
   #inputCadence = document.querySelector('.form__input--cadence');
-
+  constructor() {
+    super();
+    this.markerOnClickfunctionality = this.markerOnClickfunctionality();
+  }
   loadMap = async mapData => {
     this.#mapData = mapData;
     mapboxgl.accessToken =
@@ -189,6 +191,12 @@ class mapView extends View {
       offset: [0, -20],
     })
       .setLngLat(coords)
+      .onClick(() => {
+        this.#map.flyTo({
+          center: [coords[0], coords[1]],
+          zoom: this.#mapZoomLevel,
+        });
+      })
       .addTo(this.#map);
     this.#mapData.startPositionCoords = coords;
     this.#startMarker.on('dragend', async () => {
@@ -211,6 +219,12 @@ class mapView extends View {
       offset: [0, -20],
     })
       .setLngLat(coords)
+      .onClick(() => {
+        this.#map.flyTo({
+          center: [coords[0], coords[1]],
+          zoom: this.#mapZoomLevel,
+        });
+      })
       .addTo(this.#map);
 
     this.#myMarker.on('dragend', async () => {
@@ -239,6 +253,12 @@ class mapView extends View {
       offset: [0, -20],
     })
       .setLngLat(coords)
+      .onClick(() => {
+        this.#map.flyTo({
+          center: [coords[0], coords[1]],
+          zoom: this.#mapZoomLevel,
+        });
+      })
       .addTo(this.#map);
     await this.renderPath(
       this.#mapData.currentPosition,
@@ -298,6 +318,12 @@ class mapView extends View {
       })
         .setLngLat(coords)
         .setPopup(popup)
+        .onClick(() => {
+          this.#map.flyTo({
+            center: [coords[0], coords[1]],
+            zoom: this.#mapZoomLevel,
+          });
+        })
         .addTo(this.#map);
       this.#preserveMarker.togglePopup();
     }
@@ -311,6 +337,12 @@ class mapView extends View {
       })
         .setLngLat(coords)
         .setPopup(popup)
+        .onClick(() => {
+          this.#map.flyTo({
+            center: [coords[0], coords[1]],
+            zoom: this.#mapZoomLevel,
+          });
+        })
         .addTo(this.#map);
 
       this.#startMarkerPop.togglePopup();
@@ -332,6 +364,26 @@ class mapView extends View {
       padding: { top: 70, bottom: 50, left: 50, right: 50 },
     });
   };
+
+  markerOnClickfunctionality() {
+    // Override internal functionality
+    mapboxgl.Marker.prototype.onClick = function (handleClick) {
+      this._handleClick = handleClick;
+      return this;
+    };
+    mapboxgl.Marker.prototype._onMapClick = function (t) {
+      const targetElement = t.originalEvent.target;
+      const element = this._element;
+      if (
+        this._handleClick &&
+        (targetElement === element || element.contains(targetElement))
+      ) {
+        this.togglePopup();
+        this._handleClick();
+      }
+    };
+    // Give credit to : https://github.com/mapbox/mapbox-gl-js/issues/7793
+  }
 }
 
 export default new mapView();
