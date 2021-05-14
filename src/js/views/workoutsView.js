@@ -56,7 +56,22 @@ class workoutsView {
   };
   generateMarkup = (workout, index) => {
     if (index == 0) {
-      return `<li class="workout workout--running" data-id=${workout.id}>
+      return `
+      <li class="workout workout--running" data-id=${workout.id}>
+      <ul class="dropdown hidden" id="dropdown">
+    <li class="dropdown__items">
+      <svg class="dropdown__icon" id="icon_item">
+        <use xlink:href="${icons}#icon-new-message"></use>
+      </svg>
+      <span class="dropdown__icon-name edit">Edit</span>
+    </li>
+    <li class="dropdown__items">
+      <svg class="dropdown__icon" id="icon_item">
+        <use xlink:href="${icons}#icon-trash"></use>
+      </svg>
+      <span class="dropdown__icon-name delete">Delete</span>
+    </li>
+  </ul>
       <h2 class="workout__title">
         <div class="workout__favorite"><span>&#9733;</span></div>
         ${workout.description}
@@ -213,7 +228,8 @@ class workoutsView {
           }</span>
         </div>
       </div>
-    </li>`;
+    </li>
+    `;
     }
   };
 }

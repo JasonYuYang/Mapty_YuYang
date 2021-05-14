@@ -3,10 +3,10 @@ import * as model from './model';
 import mapView from './views/mapView';
 import formView from './views/formView';
 import workoutsView from './views/workoutsView';
-import icons from 'url:../img/sprite.svg';
+import dropdown from './views/dropdown';
+
 import 'core-js/stable';
 import 'regenerator-runtime/runtime';
-import View from './views/Views';
 
 const controlMap = async () => {
   try {
@@ -58,10 +58,18 @@ const controlWorkout = e => {
 const controlFavorites = e => {
   model.addFavorites(e, model.workouts, model.favorites);
 };
+const controlDropdown = e => {
+  dropdown.showDropdown(e);
+};
+const controlHideDropdown = e => {
+  dropdown.hideDropdownClickOutside(e);
+};
 const init = async () => {
   await controlMap();
   formView.addHandlerForm(controlForm);
   workoutsView.addHandlerWorkout(controlWorkout);
   workoutsView.addHandlerFavorite(controlFavorites);
+  dropdown.addHandlerHideDropdown(controlHideDropdown);
+  dropdown.addHandlerDropdown(controlDropdown);
 };
 init();

@@ -4,7 +4,7 @@ import View from './Views';
 
 class mapView extends View {
   #map = document.querySelector('#map');
-  #containerWorkouts = document.querySelector('.workouts');
+
   #mapData;
   #mapZoomLevel = 13;
   #clickCount = 0;
@@ -329,7 +329,7 @@ class mapView extends View {
     await this.renderPath(workout.startCoords, workout.endCoords);
 
     this.#map.fitBounds(bound, {
-      padding: { top: 50, bottom: 100, left: 50, right: 50 },
+      padding: { top: 70, bottom: 50, left: 50, right: 50 },
     });
   };
 }

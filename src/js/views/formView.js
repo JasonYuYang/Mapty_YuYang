@@ -1,4 +1,5 @@
 import { timeout } from '../helper';
+import mapView from './mapView';
 class formView {
   #form = document.getElementById('form');
   #duration = document.querySelector('.form__input--duration');
@@ -17,14 +18,17 @@ class formView {
       this.formValidation();
     });
     window.addEventListener('keypress', async e => {
-      if (e.key === 'Enter') {
-        e.preventDefault();
-        if (this.formValidation()) {
-          this.#form.classList.add('hidden');
-          await Promise.race([handler(), timeout(10)]);
-          console.log('hi');
-          this.#form.reset();
+      try {
+        if (e.key === 'Enter') {
+          e.preventDefault();
+          if (this.formValidation()) {
+            this.#form.classList.add('hidden');
+            await Promise.race([handler(), timeout(10)]);
+            this.#form.reset();
+          }
         }
+      } catch (err) {
+        mapView.renderError(err);
       }
     });
   };
