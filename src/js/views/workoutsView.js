@@ -1,12 +1,15 @@
 import icons from 'url:../../img/sprite.svg';
 import img from 'url:../../img/icon.png';
+import mapView from './mapView';
 class workoutsView {
   #form = document.querySelector('.form');
   #containerWorkouts = document.querySelector('.workouts');
   #inputType = document.querySelector('.form__input--type');
-  #inputStart = document.querySelector('.start');
-  #inputEnd = document.querySelector('.end');
+  #StartPositionType = document.querySelector('.form__input--route-type');
+  #selection = document.querySelector('.form__input--cadence');
   #inputElevation = document.querySelector('.form__input--elevation');
+  #inputCadence = document.querySelector('.form__input--cadence');
+  #duration = document.querySelector('.form__input--duration');
   #map = document.querySelector('#map');
 
   addHandlerWorkout = handler => {
@@ -54,22 +57,58 @@ class workoutsView {
     const markup = this.generateMarkup(workout, index);
     this.#form.insertAdjacentHTML('afterend', markup);
   };
+  editWorkout = async (e, workouts) => {
+    const workoutEl = e.target.closest('.workout');
+    const form = document.querySelector('.form');
+    const editWorkout = workouts.find(work => work.id === workoutEl.dataset.id);
+    const editWorkoutIndex = workouts.findIndex(
+      work => work.id === workoutEl.dataset.id
+    );
+    workoutEl.classList.add('editing');
+    //Show Form
+    form.classList.remove('hidden');
+    //Show Workout Type and vlaue
+    this.#inputType.value = `${editWorkout.type}`;
+    this.#selection =
+      this.#inputType.value == 'running'
+        ? this.#inputCadence
+        : this.#inputElevation;
+    this.#selection.value =
+      editWorkout.type == 'running'
+        ? +editWorkout.cadence
+        : +editWorkout.elevationGain;
+    //Show Workout duration;
+    this.#duration.value = +editWorkout.duration;
+    //Show from position
+    this.#StartPositionType.value = `NP`;
+    //Show Start Marker on startCoords
+    mapView.renderMarker(editWorkout.startCoords, 1);
+    //Show End Marker on endCoords
+    mapView.renderMarker(editWorkout.endCoords, 2);
+    //Remove workout Marker
+    mapView.editMarkerInit(editWorkout);
+    //Show route
+    await mapView.renderPath(editWorkout.startCoords, editWorkout.endCoords);
+    //showDataOnInput
+    mapView.showDataOnInput();
+  };
+
   generateMarkup = (workout, index) => {
     if (index == 0) {
       return `
       <li class="workout workout--running" data-id=${workout.id}>
       <ul class="dropdown hidden" id="dropdown">
-    <li class="dropdown__items">
+    <li class="dropdown__items edit">
       <svg class="dropdown__icon" id="icon_item">
         <use xlink:href="${icons}#icon-new-message"></use>
       </svg>
-      <span class="dropdown__icon-name edit">Edit</span>
+      <span class="dropdown__icon-name ">Edit</span>
     </li>
-    <li class="dropdown__items">
+    <li class="dropdown__items delete">
       <svg class="dropdown__icon" id="icon_item">
         <use xlink:href="${icons}#icon-trash"></use>
       </svg>
-      <span class="dropdown__icon-name delete">Delete</span>
+      <span class="dropdown__icon-name ">Delete</span>
     </li>
   </ul>
       <h2 class="workout__title">

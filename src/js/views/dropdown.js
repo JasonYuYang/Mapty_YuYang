@@ -1,7 +1,7 @@
 class dropdown {
   #containerWorkouts = document.querySelector('.workouts');
   #parentElemet = document.querySelector('.sidebar');
-  addHandlerDropdown = handler => {
+  addHandlerShowDropdown = handler => {
     this.#containerWorkouts.addEventListener('click', e => {
       handler(e);
     });
@@ -11,7 +11,12 @@ class dropdown {
       handler(e);
     });
   };
-
+  addHandlerControlDropdown = handler => {
+    this.#parentElemet.addEventListener('click', e => {
+      const dropdownItem = e.target.closest('.dropdown__items');
+      handler(e, dropdownItem);
+    });
+  };
   showDropdown = e => {
     const workoutEl = e.target.closest('.workout');
     if (!workoutEl) return;
@@ -23,8 +28,8 @@ class dropdown {
       this.hideDropdown();
       const dropdown = workoutEl.querySelector('.dropdown');
       dropdown.classList.remove('hidden');
-      //   const editItem = dropdown.querySelector('.edit');
-      //   const deleteItem = dropdown.querySelector('.delete');
+      const editItem = dropdown.querySelector('.edit');
+      const deleteItem = dropdown.querySelector('.delete');
     }
   };
   hideDropdown = () => {

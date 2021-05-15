@@ -42,7 +42,8 @@ const controlForm = async () => {
     await model.getLocation(addWorkout.endCoords, 1);
     mapView.removeSpinner();
     addWorkout.locationName = { ...model.state.locationName };
-    mapView.addpopupToMarker(addWorkout, 1);
+    addWorkout.Marker = mapView.addpopupToMarker(addWorkout, 1);
+    model.markers.push({ id: addWorkout.id, marker: addWorkout.Marker });
     workoutsView.renderWorkout(addWorkout);
   } catch (err) {
     mapView.renderError(err);
@@ -55,23 +56,31 @@ const controlWorkoutRenderPath = e => {
     mapView.renderError(err);
   }
 };
-const controlWorkoutEdit = () => {};
-const controlWorkoutDelete = () => {};
+
 const controlFavorites = e => {
   model.addFavorites(e, model.workouts, model.favorites);
 };
-const controlDropdown = e => {
+const controlDropdown = (e, dropdownItem) => {
+  if (dropdownItem === null) return;
+  if (dropdownItem.classList.contains('edit')) {
+    model.state.edit = true;
+    workoutsView.editWorkout(e, model.workouts);
+  }
+};
+const showDropdown = e => {
   dropdown.showDropdown(e);
 };
 const controlHideDropdown = e => {
   dropdown.hideDropdownClickOutside(e);
 };
+
 const init = async () => {
   await controlMap();
   formView.addHandlerForm(controlForm);
   workoutsView.addHandlerWorkout(controlWorkoutRenderPath);
   workoutsView.addHandlerFavorite(controlFavorites);
   dropdown.addHandlerHideDropdown(controlHideDropdown);
-  dropdown.addHandlerDropdown(controlDropdown);
+  dropdown.addHandlerShowDropdown(showDropdown);
+  dropdown.addHandlerControlDropdown(controlDropdown);
 };
 init();

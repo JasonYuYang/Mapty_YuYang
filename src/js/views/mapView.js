@@ -1,11 +1,13 @@
 import * as config from './config';
 import { AJAX } from '../helper';
 import View from './Views';
+import * as model from '../model';
 
 class mapView extends View {
   #map = document.querySelector('#map');
   #mapData;
   #mapZoomLevel = 13;
+  #parentElemet = document.querySelector('.sidebar');
   #clickCount = 0;
   #accessToken;
   #myMarker;
@@ -30,8 +32,25 @@ class mapView extends View {
       center: this.#mapData.currentPosition,
       zoom: this.#mapZoomLevel,
     });
+    //Handle click outside map
+    this.#parentElemet.addEventListener('click', async e => {
+      const form = document.querySelector('.form');
+      if (
+        !form.classList.contains('hidden') &&
+        e.target.closest('#form') == null
+      ) {
+        form.classList.add('hidden');
+        this.#myMarker.remove();
+        this.#myMarker = undefined;
+        await this.renderPath(
+          this.#mapData.currentPosition,
+          this.#mapData.currentPosition
+        );
+      }
+    });
 
     //Handle click on Map
+
     this.#map.on('click', this.showForm);
     this.#map.on('load', async () => {
       // Add zoom and rotation controls to the map.
@@ -46,30 +65,21 @@ class mapView extends View {
         this.#mapData.currentPosition,
         this.#mapData.currentPosition
       );
-      this.#StartPositionType.addEventListener('change', async () => {
-        if (this.#StartPositionType.selectedIndex == 1) {
-          this.renderMarker(this.#mapData.currentPosition, 1);
-        } else {
-          this.#startMarker.remove();
-          this.#startMarker = undefined;
-          delete this.#mapData.startPositionCoords;
-          await this.renderPath(
-            this.#mapData.currentPosition,
-            this.#mapData.DestinationCoords
-          );
-          this.showDataOnInput();
-        }
-      });
+      this.#StartPositionType.addEventListener('change', this.changeFromType);
     });
   };
 
   showForm = async mapE => {
     //Prevent click before form rest
-    if (this.#inputCadence.value) return;
+    if (!model.state.edit) {
+      if (this.#inputCadence.value) return;
+    }
     if (this.#startMarkerPop) {
       this.#startMarkerPop.remove();
     }
-    //Handling double click on Map
+    await this.showFormWithdbClick(mapE);
+  };
+  showFormWithdbClick = async mapE => {
     const form = document.querySelector('.form');
     let timeout = [];
     this.#clickCount++;
@@ -110,9 +120,13 @@ class mapView extends View {
     inputDistance.placeholder = `${(
       this.#pathData.routes[0].distance / 1000
     ).toFixed(2)}km`;
-    inputDestinationCoords.placeholder = `(${this.#mapData.DestinationCoords[1].toFixed(
+    inputDestinationCoords.placeholder = `(${this.#mapData.pathEnd[1].toFixed(
       3
-    )} , ${this.#mapData.DestinationCoords[0].toFixed(3)})`;
+    )} , ${this.#mapData.pathStart[0].toFixed(3)})`;
+  };
+  editMarkerInit = workout => {
+    this.#startMarkerPop.remove();
+    workout.Marker.remove();
   };
   renderPath = async (start, end) => {
     const url = `https://api.mapbox.com/directions/v5/mapbox/cycling/${
@@ -326,6 +340,7 @@ class mapView extends View {
         })
         .addTo(this.#map);
       this.#preserveMarker.togglePopup();
+      return this.#preserveMarker;
     }
     if (index == 0) {
       // this.#startMarker.remove();
@@ -344,8 +359,21 @@ class mapView extends View {
           });
         })
         .addTo(this.#map);
-
       this.#startMarkerPop.togglePopup();
+    }
+  };
+  changeFromType = async () => {
+    if (this.#StartPositionType.selectedIndex == 1) {
+      this.renderMarker(this.#mapData.currentPosition, 1);
+    } else {
+      this.#startMarker.remove();
+      this.#startMarker = undefined;
+      delete this.#mapData.startPositionCoords;
+      await this.renderPath(
+        this.#mapData.currentPosition,
+        this.#mapData.DestinationCoords
+      );
+      this.showDataOnInput();
     }
   };
   moveToPopRoute = async (e, workouts) => {

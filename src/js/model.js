@@ -1,8 +1,16 @@
 import { async } from 'regenerator-runtime';
 import { AJAX } from './helper.js';
-export const state = { map: {}, weatherData: {}, locationName: {}, time: {} };
+import { EDIT_TOGGLE } from './views/config';
+export const state = {
+  map: {},
+  weatherData: {},
+  locationName: {},
+  time: {},
+  edit: EDIT_TOGGLE,
+};
 export const workouts = [];
 export const favorites = [];
+export const markers = [];
 
 export const getPosition = async () => {
   return new Promise((resolve, reject) => {
@@ -167,7 +175,7 @@ export const addFavorites = (e, workouts, favorites) => {
   if (
     e.target.classList.contains('workout__title') ||
     e.target.classList.contains('workout__favorite') ||
-    e.target.tagName === 'SPAN'
+    e.target.parentNode.classList.contains('workout__favorite')
   ) {
     const workout = workouts.find(work => work.id === workoutEl.dataset.id);
     const workoutTitle = e.target.closest('.workout__title');
