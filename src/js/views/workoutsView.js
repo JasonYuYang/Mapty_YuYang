@@ -1,6 +1,7 @@
 import icons from 'url:../../img/sprite.svg';
 import img from 'url:../../img/icon.png';
 import mapView from './mapView';
+import * as model from '../model';
 class workoutsView {
   #form = document.querySelector('.form');
   #containerWorkouts = document.querySelector('.workouts');
@@ -48,10 +49,16 @@ class workoutsView {
         data.elevation
       );
     }
-    // ADD NEW OBJECT TO WORKOUTS ARRAY
-    workouts.push(workout);
+    if (!data.edit) {
+      // ADD NEW OBJECT TO WORKOUTS ARRAY
+      workouts.push(workout);
+    } else {
+      return workout;
+    }
+
     console.log(workouts);
   };
+
   renderWorkout = workout => {
     const index = workout.type == 'running' ? 0 : 1;
     const markup = this.generateMarkup(workout, index);
@@ -91,6 +98,7 @@ class workoutsView {
     await mapView.renderPath(editWorkout.startCoords, editWorkout.endCoords);
     //showDataOnInput
     mapView.showDataOnInput();
+    model.state.editIndex = editWorkoutIndex;
   };
 
   generateMarkup = (workout, index) => {

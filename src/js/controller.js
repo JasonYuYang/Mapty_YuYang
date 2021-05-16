@@ -46,7 +46,45 @@ const controlForm = async () => {
     model.markers.push({ id: addWorkout.id, marker: addWorkout.Marker });
     workoutsView.renderWorkout(addWorkout);
   } catch (err) {
+    console.log(err);
     mapView.renderError(err);
+  }
+};
+const controlEditForm = async () => {
+  try {
+    const form = document.querySelector('.form');
+    Object.assign(model.state, formView.getInputvalue());
+    let editWorkout;
+    model.state.weatherData = model.workouts[model.state.editIndex].weather;
+    let startSeconds = model.workouts[model.state.editIndex].time.startMs;
+    model.addTimeToPopUp(model.state.duration, startSeconds);
+    editWorkout = workoutsView.newWorkout(
+      model.Running,
+      model.Cycling,
+      model.state,
+      model.workouts
+    );
+    editWorkout.description = `${editWorkout.type[0].toUpperCase()}${editWorkout.type.slice(
+      1
+    )} on ${editWorkout.time.dateNow}`;
+    editWorkout.id = model.workouts[model.state.editIndex].id;
+    mapView.renderSpinner(form);
+    await model.getLocation(editWorkout.startCoords, 0);
+    await model.getLocation(editWorkout.endCoords, 1);
+    mapView.removeSpinner();
+    editWorkout.locationName = { ...model.state.locationName };
+    model.workouts.splice(model.state.editIndex, 1, editWorkout);
+    const markerIndex = model.markers.findIndex(
+      marker => marker.id === editWorkout.id
+    );
+    model.markers.splice(markerIndex, 1);
+    editWorkout.Marker = mapView.addpopupToMarker(editWorkout, 1);
+    model.markers.push({ id: editWorkout.id, marker: editWorkout.Marker });
+    delete model.state.editIndex;
+    workoutsView.renderWorkout(editWorkout);
+    console.log(model.state);
+  } catch (err) {
+    console.log(err);
   }
 };
 const controlWorkoutRenderPath = e => {
@@ -76,7 +114,7 @@ const controlHideDropdown = e => {
 
 const init = async () => {
   await controlMap();
-  formView.addHandlerForm(controlForm);
+  formView.addHandlerForm(controlForm, controlEditForm);
   workoutsView.addHandlerWorkout(controlWorkoutRenderPath);
   workoutsView.addHandlerFavorite(controlFavorites);
   dropdown.addHandlerHideDropdown(controlHideDropdown);

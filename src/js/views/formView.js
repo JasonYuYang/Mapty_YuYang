@@ -10,7 +10,7 @@ class formView {
   #inputType = document.querySelector('.form__input--type');
   #selection = document.querySelector('.form__input--cadence');
 
-  addHandlerForm = handler => {
+  addHandlerForm = (handler1, handler2) => {
     this.#inputType.addEventListener('change', () => {
       this.#selection =
         this.#inputType.value == 'running'
@@ -21,12 +21,13 @@ class formView {
     });
     this.#form.addEventListener('submit', async e => {
       try {
+        let handler = model.state.edit ? handler2 : handler1;
         e.preventDefault();
         if (this.formValidation()) {
-          model.state.edit = false;
           this.#form.classList.add('hidden');
           await Promise.race([handler(), timeout(10)]);
           this.#form.reset();
+          model.state.edit = false;
         }
       } catch (err) {
         mapView.renderError(err);

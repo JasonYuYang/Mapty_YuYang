@@ -64,11 +64,14 @@ export const getLocation = async (coords, index) => {
     throw err;
   }
 };
-export const addTimeToPopUp = async min => {
+export const addTimeToPopUp = async (min, startSeconds) => {
   let ms = +min * 60 * 1000;
-  let now = Date.now();
+  let now = startSeconds ? startSeconds : Date.now();
+  state.time.startMs = now;
   let outputTime = now + ms;
+  state.time.endMs = outputTime;
   let startTime = new Date(now);
+
   let endTime = new Date(outputTime);
   // prettier-ignore
   const months = [
@@ -98,6 +101,7 @@ export const addTimeToPopUp = async min => {
     endTime.getHours() > 12 ? 'PM' : 'AM'
   }`;
 };
+
 export class Workout {
   #date = new Date();
   #id = (Date.now() + '').slice(-10);
