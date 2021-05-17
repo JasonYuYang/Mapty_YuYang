@@ -176,24 +176,20 @@ export class Cycling extends Workout {
 export const addFavorites = (e, workouts, favorites) => {
   const workoutEl = e.target.closest('.workout');
   if (!workoutEl) return;
-  if (
-    e.target.classList.contains('workout__title') ||
-    e.target.classList.contains('workout__favorite') ||
-    e.target.parentNode.classList.contains('workout__favorite')
-  ) {
-    const workout = workouts.find(work => work.id === workoutEl.dataset.id);
-    const workoutTitle = e.target.closest('.workout__title');
-    if (workoutTitle.classList.contains('bookmark')) {
-      workout.favorites = false;
-      workoutTitle.classList.remove('bookmark');
-      const workoutIndex = favorites.findIndex(
-        work => work.id === workoutEl.dataset.id
-      );
-      favorites.splice(workoutIndex, 1);
-    } else {
-      workoutTitle.classList.add('bookmark');
-      workout.favorites = true;
-      favorites.push(workout);
-    }
+  const bookmarkBtn = e.target.closest('.workout__title');
+  if (!bookmarkBtn) return;
+  const workout = workouts.find(work => work.id === workoutEl.dataset.id);
+
+  if (bookmarkBtn.classList.contains('bookmark')) {
+    workout.favorites = false;
+    bookmarkBtn.classList.remove('bookmark');
+    const workoutIndex = favorites.findIndex(
+      work => work.id === workoutEl.dataset.id
+    );
+    favorites.splice(workoutIndex, 1);
+  } else {
+    bookmarkBtn.classList.add('bookmark');
+    workout.favorites = true;
+    favorites.push(workout);
   }
 };

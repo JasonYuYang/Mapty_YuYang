@@ -68,6 +68,8 @@ const controlEditForm = async () => {
       1
     )} on ${editWorkout.time.dateNow}`;
     editWorkout.id = model.workouts[model.state.editIndex].id;
+    await mapView.removeStartMarker();
+    await mapView.preserveMarker(model.state.map.DestinationCoords);
     mapView.renderSpinner(form);
     await model.getLocation(editWorkout.startCoords, 0);
     await model.getLocation(editWorkout.endCoords, 1);
@@ -81,7 +83,11 @@ const controlEditForm = async () => {
     editWorkout.Marker = mapView.addpopupToMarker(editWorkout, 1);
     model.markers.push({ id: editWorkout.id, marker: editWorkout.Marker });
     delete model.state.editIndex;
-    workoutsView.renderWorkout(editWorkout);
+    let workoutsReverse = model.workouts.reverse();
+    let editWorkoutMarkup = workoutsReverse.reduce((markup, work) => {
+      return (markup += workoutsView.generateMarkup(work));
+    }, '');
+    mapView.updateWorkout(editWorkoutMarkup);
     console.log(model.state);
   } catch (err) {
     console.log(err);
@@ -99,7 +105,7 @@ const controlFavorites = e => {
   model.addFavorites(e, model.workouts, model.favorites);
 };
 const controlDropdown = (e, dropdownItem) => {
-  if (dropdownItem === null) return;
+  console.log(dropdownItem);
   if (dropdownItem.classList.contains('edit')) {
     model.state.edit = true;
     workoutsView.editWorkout(e, model.workouts);

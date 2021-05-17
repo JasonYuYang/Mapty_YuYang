@@ -60,8 +60,7 @@ class workoutsView {
   };
 
   renderWorkout = workout => {
-    const index = workout.type == 'running' ? 0 : 1;
-    const markup = this.generateMarkup(workout, index);
+    const markup = this.generateMarkup(workout);
     this.#form.insertAdjacentHTML('afterend', markup);
   };
   editWorkout = async (e, workouts) => {
@@ -89,6 +88,7 @@ class workoutsView {
     //Show from position
     this.#StartPositionType.value = `NP`;
     //Show Start Marker on startCoords
+    mapView.InitializeStartMarker();
     mapView.renderMarker(editWorkout.startCoords, 1);
     //Show End Marker on endCoords
     mapView.renderMarker(editWorkout.endCoords, 2);
@@ -101,7 +101,8 @@ class workoutsView {
     model.state.editIndex = editWorkoutIndex;
   };
 
-  generateMarkup = (workout, index) => {
+  generateMarkup = workout => {
+    const index = workout.type == 'running' ? 0 : 1;
     if (index == 0) {
       return `
       <li class="workout workout--running" data-id=${workout.id}>
@@ -198,7 +199,7 @@ class workoutsView {
     </li>`;
     }
     if (index == 1) {
-      return `<li class="workout workout--running" data-id=${workout.id}>
+      return `<li class="workout workout--cycling" data-id=${workout.id}>
       <ul class="dropdown hidden" id="dropdown">
     <li class="dropdown__items">
       <svg class="dropdown__icon" id="icon_item">
@@ -292,6 +293,56 @@ class workoutsView {
     </li>
     `;
     }
+  };
+
+  generateSortSectionMarkup = workouts => {
+    const markup = `  <div class="sort__section">
+    <div class="sort__section sort__section--state">
+      <span>Workout type : All</span>
+    </div>
+    <div class="sort__section sort__section--number">
+      <span>Number of workouts : &nbsp;</span>
+    </div>
+    <div class="sort__section sort__section--options">
+      <ul class="sort__options">
+        <li>Sort options :</li>
+        <li><a href="">Speed</a></li>
+        <li><a href="">Duration</a></li>
+        <li><a href="">Distance</a></li>
+      </ul>
+      <div class="sort__hamburger">
+        <input
+          type="checkbox"
+          class="sort__hamburger--checkbox"
+          id="sort-toggle"
+        />
+        <label for="sort-toggle" class="sort__hamburger--button">
+          <span class="sort__hamburger--icon">&nbsp;</span>
+        </label>
+        <div class="sort__hamburger--background">&nbsp;</div>
+        <nav class="sort__hamburger--nav sort__hamburger--nav-active">
+          <ul class="sort__hamburger--list">
+            <li class="sort__section--item">
+              <a href="#1" class="sort__hamburger--link">All types</a>
+            </li>
+            <li class="sort__section--item">
+              <a href="#2" class="sort__hamburger--link"> 🏃‍♂️ Running</a>
+            </li>
+            <li class="sort__section--item">
+              <a href="#3" class="sort__hamburger--link"> 🚴‍♀ Cycling</a>
+            </li>
+            <li class="sort__section--item">
+              <a href="#4" class="sort__hamburger--link"> ⭐Favorites</a>
+            </li>
+          </ul>
+        </nav>
+      </div>
+      <div class="sort__section__reset--button">
+        <a href="#" class="reset">reset</a>
+      </div>
+    </div>
+  </div>`;
+    return markup;
   };
 }
 

@@ -13,24 +13,24 @@ class dropdown {
   };
   addHandlerControlDropdown = handler => {
     this.#parentElemet.addEventListener('click', e => {
-      const dropdownItem = e.target.closest('.dropdown__items');
-      handler(e, dropdownItem);
+      const dropdownItems = e.target.closest('.dropdown__items');
+      if (dropdownItems) {
+        console.log('dropdownItem');
+        handler(e, dropdownItems);
+      }
     });
   };
   showDropdown = e => {
     const workoutEl = e.target.closest('.workout');
     if (!workoutEl) return;
-    if (
-      e.target.classList.contains('workout__icon--expand') ||
-      e.target.parentNode.classList.contains('workout__icon--expand')
-    ) {
-      //Hide dropdown from previous workout card
-      this.hideDropdown();
-      const dropdown = workoutEl.querySelector('.dropdown');
-      dropdown.classList.remove('hidden');
-      const editItem = dropdown.querySelector('.edit');
-      const deleteItem = dropdown.querySelector('.delete');
-    }
+    const dropdownExpand = e.target.closest('.workout__icon--expand');
+    if (!dropdownExpand) return;
+    //Hide dropdown from previous workout card
+    this.hideDropdown();
+    const dropdown = workoutEl.querySelector('.dropdown');
+    dropdown.classList.remove('hidden');
+    // const editItem = dropdown.querySelector('.edit');
+    // const deleteItem = dropdown.querySelector('.delete');
   };
   hideDropdown = () => {
     const dropdownElements =
@@ -47,13 +47,9 @@ class dropdown {
     );
     // prettier-ignore
     const isHidden = dropdown.every((d) => d.classList.contains('hidden'))
-    if (
-      e.target.classList.contains('workout__icon--expand') ||
-      e.target.parentNode.classList.contains('workout__icon--expand') ||
-      e.target.closest('.dropdown__items') !== null ||
-      isHidden
-    )
-      return;
+    const dropdownExpand = e.target.closest('.workout__icon--expand');
+    const dropdownItems = e.target.closest('.dropdown__items');
+    if (dropdownExpand || dropdownItems || isHidden) return;
     this.hideDropdown();
   };
 }

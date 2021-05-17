@@ -283,10 +283,16 @@ class mapView extends View {
     if (this.#startMarker) {
       this.#startMarker.remove();
       this.#startMarker = undefined;
-      await this.renderPath(
-        this.#mapData.currentPosition,
-        this.#mapData.currentPosition
-      );
+    }
+    await this.renderPath(
+      this.#mapData.currentPosition,
+      this.#mapData.currentPosition
+    );
+  };
+  InitializeStartMarker = () => {
+    if (this.#startMarker) {
+      this.#startMarker.remove();
+      this.#startMarker = undefined;
     }
   };
   addpopupToMarker = (workout, index) => {

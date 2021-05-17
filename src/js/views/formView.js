@@ -12,10 +12,6 @@ class formView {
 
   addHandlerForm = (handler1, handler2) => {
     this.#inputType.addEventListener('change', () => {
-      this.#selection =
-        this.#inputType.value == 'running'
-          ? this.#inputCadence
-          : this.#inputElevation;
       this.toggleElevationField();
       this.formValidation();
     });
@@ -27,6 +23,12 @@ class formView {
           this.#form.classList.add('hidden');
           await Promise.race([handler(), timeout(10)]);
           this.#form.reset();
+          this.#inputElevation
+            .closest('.form__row')
+            .classList.add('form__row--hidden');
+          this.#inputCadence
+            .closest('.form__row')
+            .classList.remove('form__row--hidden');
           model.state.edit = false;
         }
       } catch (err) {
@@ -38,6 +40,10 @@ class formView {
   formValidation = () => {
     let checkDuration;
     let checkSelection;
+    this.#selection =
+      this.#inputType.value == 'running'
+        ? this.#inputCadence
+        : this.#inputElevation;
     if (this.checkRequired(this.#duration)) {
       checkDuration = this.checkInput(this.#duration);
     }
@@ -74,7 +80,7 @@ class formView {
   };
   //Check valid number input
   checkInput(input) {
-    const regex = `\\d`;
+    const regex = '^\\d+$';
     const InputValid = new RegExp(regex, 'g');
     if (!InputValid.test(`${input.value}`)) {
       this.showError(
