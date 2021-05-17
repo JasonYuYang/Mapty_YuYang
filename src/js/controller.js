@@ -109,6 +109,9 @@ const controlDropdown = (e, dropdownItem) => {
     model.state.edit = true;
     workoutsView.editWorkout(e, model.workouts);
   }
+  if (dropdownItem.classList.contains('delete')) {
+    workoutsView.deleteWorkout(e, model.workouts);
+  }
 };
 const showDropdown = e => {
   dropdown.showDropdown(e);

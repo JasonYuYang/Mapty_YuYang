@@ -129,6 +129,20 @@ class mapView extends View {
     this.#startMarkerPop.remove();
     workout.Marker.remove();
   };
+  setCenterViewToCurrentPosition = async () => {
+    this.#map.flyTo({
+      center: [
+        this.#mapData.currentPosition[0],
+        this.#mapData.currentPosition[1],
+      ],
+      zoom: this.#mapZoomLevel,
+    });
+
+    await this.renderPath(
+      this.#mapData.currentPosition,
+      this.#mapData.currentPosition
+    );
+  };
   renderPath = async (start, end) => {
     const url = `https://api.mapbox.com/directions/v5/mapbox/cycling/${
       start[0]
@@ -281,19 +295,22 @@ class mapView extends View {
       this.#startMarker.remove();
       this.#startMarker = undefined;
     }
-    this.#myMarker.remove();
-    this.#myMarker = undefined;
+    if (this.#myMarker) {
+      this.#myMarker.remove();
+      this.#myMarker = undefined;
+    }
+
     await this.renderPath(
       this.#mapData.currentPosition,
       this.#mapData.currentPosition
     );
   };
-  InitializeStartMarker = () => {
-    if (this.#startMarker) {
-      this.#startMarker.remove();
-      this.#startMarker = undefined;
-    }
-  };
+  // InitializeStartMarker = () => {
+  //   if (this.#startMarker) {
+  //     this.#startMarker.remove();
+  //     this.#startMarker = undefined;
+  //   }
+  // };
   addpopupToMarker = (workout, index) => {
     let coords = index == 0 ? workout.startCoords : workout.endCoords;
     const StartMarkup = `<div class="${workout.type}-popup"> 

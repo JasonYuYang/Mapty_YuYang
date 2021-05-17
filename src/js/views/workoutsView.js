@@ -57,6 +57,7 @@ class workoutsView {
     }
 
     console.log(workouts);
+    console.log(model.markers);
   };
 
   renderWorkout = workout => {
@@ -88,7 +89,7 @@ class workoutsView {
     //Show from position
     this.#StartPositionType.value = `NP`;
     //Show Start Marker on startCoords
-    mapView.InitializeStartMarker();
+    // mapView.InitializeStartMarker();
     mapView.renderMarker(editWorkout.startCoords, 1);
     //Show End Marker on endCoords
     mapView.renderMarker(editWorkout.endCoords, 2);
@@ -99,6 +100,28 @@ class workoutsView {
     //showDataOnInput
     mapView.showDataOnInput();
     model.state.editIndex = editWorkoutIndex;
+  };
+  deleteWorkout = async (e, workouts) => {
+    const workoutEl = e.target.closest('.workout');
+    const deleteWorkout = workouts.find(
+      work => work.id === workoutEl.dataset.id
+    );
+    const deleteWorkoutIndex = workouts.findIndex(
+      work => work.id === workoutEl.dataset.id
+    );
+    const deleteMarkerIndex = model.markers.findIndex(
+      marker => marker.id === workoutEl.dataset.id
+    );
+    workoutEl.remove();
+    //Remove workout Marker from map
+    mapView.editMarkerInit(deleteWorkout);
+    //Remove path
+    await mapView.removeSetUpMarker();
+    //Remove workout Marker from model
+    model.markers.splice(deleteWorkoutIndex, 1);
+    workouts.splice(deleteWorkoutIndex, 1);
+    //Set Center View
+    await mapView.setCenterViewToCurrentPosition();
   };
 
   generateMarkup = workout => {
