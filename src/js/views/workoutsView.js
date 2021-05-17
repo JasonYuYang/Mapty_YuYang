@@ -201,17 +201,17 @@ class workoutsView {
     if (index == 1) {
       return `<li class="workout workout--cycling" data-id=${workout.id}>
       <ul class="dropdown hidden" id="dropdown">
-    <li class="dropdown__items">
+    <li class="dropdown__items edit">
       <svg class="dropdown__icon" id="icon_item">
         <use xlink:href="${icons}#icon-new-message"></use>
       </svg>
-      <span class="dropdown__icon-name edit">Edit</span>
+      <span class="dropdown__icon-name">Edit</span>
     </li>
-    <li class="dropdown__items">
+    <li class="dropdown__items delete">
       <svg class="dropdown__icon" id="icon_item">
         <use xlink:href="${icons}#icon-trash"></use>
       </svg>
-      <span class="dropdown__icon-name delete">Delete</span>
+      <span class="dropdown__icon-name">Delete</span>
     </li>
   </ul>
       <h2 class="workout__title">

@@ -1,3 +1,4 @@
+import mapView from './mapView';
 class dropdown {
   #containerWorkouts = document.querySelector('.workouts');
   #parentElemet = document.querySelector('.sidebar');
@@ -15,7 +16,6 @@ class dropdown {
     this.#parentElemet.addEventListener('click', e => {
       const dropdownItems = e.target.closest('.dropdown__items');
       if (dropdownItems) {
-        console.log('dropdownItem');
         handler(e, dropdownItems);
       }
     });
@@ -50,6 +50,7 @@ class dropdown {
     const dropdownExpand = e.target.closest('.workout__icon--expand');
     const dropdownItems = e.target.closest('.dropdown__items');
     if (dropdownExpand || dropdownItems || isHidden) return;
+
     this.hideDropdown();
   };
 }

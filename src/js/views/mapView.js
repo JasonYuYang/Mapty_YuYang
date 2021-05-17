@@ -34,6 +34,7 @@ class mapView extends View {
     });
     //Handle click outside map
     this.#parentElemet.addEventListener('click', async e => {
+      if (model.state.edit) return;
       const form = document.querySelector('.form');
       if (
         !form.classList.contains('hidden') &&
@@ -259,7 +260,7 @@ class mapView extends View {
       }
     });
   };
-  preserveMarker = async coords => {
+  preserveMarker = coords => {
     const MyIcon = document.createElement('div');
     MyIcon.className = 'myIcon';
     this.#preserveMarker = new mapboxgl.Marker({
@@ -274,16 +275,14 @@ class mapView extends View {
         });
       })
       .addTo(this.#map);
-    await this.renderPath(
-      this.#mapData.currentPosition,
-      this.#mapData.currentPosition
-    );
   };
-  removeStartMarker = async () => {
+  removeSetUpMarker = async () => {
     if (this.#startMarker) {
       this.#startMarker.remove();
       this.#startMarker = undefined;
     }
+    this.#myMarker.remove();
+    this.#myMarker = undefined;
     await this.renderPath(
       this.#mapData.currentPosition,
       this.#mapData.currentPosition
@@ -383,9 +382,10 @@ class mapView extends View {
     }
   };
   moveToPopRoute = async (e, workouts) => {
-    if (this.#map);
+    if (!this.#map) return;
     const workoutEl = e.target.closest('.workout');
     if (!workoutEl) return;
+    if (model.state.edit) return;
     const workout = workouts.find(work => work.id === workoutEl.dataset.id);
     let bound = [workout.startCoords, workout.endCoords];
     if (this.#startMarkerPop) {
@@ -395,7 +395,7 @@ class mapView extends View {
     await this.renderPath(workout.startCoords, workout.endCoords);
 
     this.#map.fitBounds(bound, {
-      padding: { top: 70, bottom: 50, left: 50, right: 50 },
+      padding: { top: 150, bottom: 25, left: 100, right: 100 },
     });
   };
 

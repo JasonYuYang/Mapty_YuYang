@@ -34,10 +34,10 @@ const controlForm = async () => {
       model.state,
       model.workouts
     );
-    await mapView.removeStartMarker();
-    await mapView.preserveMarker(model.state.map.DestinationCoords);
-    addWorkout = model.workouts[model.workouts.length - 1];
+    mapView.preserveMarker(model.state.map.pathEnd);
     mapView.renderSpinner(form);
+    await mapView.removeSetUpMarker();
+    addWorkout = model.workouts[model.workouts.length - 1];
     await model.getLocation(addWorkout.startCoords, 0);
     await model.getLocation(addWorkout.endCoords, 1);
     mapView.removeSpinner();
@@ -68,9 +68,9 @@ const controlEditForm = async () => {
       1
     )} on ${editWorkout.time.dateNow}`;
     editWorkout.id = model.workouts[model.state.editIndex].id;
-    await mapView.removeStartMarker();
-    await mapView.preserveMarker(model.state.map.DestinationCoords);
+    mapView.preserveMarker(model.state.map.pathEnd);
     mapView.renderSpinner(form);
+    await mapView.removeSetUpMarker();
     await model.getLocation(editWorkout.startCoords, 0);
     await model.getLocation(editWorkout.endCoords, 1);
     mapView.removeSpinner();
@@ -83,7 +83,7 @@ const controlEditForm = async () => {
     editWorkout.Marker = mapView.addpopupToMarker(editWorkout, 1);
     model.markers.push({ id: editWorkout.id, marker: editWorkout.Marker });
     delete model.state.editIndex;
-    let workoutsReverse = model.workouts.reverse();
+    let workoutsReverse = [...model.workouts].reverse();
     let editWorkoutMarkup = workoutsReverse.reduce((markup, work) => {
       return (markup += workoutsView.generateMarkup(work));
     }, '');
@@ -93,9 +93,9 @@ const controlEditForm = async () => {
     console.log(err);
   }
 };
-const controlWorkoutRenderPath = e => {
+const controlWorkoutRenderPath = async e => {
   try {
-    mapView.moveToPopRoute(e, model.workouts);
+    await mapView.moveToPopRoute(e, model.workouts);
   } catch (err) {
     mapView.renderError(err);
   }
@@ -105,7 +105,6 @@ const controlFavorites = e => {
   model.addFavorites(e, model.workouts, model.favorites);
 };
 const controlDropdown = (e, dropdownItem) => {
-  console.log(dropdownItem);
   if (dropdownItem.classList.contains('edit')) {
     model.state.edit = true;
     workoutsView.editWorkout(e, model.workouts);
