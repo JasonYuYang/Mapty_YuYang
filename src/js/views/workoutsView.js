@@ -2,6 +2,7 @@ import icons from 'url:../../img/sprite.svg';
 import img from 'url:../../img/icon.png';
 import mapView from './mapView';
 import * as model from '../model';
+import sortView from './sortView';
 class workoutsView {
   #form = document.querySelector('.form');
   #containerWorkouts = document.querySelector('.workouts');
@@ -57,7 +58,6 @@ class workoutsView {
     }
 
     console.log(workouts);
-    console.log(model.markers);
   };
 
   renderWorkout = workout => {
@@ -84,6 +84,22 @@ class workoutsView {
       editWorkout.type == 'running'
         ? +editWorkout.cadence
         : +editWorkout.elevationGain;
+    if (editWorkout.type == 'running') {
+      this.#inputElevation
+        .closest('.form__row')
+        .classList.add('form__row--hidden');
+      this.#inputCadence
+        .closest('.form__row')
+        .classList.remove('form__row--hidden');
+    } else {
+      this.#inputElevation
+        .closest('.form__row')
+        .classList.remove('form__row--hidden');
+      this.#inputCadence
+        .closest('.form__row')
+        .classList.add('form__row--hidden');
+    }
+
     //Show Workout duration;
     this.#duration.value = +editWorkout.duration;
     //Show from position
@@ -118,12 +134,72 @@ class workoutsView {
     //Remove path
     await mapView.removeSetUpMarker();
     //Remove workout Marker from model
-    model.markers.splice(deleteWorkoutIndex, 1);
+    model.markers.splice(deleteMarkerIndex, 1);
     workouts.splice(deleteWorkoutIndex, 1);
     //Set Center View
     await mapView.setCenterViewToCurrentPosition();
   };
 
+  sortWorkoutType = sortType => {
+    this.#containerWorkouts.querySelectorAll('.workout').forEach(workout => {
+      workout.remove();
+    });
+    if (sortType == ' All') {
+      model.workouts.forEach(workout => {
+        this.renderWorkout(workout);
+      });
+      const markup = sortView.generateSortSectionMarkup(model.workouts);
+      mapView.updateSortSection(markup);
+    }
+    if (sortType == '🏃‍♂️ Running') {
+      const runningWorkouts = model.workouts.filter(workout => {
+        return workout.type === 'running';
+      });
+      runningWorkouts.forEach(workout => {
+        this.renderWorkout(workout);
+      });
+      const markup = sortView.generateSortSectionMarkup(runningWorkouts);
+      mapView.updateSortSection(markup);
+    }
+    if (sortType == '🚴‍♀️ Cycling') {
+      const cyclingWorkouts = model.workouts.filter(workout => {
+        return workout.type === 'cycling';
+      });
+      cyclingWorkouts.forEach(workout => {
+        this.renderWorkout(workout);
+      });
+      const markup = sortView.generateSortSectionMarkup(cyclingWorkouts);
+      mapView.updateSortSection(markup);
+    }
+    if (sortType == '⭐ Favorites') {
+      model.favorites.forEach(workout => {
+        this.renderWorkout(workout);
+      });
+      const markup = sortView.generateSortSectionMarkup(model.favorites);
+      mapView.updateSortSection(markup);
+    }
+  };
+  sortWorkoutOption = () => {
+    const workoutsOnScreen = document.querySelectorAll('.workout');
+  };
+  updateWorkoutMarkupOnScreen = () => {
+    let idOnScreen = [];
+    const workoutsOnScreen = Array.from(document.querySelectorAll('.workout'));
+    idOnScreen = workoutsOnScreen.map(workout => {
+      return workout.dataset.id;
+    });
+    console.log(idOnScreen, 'id');
+    //compare workout on screen with model.workouts ,find workouts on screen with same ID
+    let markupWorkouts = model.workouts.filter(workout => {
+      idOnScreen.includes(workout.id);
+    });
+    console.log(markupWorkouts, 'workouts');
+    const workoutMarkup = markupWorkouts.reduce((markup, workout) => {
+      return (markup += this.generateMarkup(workout));
+    }, '');
+    this.sortWorkoutType(model.state.sortType);
+    mapView.updateWorkout(workoutMarkup);
+  };
   generateMarkup = workout => {
     const index = workout.type == 'running' ? 0 : 1;
     if (index == 0) {
@@ -143,7 +219,7 @@ class workoutsView {
       <span class="dropdown__icon-name ">Delete</span>
     </li>
   </ul>
-      <h2 class="workout__title">
+      <h2 class="workout__title ${workout.favorites ? 'bookmark' : ''}">
         <div class="workout__favorite"><span>&#9733;</span></div>
         ${workout.description}
       </h2>
@@ -237,7 +313,7 @@ class workoutsView {
       <span class="dropdown__icon-name">Delete</span>
     </li>
   </ul>
-      <h2 class="workout__title">
+      <h2 class="workout__title ${workout.favorites ? 'bookmark' : ''}">
         <div class="workout__favorite"><span>&#9733;</span></div>
         ${workout.description}
       </h2>
@@ -316,56 +392,6 @@ class workoutsView {
     </li>
     `;
     }
-  };
-
-  generateSortSectionMarkup = workouts => {
-    const markup = `  <div class="sort__section">
-    <div class="sort__section sort__section--state">
-      <span>Workout type : All</span>
-    </div>
-    <div class="sort__section sort__section--number">
-      <span>Number of workouts : &nbsp;</span>
-    </div>
-    <div class="sort__section sort__section--options">
-      <ul class="sort__options">
-        <li>Sort options :</li>
-        <li><a href="">Speed</a></li>
-        <li><a href="">Duration</a></li>
-        <li><a href="">Distance</a></li>
-      </ul>
-      <div class="sort__hamburger">
-        <input
-          type="checkbox"
-          class="sort__hamburger--checkbox"
-          id="sort-toggle"
-        />
-        <label for="sort-toggle" class="sort__hamburger--button">
-          <span class="sort__hamburger--icon">&nbsp;</span>
-        </label>
-        <div class="sort__hamburger--background">&nbsp;</div>
-        <nav class="sort__hamburger--nav sort__hamburger--nav-active">
-          <ul class="sort__hamburger--list">
-            <li class="sort__section--item">
-              <a href="#1" class="sort__hamburger--link">All types</a>
-            </li>
-            <li class="sort__section--item">
-              <a href="#2" class="sort__hamburger--link"> 🏃‍♂️ Running</a>
-            </li>
-            <li class="sort__section--item">
-              <a href="#3" class="sort__hamburger--link"> 🚴‍♀ Cycling</a>
-            </li>
-            <li class="sort__section--item">
-              <a href="#4" class="sort__hamburger--link"> ⭐Favorites</a>
-            </li>
-          </ul>
-        </nav>
-      </div>
-      <div class="sort__section__reset--button">
-        <a href="#" class="reset">reset</a>
-      </div>
-    </div>
-  </div>`;
-    return markup;
   };
 }
 

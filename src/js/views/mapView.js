@@ -72,6 +72,7 @@ class mapView extends View {
 
   showForm = async mapE => {
     //Prevent click before form rest
+    if (model.state.sortType !== ' All') return;
     if (!model.state.edit) {
       if (this.#inputCadence.value) return;
     }
@@ -231,10 +232,18 @@ class mapView extends View {
     this.#startMarker.on('dragend', async () => {
       let lngLet = this.#startMarker.getLngLat();
       this.#mapData.startPositionCoords = [lngLet.lng, lngLet.lat];
-      await this.renderPath(
-        this.#mapData.startPositionCoords,
-        this.#mapData.DestinationCoords
-      );
+      if (model.state.edit) {
+        await this.renderPath(
+          this.#mapData.startPositionCoords,
+          this.#mapData.pathEnd
+        );
+      } else {
+        await this.renderPath(
+          this.#mapData.startPositionCoords,
+          this.#mapData.DestinationCoords
+        );
+      }
+
       this.showDataOnInput();
     });
   };
@@ -412,7 +421,7 @@ class mapView extends View {
     await this.renderPath(workout.startCoords, workout.endCoords);
 
     this.#map.fitBounds(bound, {
-      padding: { top: 150, bottom: 25, left: 100, right: 100 },
+      padding: { top: 150, bottom: 25, left: 125, right: 125 },
     });
   };
 

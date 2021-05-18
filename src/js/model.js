@@ -1,12 +1,15 @@
 import { async } from 'regenerator-runtime';
 import { AJAX } from './helper.js';
 import { EDIT_TOGGLE } from './views/config';
+import { SORT_OPTION } from './views/config';
 export const state = {
   map: {},
   weatherData: {},
   locationName: {},
   time: {},
   edit: EDIT_TOGGLE,
+  sortType: ' All',
+  sortOptions: SORT_OPTION,
 };
 export const workouts = [];
 export const favorites = [];

@@ -80,12 +80,14 @@ class formView {
   };
   //Check valid number input
   checkInput(input) {
-    const regex = '^\\d+$';
+    const regex = '^[1-9][0-9]*$';
     const InputValid = new RegExp(regex, 'g');
     if (!InputValid.test(`${input.value}`)) {
       this.showError(
         input,
-        `${this.getFieldName(input)} must  be  Positive  Number !!`
+        `${this.getFieldName(
+          input
+        )} must be Positive Number and not start with 0  !!`
       );
       return false;
     } else {

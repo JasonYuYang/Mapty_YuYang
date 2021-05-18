@@ -40,17 +40,6 @@
       src="https://api.mapbox.com/mapbox-gl-js/v2.2.0/mapbox-gl.js"
     ></script>
 
-    <!-- Using leaflet-routing-machine -->
-    <link
-      defer
-      rel="stylesheet"
-      href="https://unpkg.com/leaflet-routing-machine@3.2.12/dist/leaflet-routing-machine.css"
-    />
-    <script
-      defer
-      src="https://unpkg.com/leaflet-routing-machine@3.2.12/dist/leaflet-routing-machine.js"
-    ></script>
-
     <!-- <script defer src="other.js"></script> -->
     <script defer src="src/js/controller.js"></script>
     <title>mapty // Map your workouts</title>
@@ -63,14 +52,14 @@
           <span>Workout type : All</span>
         </div>
         <div class="sort__section sort__section--number">
-          <span>Number of workouts : &nbsp;</span>
+          <span>Number of workouts : 0</span>
         </div>
         <div class="sort__section sort__section--options">
           <ul class="sort__options">
             <li>Sort options :</li>
-            <li><a href="">Speed</a></li>
-            <li><a href="">Duration</a></li>
-            <li><a href="">Distance</a></li>
+            <li class="speed"><a href="javascript:;">Speed</a></li>
+            <li class="duration"><a href="javascript:;">Duration</a></li>
+            <li class="distance"><a href="javascript:;">Distance</a></li>
           </ul>
           <div class="sort__hamburger">
             <input
@@ -84,27 +73,34 @@
             <div class="sort__hamburger--background">&nbsp;</div>
             <nav class="sort__hamburger--nav sort__hamburger--nav-active">
               <ul class="sort__hamburger--list">
-                <li class="sort__section--item">
-                  <a href="#1" class="sort__hamburger--link">All types</a>
+                <li class="sort__section--item sort_all">
+                  <a href="javascript:;" class="sort__hamburger--link"
+                    >All types</a
+                  >
                 </li>
-                <li class="sort__section--item">
-                  <a href="#2" class="sort__hamburger--link"> 🏃‍♂️ Running</a>
+                <li class="sort__section--item sort_running">
+                  <a href="javascript:;" class="sort__hamburger--link">
+                    🏃‍♂️ Running</a
+                  >
                 </li>
-                <li class="sort__section--item">
-                  <a href="#3" class="sort__hamburger--link"> 🚴‍♀ Cycling</a>
+                <li class="sort__section--item sort_cycling">
+                  <a href="javascript:;" class="sort__hamburger--link">
+                    🚴‍♀ Cycling</a
+                  >
                 </li>
-                <li class="sort__section--item">
-                  <a href="#4" class="sort__hamburger--link"> ⭐Favorites</a>
+                <li class="sort__section--item sort_favorites">
+                  <a href="javascript:;" class="sort__hamburger--link">
+                    ⭐Favorites</a
+                  >
                 </li>
               </ul>
             </nav>
           </div>
           <div class="sort__section__reset--button">
-            <a href="#" class="reset">reset</a>
+            <a href="javascript:;" class="reset">reset</a>
           </div>
         </div>
       </div>
-
       <ul class="workouts">
         <form class="form hidden" id="form" autocomplete="off">
           <div class="form__row">

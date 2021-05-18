@@ -4,10 +4,14 @@ import mapView from './views/mapView';
 import formView from './views/formView';
 import workoutsView from './views/workoutsView';
 import dropdown from './views/dropdown';
+import sortView from './views/sortView';
 
 import 'core-js/stable';
 import 'regenerator-runtime/runtime';
-
+const controlWorkout = () => {
+  const markup = sortView.generateSortSectionMarkup(model.workouts);
+  mapView.updateSortSection(markup);
+};
 const controlMap = async () => {
   try {
     const map = document.querySelector('#map');
@@ -45,6 +49,8 @@ const controlForm = async () => {
     addWorkout.Marker = mapView.addpopupToMarker(addWorkout, 1);
     model.markers.push({ id: addWorkout.id, marker: addWorkout.Marker });
     workoutsView.renderWorkout(addWorkout);
+    const sortMarkup = sortView.generateSortSectionMarkup(model.workouts);
+    mapView.updateSortSection(sortMarkup);
   } catch (err) {
     console.log(err);
     mapView.renderError(err);
@@ -83,12 +89,7 @@ const controlEditForm = async () => {
     editWorkout.Marker = mapView.addpopupToMarker(editWorkout, 1);
     model.markers.push({ id: editWorkout.id, marker: editWorkout.Marker });
     delete model.state.editIndex;
-    let workoutsReverse = [...model.workouts].reverse();
-    let editWorkoutMarkup = workoutsReverse.reduce((markup, work) => {
-      return (markup += workoutsView.generateMarkup(work));
-    }, '');
-    mapView.updateWorkout(editWorkoutMarkup);
-    console.log(model.state);
+    workoutsView.updateWorkoutMarkupOnScreen();
   } catch (err) {
     console.log(err);
   }
@@ -119,8 +120,13 @@ const showDropdown = e => {
 const controlHideDropdown = e => {
   dropdown.hideDropdownClickOutside(e);
 };
-
+const controlSort = e => {};
+const controlHamburger = e => {
+  sortView.sortState(e);
+  workoutsView.sortWorkoutType(model.state.sortType);
+};
 const init = async () => {
+  controlWorkout();
   await controlMap();
   formView.addHandlerForm(controlForm, controlEditForm);
   workoutsView.addHandlerWorkout(controlWorkoutRenderPath);
@@ -128,5 +134,7 @@ const init = async () => {
   dropdown.addHandlerHideDropdown(controlHideDropdown);
   dropdown.addHandlerShowDropdown(showDropdown);
   dropdown.addHandlerControlDropdown(controlDropdown);
+  sortView.addHandlerSort(controlSort);
+  sortView.addHandlerhamburger(controlHamburger);
 };
 init();
