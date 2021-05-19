@@ -19,7 +19,6 @@ export default class View {
     // console.log(this._containerWorkouts.querySelectorAll('*'));
     newElements.forEach((newEl, i) => {
       let curEl = curElements[i];
-      console.log(curEl, newEl.isEqualNode(curEl));
       if (!newEl.isEqualNode(curEl)) {
         curEl.outerHTML = newEl.outerHTML;
       }

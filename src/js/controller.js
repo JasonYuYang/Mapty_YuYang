@@ -120,7 +120,12 @@ const showDropdown = e => {
 const controlHideDropdown = e => {
   dropdown.hideDropdownClickOutside(e);
 };
-const controlSort = e => {};
+const controlSort = e => {
+  if (e.target.closest('.SC')) workoutsView.sortWorkoutOption('SC');
+  if (e.target.closest('.duration')) workoutsView.sortWorkoutOption('duration');
+  if (e.target.closest('.distance')) workoutsView.sortWorkoutOption('distance');
+  if (e.target.closest('.reset')) workoutsView.sortWorkoutOption('reset');
+};
 const controlHamburger = e => {
   sortView.sortState(e);
   workoutsView.sortWorkoutType(model.state.sortType);

@@ -179,8 +179,58 @@ class workoutsView {
       mapView.updateSortSection(markup);
     }
   };
-  sortWorkoutOption = () => {
-    const workoutsOnScreen = document.querySelectorAll('.workout');
+
+  workoutsOnView = () => {
+    let idOnScreen = [];
+    const workoutsOnScreen = Array.from(document.querySelectorAll('.workout'));
+    idOnScreen = workoutsOnScreen.map(workout => {
+      return workout.dataset.id;
+    });
+    return model.workouts.filter(workout => {
+      return idOnScreen.includes(workout.id);
+    });
+  };
+  sortWorkoutOption = option => {
+    const workoutEl = document.querySelector('.workout');
+    if (!workoutEl) return;
+    let Workouts = this.workoutsOnView();
+    let workoutsSortRender;
+    if (option == 'SC') {
+      workoutsSortRender = [...Workouts].sort((a, b) => {
+        a = a.speed ? +a.speed : +a.pace;
+        b = b.speed ? +b.speed : +b.pace;
+        console.log(a, b);
+        return b - a;
+      });
+    }
+    if (option == 'duration') {
+      workoutsSortRender = [...Workouts].sort((a, b) => {
+        return b.duration - a.duration;
+      });
+    }
+
+    if (option == 'distance') {
+      workoutsSortRender = [...Workouts].sort((a, b) => {
+        return b.distance - a.distance;
+      });
+    }
+
+    if (option == 'reset') {
+      workoutsSortRender = [...Workouts].sort((a, b) => {
+        return b.time.startMs - a.time.startMs;
+      });
+      console.log(
+        [...Workouts].sort((a, b) => {
+          return b.time.startMs - a.time.startMs;
+        })
+      );
+    }
+    let workoutMarkup = workoutsSortRender.reduce((markup, workout) => {
+      return (markup += this.generateMarkup(workout));
+    }, '');
+
+    // console.log(workoutsSortRender);
+    mapView.updateWorkout(workoutMarkup);
   };
   updateWorkoutMarkupOnScreen = () => {
     let idOnScreen = [];
@@ -188,12 +238,11 @@ class workoutsView {
     idOnScreen = workoutsOnScreen.map(workout => {
       return workout.dataset.id;
     });
-    console.log(idOnScreen, 'id');
     //compare workout on screen with model.workouts ,find workouts on screen with same ID
     let markupWorkouts = model.workouts.filter(workout => {
-      idOnScreen.includes(workout.id);
+      return idOnScreen.includes(workout.id);
     });
-    console.log(markupWorkouts, 'workouts');
+
     const workoutMarkup = markupWorkouts.reduce((markup, workout) => {
       return (markup += this.generateMarkup(workout));
     }, '');

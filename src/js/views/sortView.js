@@ -1,22 +1,22 @@
 import workoutsView from './workoutsView';
 import * as model from '../model';
 class sortView {
-  #sortSC = document.querySelector('.speed');
-  #sortDuration = document.querySelector('.duration');
-  #sortDistance = document.querySelector('.distance');
-  #sortReset = document.querySelector('.reset');
-
   addHandlerSort = handler => {
-    this.#sortSC.addEventListener('click', e => {
+    const sortSC = document.querySelector('.SC');
+    const sortDuration = document.querySelector('.duration');
+    const sortDistance = document.querySelector('.distance');
+    const sortReset = document.querySelector('.reset');
+
+    sortSC.addEventListener('click', e => {
       handler(e);
     });
-    this.#sortDuration.addEventListener('click', e => {
+    sortDuration.addEventListener('click', e => {
       handler(e);
     });
-    this.#sortDistance.addEventListener('click', e => {
+    sortDistance.addEventListener('click', e => {
       handler(e);
     });
-    this.#sortReset.addEventListener('click', e => {
+    sortReset.addEventListener('click', e => {
       handler(e);
     });
   };
@@ -58,7 +58,7 @@ class sortView {
         <div class="sort__section sort__section--options">
           <ul class="sort__options">
             <li>Sort options : </li>
-            <li class='speed'><a href="javascript:;">⚡ S/C</a></li>
+            <li class='SC'><a href="javascript:;">⚡ S/C</a></li>
             <li class='duration'><a href="javascript:;">⏱ Duration</a></li>
             <li class='distance'><a href="javascript:;">🚵‍♀️ Distance</a></li>
           </ul>
