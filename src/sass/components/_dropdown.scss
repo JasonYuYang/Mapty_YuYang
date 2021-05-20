@@ -1,0 +1,52 @@
+.dropdown {
+  grid-column: 4/-1;
+  grid-row: 1/2;
+  background-color: $--color-dark--2;
+  height: auto;
+  width: 10rem;
+  border-radius: 2px;
+  box-shadow: 0 1rem 1rem 0 rgba(39, 39, 39, 1);
+  display: flex;
+  flex-direction: column;
+  align-items: start;
+  cursor: pointer;
+  padding: 0.5rem 1.5rem;
+  backface-visibility: hidden;
+  position: absolute;
+  top: 0;
+  right: 0;
+  z-index: 1;
+  visibility: visible;
+  opacity: 1;
+  transition: all 0.25s;
+
+  &__items {
+    display: flex;
+    list-style: none;
+    justify-content: center;
+    margin-top: 0.5rem;
+    &:hover #icon_item,
+    &:hover .dropdown__icon-name,
+    &:hover {
+      fill: $--color-brand--2;
+      color: #00c46a;
+    }
+  }
+  &__icon {
+    width: 2rem !important;
+    height: 2rem !important;
+    opacity: 0.5;
+    fill: $--color-light--1;
+  }
+
+  &__icon-name {
+    font-weight: 600;
+    font-size: 1rem;
+    color: $--color-light--2;
+    margin-left: 0.8rem;
+  }
+  &.hidden {
+    visibility: hidden;
+    opacity: 0;
+  }
+}

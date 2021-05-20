@@ -1,291 +1,141 @@
-'use strict';
+mapboxgl.accessToken =
+  'pk.eyJ1Ijoicm9ibGFicyIsImEiOiJwVlg0cnZnIn0.yhekddtKwZohGoORaWjqIw';
 
-class Workout {
-  date = new Date();
-  id = (Date.now() + '').slice(-10);
-  //Create ID as last 10 characters  from date
-  clicks = 0;
-  constructor(coords, distance, duration) {
-    // this.date = ...
-    // this.id = ...
-    this.coords = coords; // [lat, lng]
-    this.distance = distance; // in km
-    this.duration = duration; // in min
-  }
-  _setDescription() {
-    // prettier-ignore
-    const months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+var map = new mapboxgl.Map({
+  container: 'map', // container id
+  style: 'mapbox://styles/mapbox/streets-v9', // stylesheet location
+  center: [-64.75, 32.3], // starting position [lng, lat]
+  zoom: 10, // starting zoom
+});
 
-    this.description = `${this.type[0].toUpperCase()}${this.type.slice(1)} on ${
-      months[this.date.getMonth()]
-    } ${this.date.getDate()}`;
-  }
-  _clicks() {
-    this.clicks++;
-  }
-}
-class Running extends Workout {
-  type = 'running';
-  constructor(coords, distance, duration, cadence) {
-    super(coords, distance, duration);
-    this.cadence = cadence;
-    this._setDescription();
-    //為什麼不放在workout呢?是因為_setDescription要用到type
-    this.calcPace();
-  }
-  calcPace() {
-    // min/km
-    this.pace = this.duration / this.distance;
-    return this.pace;
-  }
-}
-class Cycling extends Workout {
-  type = 'cycling';
-  constructor(coords, distance, duration, elevationGain) {
-    super(coords, distance, duration);
-    this.elevationGain = elevationGain;
-    this._setDescription();
-    //為什麼不放在workout呢?是因為_setDescription要用到type
-    this.calcSpeed();
-  }
-  calcSpeed() {
-    // km/h
-    this.speed = this.distance / (this.duration / 60);
-    return this.speed;
-  }
-}
-//////////////////////////////////////////////////////////////////////////////////////////////////////
-// APPLICATION ARCHITECTURE
-const form = document.querySelector('.form');
-const containerWorkouts = document.querySelector('.workouts');
-const inputType = document.querySelector('.form__input--type');
-const inputDistance = document.querySelector('.form__input--distance');
-const inputDuration = document.querySelector('.form__input--duration');
-const inputCadence = document.querySelector('.form__input--cadence');
-const inputElevation = document.querySelector('.form__input--elevation');
-class App {
-  //Private class properties
-  #map;
-  #mapEvent;
-  #mapZoomLevel = 13;
-  #workouts = [];
-  constructor() {
-    //Immediately call When instance created.So, when Page load the function will be invoked.
-    this._getPostion();
-    //Get local Storage
-    this._getLocalStorage();
-    //Event listner
-    form.addEventListener('submit', this._newWorkout);
-    inputType.addEventListener('change', this._toggleElevationField);
-    containerWorkouts.addEventListener('click', this._moveToPopup);
-  }
-  _getPostion = () => {
-    if (navigator.geolocation)
-      navigator.geolocation.getCurrentPosition(this._loadMap, () =>
-        alert(`Could not get your position`)
-      );
-  };
-  _loadMap = position => {
-    const { latitude } = position.coords;
-    const { longitude } = position.coords;
-
-    const coords = [latitude, longitude];
-    this.#map = L.map('map').setView(coords, 13); //13 is zoom value
-
-    L.tileLayer('https://{s}.tile.openstreetmap.fr/hot/{z}/{x}/{y}.png', {
-      attribution:
-        '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
-    }).addTo(this.#map);
-    //Handling click on Map
-    this.#map.on('click', this._showForm);
-
-    //When we get the localStorageDATA,we need to render the marker，but it has to be after this.#map load.
-    this.#workouts.forEach(work => {
-      this._renderWorkoutMarker(work);
-    });
-  };
-  _showForm = mapE => {
-    this.#mapEvent = mapE;
-    form.classList.remove('hidden');
-  };
-  _toggleElevationField() {
-    inputElevation.closest('.form__row').classList.toggle('form__row--hidden');
-    inputCadence.closest('.form__row').classList.toggle('form__row--hidden');
-  }
-  _newWorkout = e => {
-    e.preventDefault();
-
-    //Validation function
-    const validInputs = (...inputs) =>
-      inputs.every(inp => Number.isFinite(inp));
-    const allPositive = (...inputs) => inputs.every(inp => inp > 0);
-
-    // Get data from form
-    const type = inputType.value;
-    const distance = +inputDistance.value;
-    const duration = +inputDuration.value;
-    const { lat, lng } = this.#mapEvent.latlng;
-    let workout;
-
-    // If workout running, create running object
-    if (type === 'running') {
-      const cadence = +inputCadence.value;
-      // Check if data is valid
-      if (
-        // !Number.isFinite(distance) ||
-        // !Number.isFinite(duration) ||
-        // !Number.isFinite(cadence)
-        !validInputs(distance, duration, cadence) ||
-        !allPositive(distance, duration, cadence)
-      )
-        return alert('Inputs have to be positive numbers!');
-      workout = new Running([lat, lng], distance, duration, cadence);
-    }
-    // If workout cycling, create cycling object
-    if (type === 'cycling') {
-      const elevation = +inputElevation.value;
-      // Check if data is valid
-      if (
-        !validInputs(distance, duration, elevation) ||
-        !allPositive(distance, duration)
-      )
-        return alert('Inputs have to be positive numbers!');
-      workout = new Cycling([lat, lng], distance, duration, elevation);
-    }
-
-    // Add new object to workout array
-    this.#workouts.push(workout);
-
-    // Render workout on map as marker
-    this._renderWorkoutMarker(workout);
-
-    // Render workout on list
-    this._renderWorkout(workout);
-
-    // Hide form + clear input fields
-    this._hideForm();
-
-    // Set local storage to all workouts
-    this._setLocalStorage();
-  };
-  _renderWorkoutMarker(workout) {
-    //display markup
-    L.marker(workout.coords)
-      .addTo(this.#map)
-      .bindPopup(
-        L.popup({
-          maxWidth: 250,
-          minWidth: 100,
-          autoClose: false,
-          closeOnClick: false,
-          className: `${workout.type}-popup`,
-        })
-      )
-      .setPopupContent(
-        `${workout.type === 'running' ? '🏃‍♂️ ' : '🚴‍♀️ '}${workout.description}`
-      )
-      .openPopup();
-  }
-  _renderWorkout(workout) {
-    let html = `
-    <li class="workout workout--${workout.type}" data-id="${workout.id}">
-        <h2 class="workout__title">${workout.description}</h2>
-        <div class="workout__details">
-          <span class="workout__icon">${
-            workout.type === 'running' ? '🏃‍♂️' : '🚴‍♀️'
-          }</span>
-          <span class="workout__value">${workout.distance}</span>
-          <span class="workout__unit">km</span>
-        </div>
-        <div class="workout__details">
-          <span class="workout__icon">⏱</span>
-          <span class="workout__value">${workout.duration}</span>
-          <span class="workout__unit">min</span>
-        </div>
-    `;
-    if (workout.type === 'running')
-      html += `
-        <div class="workout__details">
-          <span class="workout__icon">⚡️</span>
-          <span class="workout__value">${workout.pace.toFixed(1)}</span>
-          <span class="workout__unit">min/km</span>
-        </div>
-        <div class="workout__details">
-          <span class="workout__icon">🦶🏼</span>
-          <span class="workout__value">${workout.cadence}</span>
-          <span class="workout__unit">spm</span>
-        </div>
-      </li>
-      `;
-
-    if (workout.type === 'cycling')
-      html += `
-        <div class="workout__details">
-          <span class="workout__icon">⚡️</span>
-          <span class="workout__value">${workout.speed.toFixed(1)}</span>
-          <span class="workout__unit">km/h</span>
-        </div>
-        <div class="workout__details">
-          <span class="workout__icon">⛰</span>
-          <span class="workout__value">${workout.elevationGain}</span>
-          <span class="workout__unit">m</span>
-        </div>
-      </li>
-      `;
-
-    form.insertAdjacentHTML('afterend', html);
-  }
-  _hideForm() {
-    //clear Input fields
-    inputDistance.value = inputDuration.value = inputCadence.value = inputElevation.value =
-      '';
-    form.style.display = 'none';
-    form.classList.add('hidden');
-    setTimeout(() => (form.style.display = 'grid'), 1000);
-    //cuz transtion time costs 1 sec so we add display=grid after 1sec
-  }
-  _moveToPopup = e => {
-    // BUGFIX: When we click on a workout before the map has loaded, we get an error. But there is an easy fix:
-    if (!this.#map) return;
-
-    const workoutEl = e.target.closest('.workout');
-
-    if (!workoutEl) return;
-
-    const workout = this.#workouts.find(
-      work => work.id === workoutEl.dataset.id
-    );
-
-    this.#map.setView(workout.coords, this.#mapZoomLevel, {
-      animate: true,
-      pan: {
-        duration: 1,
-      },
-    });
-    console.log(workout);
-    workout._clicks();
-  };
-  _setLocalStorage() {
-    localStorage.setItem('workouts', JSON.stringify(this.#workouts));
+// Original ES6 Class— https://github.com/tobinbradley/mapbox-gl-pitch-toggle-control
+// export default class PitchToggle {
+class PitchToggle {
+  constructor({ bearing = -20, pitch = 70, minpitchzoom = null }) {
+    this._bearing = bearing;
+    this._pitch = pitch;
+    this._minpitchzoom = minpitchzoom;
   }
 
-  _getLocalStorage() {
-    const data = JSON.parse(localStorage.getItem('workouts'));
+  onAdd(map) {
+    this._map = map;
+    let _this = this;
 
-    if (!data) return;
+    this._btn = document.createElement('button');
+    this._btn.className = 'mapboxgl-ctrl-icon mapboxgl-ctrl-pitchtoggle-3d';
+    this._btn.type = 'button';
+    this._btn['aria-label'] = 'Toggle Pitch';
+    this._btn.onclick = function () {
+      if (map.getPitch() === 0) {
+        let options = { pitch: _this._pitch, bearing: _this._bearing };
+        if (_this._minpitchzoom && map.getZoom() > _this._minpitchzoom) {
+          options.zoom = _this._minpitchzoom;
+        }
+        map.easeTo(options);
+        _this._btn.className =
+          'mapboxgl-ctrl-icon mapboxgl-ctrl-pitchtoggle-2d';
+      } else {
+        map.easeTo({ pitch: 0, bearing: 0 });
+        _this._btn.className =
+          'mapboxgl-ctrl-icon mapboxgl-ctrl-pitchtoggle-3d';
+      }
+    };
 
-    this.#workouts = data;
+    this._container = document.createElement('div');
+    this._container.className = 'mapboxgl-ctrl-group mapboxgl-ctrl';
+    this._container.appendChild(this._btn);
 
-    this.#workouts.forEach(work => {
-      this._renderWorkout(work);
-    });
+    return this._container;
   }
-  //Remove data from localStorage
-  reset() {
-    localStorage.removeItem('workouts');
-    location.reload();
+
+  onRemove() {
+    this._container.parentNode.removeChild(this._container);
+    this._map = undefined;
   }
 }
 
-const app = new App();
-console.log(app);
+/* Idea from Stack Overflow https://stackoverflow.com/a/51683226  */
+class MapboxGLButtonControl {
+  constructor({ className = '', title = '', eventHandler = evtHndlr }) {
+    this._className = className;
+    this._title = title;
+    this._eventHandler = eventHandler;
+  }
+
+  onAdd(map) {
+    this._btn = document.createElement('button');
+    this._btn.className = 'mapboxgl-ctrl-icon' + ' ' + this._className;
+    this._btn.type = 'button';
+    this._btn.title = this._title;
+    this._btn.onclick = this._eventHandler;
+
+    this._container = document.createElement('div');
+    this._container.className = 'mapboxgl-ctrl-group mapboxgl-ctrl';
+    this._container.appendChild(this._btn);
+
+    return this._container;
+  }
+
+  onRemove() {
+    this._container.parentNode.removeChild(this._container);
+    this._map = undefined;
+  }
+}
+
+/* Event Handlers */
+function one(event) {
+  alert('Event handler when clicking on \r\n' + event.target.className);
+  console.log('event number 1', event);
+}
+
+function two(event) {
+  alert('Event handler when clicking on \r\n' + event.target.className);
+  console.log('event number 2', event);
+}
+
+function three(event) {
+  alert('Event handler when clicking on \r\n' + event.target.className);
+  console.log('event number 3', event);
+}
+
+/* Instantiate new controls with custom event handlers */
+const ctrlPoint = new MapboxGLButtonControl({
+  className: 'mapbox-gl-draw_point',
+  title: 'Draw Point',
+  eventHandler: one,
+});
+
+const ctrlLine = new MapboxGLButtonControl({
+  className: 'mapbox-gl-draw_line',
+  title: 'Draw Line',
+  eventHandler: two,
+});
+
+const ctrlPolygon = new MapboxGLButtonControl({
+  className: 'mapbox-gl-draw_polygon',
+  title: 'Draw Polygon',
+  eventHandler: three,
+});
+
+/* Add Controls to the Map */
+map.addControl(new mapboxgl.NavigationControl(), 'top-left');
+map.addControl(new PitchToggle({ minpitchzoom: 11 }), 'top-left');
+map.addControl(ctrlPoint, 'bottom-left');
+map.addControl(ctrlLine, 'bottom-right');
+map.addControl(ctrlPolygon, 'top-right');
+
+export const setLocalStorage = function (workouts) {
+  localStorage.setItem('workouts', JSON.stringify(workouts));
+};
+
+export const getLocalStorage = workouts => {
+  const data = JSON.parse(localStorage.getItem('workouts'));
+  if (!data) return;
+  data.forEach(workout => {
+    workout =
+      workout.type === 'running'
+        ? Object.setPrototypeOf(workout, Running.prototype)
+        : Object.setPrototypeOf(workout, Cycling.prototype);
+  });
+  workouts = data;
+};

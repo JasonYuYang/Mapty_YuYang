@@ -1,0 +1,17 @@
+.copyright {
+  margin-top: auto;
+  font-size: 1.3rem;
+  text-align: center;
+  color: $--color-light--1;
+}
+
+.twitter-link:link,
+.twitter-link:visited {
+  color: $--color-light--1;
+  transition: all 0.2s;
+}
+
+.twitter-link:hover,
+.twitter-link:active {
+  color: $--color-light--2;
+}

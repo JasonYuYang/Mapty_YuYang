@@ -21,15 +21,15 @@ class sortView {
     });
   };
   addHandlerhamburger = handler => {
-    document
-      .querySelector('.sort__hamburger--button')
-      .addEventListener('click', () => {
-        document.querySelectorAll('.sort__section--item').forEach(item => {
-          item.addEventListener('click', e => {
-            handler(e);
-          });
+    const sortHamburger = document.querySelector('.sort__hamburger--button');
+    const sortList = document.querySelectorAll('.sort__section--item');
+    sortHamburger.addEventListener('click', () => {
+      sortList.forEach(item => {
+        item.addEventListener('click', e => {
+          handler(e);
         });
       });
+    });
   };
 
   sortState = e => {
@@ -45,15 +45,20 @@ class sortView {
 
     document.querySelector('#sort-toggle').checked = false;
   };
-
-  soerOptions = e => {};
+  removeSelected = () => {
+    const sortOptions = document.querySelector('.sort__options');
+    let aTags = Array.from(sortOptions.getElementsByTagName('a'));
+    aTags.forEach(a => {
+      a.classList.remove('selected');
+    });
+  };
   generateSortSectionMarkup = workouts => {
     const markup = `<div class="sort__section">
         <div class="sort__section sort__section--state">
           <span>Workout type : ${model.state.sortType}</span>
         </div>
         <div class="sort__section sort__section--number">
-          <span>Number of workouts : ${workouts.length}</span>
+          <span>Number of workouts : <span class='workout__number'>${workouts.length}</span></span>
         </div>
         <div class="sort__section sort__section--options">
           <ul class="sort__options">

@@ -10,7 +10,6 @@
     transition: all 0.2s;
     position: relative;
     font-size: 1.6rem;
-    text-decoration: none;
     //Change for the <button> element
     color: #fff;
     border: none;
@@ -40,6 +39,16 @@
 
     &::after {
       background-color: #ff3c0bc0;
+    }
+  }
+  &--orange {
+    font-size: 1rem;
+    padding: 0.8rem 5rem;
+    background-color: $--color-brand--1;
+    color: #fff;
+
+    &::after {
+      background-color: $--color-brand--1;
     }
   }
 

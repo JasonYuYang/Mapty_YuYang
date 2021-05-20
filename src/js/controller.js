@@ -9,6 +9,16 @@ import sortView from './views/sortView';
 import 'core-js/stable';
 import 'regenerator-runtime/runtime';
 const controlWorkout = () => {
+  model.getLocalStorage(model.workouts);
+  model.workouts.forEach(workout => {
+    workoutsView.renderWorkout(workout);
+    mapView.addpopupToMarker(workout, 1);
+    model.markers.push({
+      id: workout.id,
+      marker: mapView.addpopupToMarker(workout, 1),
+    });
+  });
+  model.initialFavorites(model.workouts);
   const markup = sortView.generateSortSectionMarkup(model.workouts);
   mapView.updateSortSection(markup);
 };
@@ -46,9 +56,12 @@ const controlForm = async () => {
     await model.getLocation(addWorkout.endCoords, 1);
     mapView.removeSpinner();
     addWorkout.locationName = { ...model.state.locationName };
-    addWorkout.Marker = mapView.addpopupToMarker(addWorkout, 1);
-    model.markers.push({ id: addWorkout.id, marker: addWorkout.Marker });
+    model.markers.push({
+      id: addWorkout.id,
+      marker: mapView.addpopupToMarker(addWorkout, 1),
+    });
     workoutsView.renderWorkout(addWorkout);
+    model.setLocalStorage(model.workouts);
     const sortMarkup = sortView.generateSortSectionMarkup(model.workouts);
     mapView.updateSortSection(sortMarkup);
   } catch (err) {
@@ -82,12 +95,15 @@ const controlEditForm = async () => {
     mapView.removeSpinner();
     editWorkout.locationName = { ...model.state.locationName };
     model.workouts.splice(model.state.editIndex, 1, editWorkout);
+    let editMarker = {
+      id: editWorkout.id,
+      marker: mapView.addpopupToMarker(editWorkout, 1),
+    };
     const markerIndex = model.markers.findIndex(
       marker => marker.id === editWorkout.id
     );
-    model.markers.splice(markerIndex, 1);
-    editWorkout.Marker = mapView.addpopupToMarker(editWorkout, 1);
-    model.markers.push({ id: editWorkout.id, marker: editWorkout.Marker });
+    model.markers.splice(markerIndex, 1, editMarker);
+    model.setLocalStorage(model.workouts);
     delete model.state.editIndex;
     workoutsView.updateWorkoutMarkupOnScreen();
   } catch (err) {
@@ -104,6 +120,7 @@ const controlWorkoutRenderPath = async e => {
 
 const controlFavorites = e => {
   model.addFavorites(e, model.workouts, model.favorites);
+  model.setLocalStorage(model.workouts);
 };
 const controlDropdown = (e, dropdownItem) => {
   if (dropdownItem.classList.contains('edit')) {
@@ -121,12 +138,16 @@ const controlHideDropdown = e => {
   dropdown.hideDropdownClickOutside(e);
 };
 const controlSort = e => {
+  if (model.state.edit) return;
+  sortView.removeSelected();
+  e.target.classList.add('selected');
   if (e.target.closest('.SC')) workoutsView.sortWorkoutOption('SC');
   if (e.target.closest('.duration')) workoutsView.sortWorkoutOption('duration');
   if (e.target.closest('.distance')) workoutsView.sortWorkoutOption('distance');
   if (e.target.closest('.reset')) workoutsView.sortWorkoutOption('reset');
 };
 const controlHamburger = e => {
+  if (model.state.edit) return;
   sortView.sortState(e);
   workoutsView.sortWorkoutType(model.state.sortType);
 };

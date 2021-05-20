@@ -196,3 +196,38 @@ export const addFavorites = (e, workouts, favorites) => {
     favorites.push(workout);
   }
 };
+
+export const initialFavorites = workouts => {
+  workouts.forEach(workout => {
+    if (workout.favorites) {
+      favorites.push(workout);
+    }
+  });
+  const workoutsOnScreen = Array.from(document.querySelectorAll('.workout'));
+  let idFavorites = [];
+  idFavorites = favorites.map(workout => {
+    return workout.id;
+  });
+  let favoritesOnScreen = workoutsOnScreen.filter(workout => {
+    return idFavorites.includes(workout.dataset.id);
+  });
+  favoritesOnScreen.forEach(favorite => {
+    favorite.querySelector('.workout__title').classList.add('bookmark');
+  });
+};
+
+export const setLocalStorage = workouts => {
+  localStorage.setItem('workouts', JSON.stringify(workouts));
+};
+
+export const getLocalStorage = workouts => {
+  const data = JSON.parse(localStorage.getItem('workouts'));
+  if (!data) return;
+  data.forEach(workout => {
+    workout =
+      workout.type === 'running'
+        ? Object.setPrototypeOf(workout, Running.prototype)
+        : Object.setPrototypeOf(workout, Cycling.prototype);
+  });
+  workouts = data;
+};

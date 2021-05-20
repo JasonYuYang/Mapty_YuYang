@@ -55,14 +55,33 @@
   &--list {
     position: absolute;
     list-style: none;
-    left: 25%;
+    display: flex;
+    left: 15%;
     font-size: 1rem;
     flex-direction: column;
     align-items: flex-end;
-    //using javascript add this element,when invisble
   }
   .sort__section--item {
     margin-top: 0.5rem;
+    & a {
+      &,
+      &:link,
+      &:visited {
+        text-transform: uppercase;
+        text-decoration: none;
+        transition: all 0.2s;
+        position: relative;
+        //Change for the <button> element
+        color: $--color-light--2;
+        font-weight: 700;
+        border: none;
+        cursor: pointer;
+        backface-visibility: hidden;
+      }
+      &:hover {
+        color: $--color-brand--2;
+      }
+    }
   }
   &--checkbox:checked ~ &--background {
     transform-origin: top left;

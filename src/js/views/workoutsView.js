@@ -12,7 +12,6 @@ class workoutsView {
   #inputElevation = document.querySelector('.form__input--elevation');
   #inputCadence = document.querySelector('.form__input--cadence');
   #duration = document.querySelector('.form__input--duration');
-  #map = document.querySelector('#map');
 
   addHandlerWorkout = handler => {
     this.#containerWorkouts.addEventListener('click', e => {
@@ -138,6 +137,8 @@ class workoutsView {
     workouts.splice(deleteWorkoutIndex, 1);
     //Set Center View
     await mapView.setCenterViewToCurrentPosition();
+    model.setLocalStorage(model.workouts);
+    this.sortWorkoutType(model.state.sortType);
   };
 
   sortWorkoutType = sortType => {
@@ -199,7 +200,6 @@ class workoutsView {
       workoutsSortRender = [...Workouts].sort((a, b) => {
         a = a.speed ? +a.speed : +a.pace;
         b = b.speed ? +b.speed : +b.pace;
-        console.log(a, b);
         return b - a;
       });
     }
@@ -239,7 +239,8 @@ class workoutsView {
       return workout.dataset.id;
     });
     //compare workout on screen with model.workouts ,find workouts on screen with same ID
-    let markupWorkouts = model.workouts.filter(workout => {
+    let workoutsArray = [...model.workouts].reverse();
+    let markupWorkouts = workoutsArray.filter(workout => {
       return idOnScreen.includes(workout.id);
     });
 
@@ -248,6 +249,22 @@ class workoutsView {
     }, '');
     this.sortWorkoutType(model.state.sortType);
     mapView.updateWorkout(workoutMarkup);
+  };
+  initializeDataView = async () => {
+    if (model.state.edit) return;
+    const workEl = document.querySelector('.workout');
+    if (!workEl) return;
+    model.workouts.forEach(workout => {
+      mapView.editMarkerInit(workout);
+    });
+    await mapView.initializeMapRoute();
+    const workoutLists = document.querySelectorAll('.workout');
+    workoutLists.forEach(workout => (workout.style.display = 'none'));
+    model.workouts = [];
+    model.markers = [];
+    model.setLocalStorage(model.workouts);
+    this.sortWorkoutType(model.state.sortType);
+    await mapView.setCenterViewToCurrentPosition();
   };
   generateMarkup = workout => {
     const index = workout.type == 'running' ? 0 : 1;

@@ -1,0 +1,147 @@
+/* MAP */
+#map {
+  flex: 1;
+  height: 100vh;
+  background-color: $--color-light--2;
+  position: relative;
+}
+
+/* Popup width is defined in JS using options */
+.leaflet-popup {
+  &-content-wrapper {
+    background-color: $--color-dark--1;
+    color: $--color-light--2;
+    border-radius: 5px;
+    padding-right: 0.6rem;
+  }
+
+  &-content {
+    font-size: 1.5rem;
+  }
+
+  &-tip {
+    background-color: $--color-dark--1;
+  }
+}
+.startIcon {
+  &--in {
+    position: relative;
+    width: 0.5rem;
+    height: 0.5rem;
+    background-color: #00c46a;
+    border-radius: 50%;
+    border: solid 0.2rem #fff;
+    padding: 0.8rem;
+
+    &::before {
+      padding: 1.5rem;
+      background-color: #ff9c08ad;
+      position: absolute;
+      content: '';
+      top: 50%;
+      left: 50%;
+      border-radius: 50%;
+      z-index: -1;
+      animation: InfiniteScale 1s linear infinite;
+      transform-origin: center;
+    }
+  }
+}
+.myIcon {
+  width: 4rem;
+  height: 4rem;
+  background-image: url(../img/icon.png);
+  background-size: 100%;
+  cursor: pointer;
+}
+.startMarker {
+  width: 4rem;
+  height: 4rem;
+  background-image: url(../img/startMarker.png);
+  background-size: 100%;
+  cursor: pointer;
+}
+@keyframes InfiniteScale {
+  0% {
+    opacity: 0.3;
+    transform: translate(-50%, -50%) scale(0.1);
+  }
+
+  50% {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1);
+  }
+
+  100% {
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(3);
+  }
+}
+
+.mapboxgl-popup-close-button {
+  display: none;
+}
+.mapboxgl-popup-content-wrapper {
+  height: auto;
+  max-width: 30rem;
+}
+.mapboxgl-popup-content {
+  padding: 0 0 0 !important;
+  border: none !important;
+  background-color: $--color-dark--2 !important;
+}
+.mapboxgl-popup-content .cycling-popup {
+  font: 500 1rem/1.5rem 'Source Sans Pro', 'Helvetica Neue', Sans-serif;
+  border-left: 5px solid $--color-brand--1;
+  padding: 1rem 1rem;
+  background-color: $--color-dark--2;
+  border-radius: 3px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: auto;
+  color: $--color-light--2;
+}
+.mapboxgl-popup-content .running-popup {
+  font: 500 1rem/1.5rem 'Source Sans Pro', 'Helvetica Neue', Sans-serif;
+  width: auto;
+  color: $--color-light--2;
+  border-left: 5px solid $--color-brand--2;
+  padding: 1rem 1rem;
+  background-color: $--color-dark--2;
+  border-radius: 3px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.mapboxgl-popup-content .running-popup > *:not(:first-child) {
+  margin-top: 0.5rem;
+}
+.mapboxgl-popup-content .cycling-popup > *:not(:first-child) {
+  margin-top: 0.5rem;
+}
+.mapboxgl-popup-tip {
+  border-top-color: $--color-dark--2 !important;
+}
+.mapbox-gl-draw_location {
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: 2rem 2rem;
+  pointer-events: auto;
+  background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAMAAABEpIrGAAAAS1BMVEUAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAADmYDp0AAAAGHRSTlMABwkQIy0wPExfYIOfoLPDz9DS3O/w9vhvrQLlAAAAg0lEQVR42u2NRQLEIBRDU3e33P+kg33GfcvbtMBLgq/oU9wQt/KXVCPAo4lwSTbT/uTtSgIklxJn6p20YWoAavxO3FJhw5eC7Kh6DSiIYHd0/XNB/oMQhP+EYrgV9lqErcsBr4gwZ+5nqhMoRBGhjQH4MC4VQNdDcxG+UABd/xJd/xEnaUQ+W7EZ13wAAAAASUVORK5CYII=);
+}
+.mapbox-gl-draw_delete {
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: 2rem 2rem;
+  pointer-events: auto;
+  background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgBAMAAACBVGfHAAAAElBMVEUAAAAAAAAAAAAAAAAAAAAAAADgKxmiAAAABXRSTlMAQIDg8FuJRPwAAAA+SURBVChTY2AAAdXQ0NAgBiQQCgIoAlCMXUA1FAGC4PphgDgBIgCGDrIEGKBwZAgQCg9XOD8YIiAMFzAE8gCx0VLPOnGP7QAAAABJRU5ErkJggg==);
+}
+/* // From: Pitch toggle control for Mapbox GL JS — http://fuzzytolerance.info/blog/2017/01/30/Pitch-toggle-control-for-Mapbox-GL-JS/ */
+.mapboxgl-ctrl-pitchtoggle-3d {
+  background-image: url(data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIzMCIgaGVpZ2h0PSIzMCI+ICAgIDx0ZXh0IHg9IjUwJSIgeT0iNTAlIiBkeT0iLjM1ZW0iIHN0eWxlPSJmb250LXNpemU6IDE0cHg7IGZvbnQtZmFtaWx5OiAnSGVsdmV0aWNhIE5ldWUnLEFyaWFsLEhlbHZldGljYSxzYW5zLXNlcmlmOyBmb250LXdlaWdodDogYm9sZDsgdGV4dC1hbmNob3I6IG1pZGRsZTsiPjNEPC90ZXh0Pjwvc3ZnPg==);
+}
+
+.mapboxgl-ctrl-pitchtoggle-2d {
+  background-image: url(data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIzMCIgaGVpZ2h0PSIzMCI+ICAgIDx0ZXh0IHg9IjUwJSIgeT0iNTAlIiBkeT0iLjM1ZW0iIHN0eWxlPSJmb250LXNpemU6IDE0cHg7IGZvbnQtZmFtaWx5OiAnSGVsdmV0aWNhIE5ldWUnLEFyaWFsLEhlbHZldGljYSxzYW5zLXNlcmlmOyBmb250LXdlaWdodDogYm9sZDsgdGV4dC1hbmNob3I6IG1pZGRsZTsiPjJEPC90ZXh0Pjwvc3ZnPg==);
+}

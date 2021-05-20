@@ -1,0 +1,15 @@
+/* SIDEBAR */
+.sidebar {
+  flex-basis: 50rem;
+  background-color: $--color-dark--1;
+  padding: 3rem 4rem 1rem 3rem;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+}
+
+.logo {
+  height: 5.2rem;
+  align-self: center;
+  margin-bottom: 1rem;
+}

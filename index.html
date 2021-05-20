@@ -14,20 +14,6 @@
 
     <link defer rel="stylesheet" href="src/sass/main.scss" />
 
-    <link
-      defer
-      rel="stylesheet"
-      href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css"
-      integrity="sha512-xodZBNTC5n17Xt2atTPuE1HxjVMSvLVW9ocqUKLsCC5CXdbqCmblAshOMAS6/keqq/sMZMZ19scR4PsZChSR7A=="
-      crossorigin=""
-    />
-    <!-- Make sure you put this AFTER Leaflet's CSS -->
-    <script
-      defer
-      src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"
-      integrity="sha512-XQoYMqMTK8LvdxXYG3nZ448hOEQiglfqkJs1NOQV44cWnUrBc8PkAOcXy20w0vlaXaVUearIOBhiXZ5V3ynxwA=="
-      crossorigin=""
-    ></script>
     <!-- Using Mapbox -->
     <link
       defer
@@ -52,11 +38,11 @@
           <span>Workout type : All</span>
         </div>
         <div class="sort__section sort__section--number">
-          <span>Number of workouts : 0</span>
+          <span>Number of workouts :<span class='workout__number'>0</span> </span>
         </div>
         <div class="sort__section sort__section--options">
           <ul class="sort__options">
-            <li>Sort options :</li>
+            <li>Sort Options :</li>
             <li class="speed"><a href="javascript:;">Speed</a></li>
             <li class="duration"><a href="javascript:;">Duration</a></li>
             <li class="distance"><a href="javascript:;">Distance</a></li>
@@ -255,8 +241,10 @@
           target="_blank"
           href="https://twitter.com/jonasschmedtman"
           >Jonas Schmedtmann</a
-        >. Use for learning or your portfolio. Don't use to teach. Don't claim
-        as your own.
+        >. Desgined by 
+        <a href=" class="twitter-link"
+        target="_blank"
+        href="https://github.com/JasonYang840723"> Yu-Yang </a>only for demonstration may not be copied for commercial use or distribution.
       </p>
     </div>
     <div class="overlay hidden"></div>
@@ -268,32 +256,6 @@
       <p class="error__text"></p>
       <a class="btn btn--red btn--animated error__btn">Try Again</a>
     </div>
-    <!-- <div class="overlay--black"></div>
-    <svg class="icon-spinner8">
-      <use xlink:href="src/img/sprite.svg#icon-spinner8"></use>
-    </svg> -->
     <div id="map"></div>
-    <!-- <div>
-      <div>
-        <p>Start</p>
-        ${workout.type}
-        <p>on</p>
-        ${workout.time.dateNow}
-      </div>
-      <div>${workout.startLocationIn}</div>
-      <div>${workout.startLocationStreet}</div>
-      <div>${workout.time.timeNow}</div>
-    </div> -->
-    <!-- <div>
-      <div>
-        <p>Finished</p>
-        ${workout.type}
-        <p>on</p>
-        ${workout.time.dateEnd}
-      </div>
-      <div>${workout.endLocationIn}</div>
-      <div>${workout.endLocationStreet}</div>
-      <div>${workout.time.timeEnd}</div>
-    </div> -->
   </body>
 </html>

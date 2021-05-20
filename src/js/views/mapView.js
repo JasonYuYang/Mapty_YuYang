@@ -2,6 +2,9 @@ import * as config from './config';
 import { AJAX } from '../helper';
 import View from './Views';
 import * as model from '../model';
+import { PitchToggle } from './config';
+import { MapboxGLButtonControl } from './config';
+import workoutsView from './workoutsView';
 
 class mapView extends View {
   #map = document.querySelector('#map');
@@ -32,6 +35,7 @@ class mapView extends View {
       center: this.#mapData.currentPosition,
       zoom: this.#mapZoomLevel,
     });
+
     //Handle click outside map
     this.#parentElemet.addEventListener('click', async e => {
       if (model.state.edit) return;
@@ -56,6 +60,7 @@ class mapView extends View {
     this.#map.on('load', async () => {
       // Add zoom and rotation controls to the map.
       this.#map.addControl(new mapboxgl.NavigationControl());
+      this.addButtonOnMap();
       //Disable double click zoom in
       this.#map.doubleClickZoom.disable();
       // Render Marker at current position
@@ -69,7 +74,21 @@ class mapView extends View {
       this.#StartPositionType.addEventListener('change', this.changeFromType);
     });
   };
-
+  addButtonOnMap = () => {
+    const ctrlZoom = new MapboxGLButtonControl({
+      className: 'mapbox-gl-draw_location',
+      title: 'See All Markers',
+      eventHandler: this.zoomToSeeAllMarker,
+    });
+    const ctrlDelete = new MapboxGLButtonControl({
+      className: 'mapbox-gl-draw_delete',
+      title: 'Delete All Markers & Workouts',
+      eventHandler: workoutsView.initializeDataView,
+    });
+    this.#map.addControl(ctrlZoom, 'top-left');
+    this.#map.addControl(ctrlDelete, 'top-left');
+    this.#map.addControl(new PitchToggle({ minpitchzoom: 11 }), 'top-left');
+  };
   showForm = async mapE => {
     //Prevent click before form rest
     if (model.state.sortType !== ' All') return;
@@ -127,8 +146,18 @@ class mapView extends View {
     )} , ${this.#mapData.pathStart[0].toFixed(3)})`;
   };
   editMarkerInit = workout => {
-    this.#startMarkerPop.remove();
-    workout.Marker.remove();
+    if (this.#startMarkerPop) {
+      this.#startMarkerPop.remove();
+    }
+    const markerObject = model.markers.find(marker => marker.id === workout.id);
+    console.log(markerObject, 'marker');
+    markerObject.marker.remove();
+  };
+  initializeMapRoute = async () => {
+    await this.renderPath(
+      this.#mapData.currentPosition,
+      this.#mapData.currentPosition
+    );
   };
   setCenterViewToCurrentPosition = async () => {
     this.#map.flyTo({
@@ -314,12 +343,6 @@ class mapView extends View {
       this.#mapData.currentPosition
     );
   };
-  // InitializeStartMarker = () => {
-  //   if (this.#startMarker) {
-  //     this.#startMarker.remove();
-  //     this.#startMarker = undefined;
-  //   }
-  // };
   addpopupToMarker = (workout, index) => {
     let coords = index == 0 ? workout.startCoords : workout.endCoords;
     const StartMarkup = `<div class="${workout.type}-popup"> 
@@ -421,6 +444,19 @@ class mapView extends View {
     await this.renderPath(workout.startCoords, workout.endCoords);
 
     this.#map.fitBounds(bound, {
+      padding: { top: 150, bottom: 25, left: 125, right: 125 },
+    });
+  };
+  zoomToSeeAllMarker = () => {
+    if (model.state.edit) return;
+    if (model.workouts.length <= 1) return;
+    let allCoords = model.workouts.map(workout => {
+      return workout.endCoords;
+    });
+    let turf = require('@turf/turf');
+    let line = turf.lineString(allCoords);
+    let bbox = turf.bbox(line);
+    this.#map.fitBounds(bbox, {
       padding: { top: 150, bottom: 25, left: 125, right: 125 },
     });
   };
