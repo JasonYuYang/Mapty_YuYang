@@ -248,12 +248,10 @@ class workoutsView {
     if (model.state.edit) return;
     const workEl = document.querySelector('.workout');
     if (!workEl) return;
-    model.workouts.forEach(workout => {
-      mapView.editMarkerInit(workout);
-    });
     await mapView.initializeMapRoute();
     const workoutLists = document.querySelectorAll('.workout');
     workoutLists.forEach(workout => (workout.style.display = 'none'));
+    model.markers.forEach(marker => marker.marker.remove());
     model.workouts.splice(0, model.workouts.length);
     model.markers.splice(0, model.workouts.length);
     model.favorites.splice(0, model.favorites.length);

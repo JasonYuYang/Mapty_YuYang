@@ -13,13 +13,11 @@ const controlWorkout = () => {
   model.getLocalStorage();
   model.workouts.forEach(workout => {
     workoutsView.renderWorkout(workout);
-    mapView.addpopupToMarker(workout, 1);
     model.markers.push({
       id: workout.id,
       marker: mapView.addpopupToMarker(workout, 1),
     });
   });
-
   model.initialFavorites(model.workouts);
   const markup = sortView.generateSortSectionMarkup(model.workouts);
   mapView.updateSortSection(markup);

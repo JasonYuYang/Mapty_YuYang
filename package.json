@@ -5,7 +5,7 @@
   "description": "Rebuild Mapty Web app from Jonas Schmedtmann",
   "scripts": {
     "start": "parcel index.html",
-    "build": "parcel build index.html"
+    "build": "parcel build index.html --out-dir ./dist --no-minify"
   },
   "repository": {
     "type": "git",
