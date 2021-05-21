@@ -1,25 +1,25 @@
-import icons from 'url:../../img/sprite.svg';
-import img from 'url:../../img/icon.png';
+import icons from '../../img/sprite.svg';
+import img from '../../img/icon.png';
 import mapView from './mapView';
 import * as model from '../model';
 import sortView from './sortView';
 class workoutsView {
-  #form = document.querySelector('.form');
-  #containerWorkouts = document.querySelector('.workouts');
-  #inputType = document.querySelector('.form__input--type');
-  #StartPositionType = document.querySelector('.form__input--route-type');
-  #selection = document.querySelector('.form__input--cadence');
-  #inputElevation = document.querySelector('.form__input--elevation');
-  #inputCadence = document.querySelector('.form__input--cadence');
-  #duration = document.querySelector('.form__input--duration');
+  _form = document.querySelector('.form');
+  _containerWorkouts = document.querySelector('.workouts');
+  _inputType = document.querySelector('.form__input--type');
+  _StartPositionType = document.querySelector('.form__input--route-type');
+  _selection = document.querySelector('.form__input--cadence');
+  _inputElevation = document.querySelector('.form__input--elevation');
+  _inputCadence = document.querySelector('.form__input--cadence');
+  _duration = document.querySelector('.form__input--duration');
 
   addHandlerWorkout = handler => {
-    this.#containerWorkouts.addEventListener('click', e => {
+    this._containerWorkouts.addEventListener('click', e => {
       handler(e);
     });
   };
   addHandlerFavorite = handler => {
-    this.#containerWorkouts.addEventListener('click', e => {
+    this._containerWorkouts.addEventListener('click', e => {
       handler(e);
     });
   };
@@ -55,13 +55,11 @@ class workoutsView {
     } else {
       return workout;
     }
-
-    console.log(workouts);
   };
 
   renderWorkout = workout => {
     const markup = this.generateMarkup(workout);
-    this.#form.insertAdjacentHTML('afterend', markup);
+    this._form.insertAdjacentHTML('afterend', markup);
   };
   editWorkout = async (e, workouts) => {
     const workoutEl = e.target.closest('.workout');
@@ -74,35 +72,35 @@ class workoutsView {
     //Show Form
     form.classList.remove('hidden');
     //Show Workout Type and vlaue
-    this.#inputType.value = `${editWorkout.type}`;
-    this.#selection =
-      this.#inputType.value == 'running'
-        ? this.#inputCadence
-        : this.#inputElevation;
-    this.#selection.value =
+    this._inputType.value = `${editWorkout.type}`;
+    this._selection =
+      this._inputType.value == 'running'
+        ? this._inputCadence
+        : this._inputElevation;
+    this._selection.value =
       editWorkout.type == 'running'
         ? +editWorkout.cadence
         : +editWorkout.elevationGain;
     if (editWorkout.type == 'running') {
-      this.#inputElevation
+      this._inputElevation
         .closest('.form__row')
         .classList.add('form__row--hidden');
-      this.#inputCadence
+      this._inputCadence
         .closest('.form__row')
         .classList.remove('form__row--hidden');
     } else {
-      this.#inputElevation
+      this._inputElevation
         .closest('.form__row')
         .classList.remove('form__row--hidden');
-      this.#inputCadence
+      this._inputCadence
         .closest('.form__row')
         .classList.add('form__row--hidden');
     }
 
     //Show Workout duration;
-    this.#duration.value = +editWorkout.duration;
+    this._duration.value = +editWorkout.duration;
     //Show from position
-    this.#StartPositionType.value = `NP`;
+    this._StartPositionType.value = `NP`;
     //Show Start Marker on startCoords
     // mapView.InitializeStartMarker();
     mapView.renderMarker(editWorkout.startCoords, 1);
@@ -117,6 +115,7 @@ class workoutsView {
     model.state.editIndex = editWorkoutIndex;
   };
   deleteWorkout = async (e, workouts) => {
+    if (model.state.edit) return;
     const workoutEl = e.target.closest('.workout');
     const deleteWorkout = workouts.find(
       work => work.id === workoutEl.dataset.id
@@ -142,7 +141,7 @@ class workoutsView {
   };
 
   sortWorkoutType = sortType => {
-    this.#containerWorkouts.querySelectorAll('.workout').forEach(workout => {
+    this._containerWorkouts.querySelectorAll('.workout').forEach(workout => {
       workout.remove();
     });
     if (sortType == ' All') {
@@ -219,11 +218,6 @@ class workoutsView {
       workoutsSortRender = [...Workouts].sort((a, b) => {
         return b.time.startMs - a.time.startMs;
       });
-      console.log(
-        [...Workouts].sort((a, b) => {
-          return b.time.startMs - a.time.startMs;
-        })
-      );
     }
     let workoutMarkup = workoutsSortRender.reduce((markup, workout) => {
       return (markup += this.generateMarkup(workout));
@@ -260,8 +254,9 @@ class workoutsView {
     await mapView.initializeMapRoute();
     const workoutLists = document.querySelectorAll('.workout');
     workoutLists.forEach(workout => (workout.style.display = 'none'));
-    model.workouts = [];
-    model.markers = [];
+    model.workouts.splice(0, model.workouts.length);
+    model.markers.splice(0, model.workouts.length);
+    model.favorites.splice(0, model.favorites.length);
     model.setLocalStorage(model.workouts);
     this.sortWorkoutType(model.state.sortType);
     await mapView.setCenterViewToCurrentPosition();

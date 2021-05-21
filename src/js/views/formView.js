@@ -3,30 +3,30 @@ import mapView from './mapView';
 import * as model from '../model';
 
 class formView {
-  #form = document.getElementById('form');
-  #duration = document.querySelector('.form__input--duration');
-  #inputElevation = document.querySelector('.form__input--elevation');
-  #inputCadence = document.querySelector('.form__input--cadence');
-  #inputType = document.querySelector('.form__input--type');
-  #selection = document.querySelector('.form__input--cadence');
+  _form = document.getElementById('form');
+  _duration = document.querySelector('.form__input--duration');
+  _inputElevation = document.querySelector('.form__input--elevation');
+  _inputCadence = document.querySelector('.form__input--cadence');
+  _inputType = document.querySelector('.form__input--type');
+  _selection = document.querySelector('.form__input--cadence');
 
   addHandlerForm = (handler1, handler2) => {
-    this.#inputType.addEventListener('change', () => {
+    this._inputType.addEventListener('change', () => {
       this.toggleElevationField();
       this.formValidation();
     });
-    this.#form.addEventListener('submit', async e => {
+    this._form.addEventListener('submit', async e => {
       try {
         let handler = model.state.edit ? handler2 : handler1;
         e.preventDefault();
         if (this.formValidation()) {
-          this.#form.classList.add('hidden');
+          this._form.classList.add('hidden');
           await Promise.race([handler(), timeout(10)]);
-          this.#form.reset();
-          this.#inputElevation
+          this._form.reset();
+          this._inputElevation
             .closest('.form__row')
             .classList.add('form__row--hidden');
-          this.#inputCadence
+          this._inputCadence
             .closest('.form__row')
             .classList.remove('form__row--hidden');
           model.state.edit = false;
@@ -40,16 +40,16 @@ class formView {
   formValidation = () => {
     let checkDuration;
     let checkSelection;
-    this.#selection =
-      this.#inputType.value == 'running'
-        ? this.#inputCadence
-        : this.#inputElevation;
-    if (this.checkRequired(this.#duration)) {
-      checkDuration = this.checkInput(this.#duration);
+    this._selection =
+      this._inputType.value == 'running'
+        ? this._inputCadence
+        : this._inputElevation;
+    if (this.checkRequired(this._duration)) {
+      checkDuration = this.checkInput(this._duration);
     }
 
-    if (this.checkRequired(this.#selection)) {
-      checkSelection = this.checkInput(this.#selection);
+    if (this.checkRequired(this._selection)) {
+      checkSelection = this.checkInput(this._selection);
     }
     return checkDuration && checkSelection;
   };
@@ -100,18 +100,18 @@ class formView {
     return input.id.charAt(0).toUpperCase() + input.id.slice(1);
   };
   toggleElevationField = () => {
-    this.#inputElevation
+    this._inputElevation
       .closest('.form__row')
       .classList.toggle('form__row--hidden');
-    this.#inputCadence
+    this._inputCadence
       .closest('.form__row')
       .classList.toggle('form__row--hidden');
   };
   getInputvalue = () => {
     const inputValue = {};
-    inputValue[this.#selection.id] = this.#selection.value;
-    inputValue[this.#duration.id] = this.#duration.value;
-    inputValue.type = this.#inputType.value;
+    inputValue[this._selection.id] = this._selection.value;
+    inputValue[this._duration.id] = this._duration.value;
+    inputValue.type = this._inputType.value;
     return inputValue;
   };
 }

@@ -8,8 +8,9 @@ import sortView from './views/sortView';
 
 import 'core-js/stable';
 import 'regenerator-runtime/runtime';
+
 const controlWorkout = () => {
-  model.getLocalStorage(model.workouts);
+  model.getLocalStorage();
   model.workouts.forEach(workout => {
     workoutsView.renderWorkout(workout);
     mapView.addpopupToMarker(workout, 1);
@@ -18,6 +19,7 @@ const controlWorkout = () => {
       marker: mapView.addpopupToMarker(workout, 1),
     });
   });
+
   model.initialFavorites(model.workouts);
   const markup = sortView.generateSortSectionMarkup(model.workouts);
   mapView.updateSortSection(markup);
@@ -65,7 +67,6 @@ const controlForm = async () => {
     const sortMarkup = sortView.generateSortSectionMarkup(model.workouts);
     mapView.updateSortSection(sortMarkup);
   } catch (err) {
-    console.log(err);
     mapView.renderError(err);
   }
 };
@@ -107,7 +108,7 @@ const controlEditForm = async () => {
     delete model.state.editIndex;
     workoutsView.updateWorkoutMarkupOnScreen();
   } catch (err) {
-    console.log(err);
+    mapView.renderError(err);
   }
 };
 const controlWorkoutRenderPath = async e => {
@@ -148,12 +149,13 @@ const controlSort = e => {
 };
 const controlHamburger = e => {
   if (model.state.edit) return;
+  sortView.removeSelected();
   sortView.sortState(e);
   workoutsView.sortWorkoutType(model.state.sortType);
 };
 const init = async () => {
-  controlWorkout();
   await controlMap();
+  controlWorkout();
   formView.addHandlerForm(controlForm, controlEditForm);
   workoutsView.addHandlerWorkout(controlWorkoutRenderPath);
   workoutsView.addHandlerFavorite(controlFavorites);

@@ -11,9 +11,9 @@ export const state = {
   sortType: ' All',
   sortOptions: SORT_OPTION,
 };
-export const workouts = [];
-export const favorites = [];
-export const markers = [];
+export let workouts = [];
+export let favorites = [];
+export let markers = [];
 
 export const getPosition = async () => {
   return new Promise((resolve, reject) => {
@@ -106,11 +106,11 @@ export const addTimeToPopUp = async (min, startSeconds) => {
 };
 
 export class Workout {
-  #date = new Date();
-  #id = (Date.now() + '').slice(-10);
+  _date = new Date();
+  _id = (Date.now() + '').slice(-10);
   //Create ID as last 10 characters  from date
   constructor(startCoords, endCoords, distance, duration, weather, time) {
-    this.id = this.#id;
+    this.id = this._id;
     this.startCoords = startCoords;
     this.endCoords = endCoords; // [lat, lng]
     this.distance = distance; // in km
@@ -122,11 +122,11 @@ export class Workout {
     // prettier-ignore
     const months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
 
-    return `${months[this.#date.getMonth()]} ${this.#date.getDate()}`;
+    return `${months[this._date.getMonth()]} ${this._date.getDate()}`;
   }
 }
 export class Running extends Workout {
-  #type = 'running';
+  _type = 'running';
   constructor(
     startCoords,
     endCoords,
@@ -138,11 +138,11 @@ export class Running extends Workout {
   ) {
     super(startCoords, endCoords, distance, duration, weather, time);
     this.cadence = cadence;
-    this.description = `${this.#type[0].toUpperCase()}${this.#type.slice(
+    this.description = `${this._type[0].toUpperCase()}${this._type.slice(
       1
     )} on ${this._setDescription()}`;
     this._calcPace();
-    this.type = this.#type;
+    this.type = this._type;
   }
   _calcPace() {
     // min/km
@@ -151,7 +151,7 @@ export class Running extends Workout {
   }
 }
 export class Cycling extends Workout {
-  #type = 'cycling';
+  _type = 'cycling';
   constructor(
     startCoords,
     endCoords,
@@ -163,11 +163,11 @@ export class Cycling extends Workout {
   ) {
     super(startCoords, endCoords, distance, duration, weather, time);
     this.elevationGain = elevationGain;
-    this.description = `${this.#type[0].toUpperCase()}${this.#type.slice(
+    this.description = `${this._type[0].toUpperCase()}${this._type.slice(
       1
     )} on ${this._setDescription()}`;
     this._calcSpeed();
-    this.type = this.#type;
+    this.type = this._type;
   }
   _calcSpeed() {
     // km/h
@@ -220,7 +220,7 @@ export const setLocalStorage = workouts => {
   localStorage.setItem('workouts', JSON.stringify(workouts));
 };
 
-export const getLocalStorage = workouts => {
+export const getLocalStorage = () => {
   const data = JSON.parse(localStorage.getItem('workouts'));
   if (!data) return;
   data.forEach(workout => {

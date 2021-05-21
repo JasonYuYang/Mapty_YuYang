@@ -1,7 +1,7 @@
 import 'core-js/stable';
 import 'regenerator-runtime/runtime';
-import img from 'url:../../img/icon.png';
-import icons from 'url:../../img/sprite.svg';
+import img from '../../img/icon.png';
+import icons from '../../img/sprite.svg';
 
 export default class View {
   _textEl = document.querySelector('.error__text');

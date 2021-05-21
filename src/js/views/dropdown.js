@@ -1,19 +1,18 @@
-import mapView from './mapView';
 class dropdown {
-  #containerWorkouts = document.querySelector('.workouts');
-  #parentElemet = document.querySelector('.sidebar');
+  _containerWorkouts = document.querySelector('.workouts');
+  _parentElemet = document.querySelector('.sidebar');
   addHandlerShowDropdown = handler => {
-    this.#containerWorkouts.addEventListener('click', e => {
+    this._containerWorkouts.addEventListener('click', e => {
       handler(e);
     });
   };
   addHandlerHideDropdown = handler => {
-    this.#parentElemet.addEventListener('click', e => {
+    this._parentElemet.addEventListener('click', e => {
       handler(e);
     });
   };
   addHandlerControlDropdown = handler => {
-    this.#parentElemet.addEventListener('click', e => {
+    this._parentElemet.addEventListener('click', e => {
       const dropdownItems = e.target.closest('.dropdown__items');
       if (dropdownItems) {
         handler(e, dropdownItems);
@@ -34,7 +33,7 @@ class dropdown {
   };
   hideDropdown = () => {
     const dropdownElements =
-      this.#containerWorkouts.querySelectorAll('.dropdown');
+      this._containerWorkouts.querySelectorAll('.dropdown');
     if (!dropdownElements) return;
     dropdownElements.forEach(d => {
       if (d.classList.contains('hidden')) return;
@@ -43,7 +42,7 @@ class dropdown {
   };
   hideDropdownClickOutside = e => {
     const dropdown = Array.from(
-      this.#parentElemet.querySelectorAll('.dropdown')
+      this._parentElemet.querySelectorAll('.dropdown')
     );
     // prettier-ignore
     const isHidden = dropdown.every((d) => d.classList.contains('hidden'))

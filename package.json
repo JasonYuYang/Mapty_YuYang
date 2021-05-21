@@ -18,12 +18,17 @@
   },
   "homepage": "https://github.com/JasonYang840723/Mapty_rebuilded#readme",
   "devDependencies": {
+    "@babel/core": "^7.3.4",
+    "@babel/plugin-syntax-class-properties": "^7.12.13",
     "@turf/turf": "^6.3.0",
-    "parcel": "^2.0.0-beta.1",
-    "sass": "^1.32.11"
+    "parcel-bundler": "^1.12.3",
+    "sass": "^1.33.0"
   },
   "dependencies": {
+    "@babel/plugin-proposal-class-properties": "^7.13.0",
+    "@babel/plugin-proposal-private-methods": "^7.13.0",
     "core-js": "^3.11.1",
+    "img": "^3.0.3",
     "regenerator-runtime": "^0.13.7"
   }
 }

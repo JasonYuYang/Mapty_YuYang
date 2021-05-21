@@ -1,4 +1,3 @@
-import workoutsView from './workoutsView';
 import * as model from '../model';
 class sortView {
   addHandlerSort = handler => {
@@ -60,44 +59,7 @@ class sortView {
         <div class="sort__section sort__section--number">
           <span>Number of workouts : <span class='workout__number'>${workouts.length}</span></span>
         </div>
-        <div class="sort__section sort__section--options">
-          <ul class="sort__options">
-            <li>Sort options : </li>
-            <li class='SC'><a href="javascript:;">⚡ S/C</a></li>
-            <li class='duration'><a href="javascript:;">⏱ Duration</a></li>
-            <li class='distance'><a href="javascript:;">🚵‍♀️ Distance</a></li>
-          </ul>
-          <div class="sort__hamburger">
-            <input
-              type="checkbox"
-              class="sort__hamburger--checkbox"
-              id="sort-toggle"
-            />
-            <label for="sort-toggle" class="sort__hamburger--button">
-              <span class="sort__hamburger--icon">&nbsp;</span>
-            </label>
-            <div class="sort__hamburger--background">&nbsp;</div>
-            <nav class="sort__hamburger--nav sort__hamburger--nav-active">
-              <ul class="sort__hamburger--list">
-                <li class="sort__section--item sort_all">
-                  <a href="javascript:;" class="sort__hamburger--link ">All types</a>
-                </li>
-                <li class="sort__section--item sort_running">
-                  <a href="javascript:;" class="sort__hamburger--link "> 🏃‍♂️ Running</a>
-                </li>
-                <li class="sort__section--item sort_cycling">
-                  <a href="javascript:;" class="sort__hamburger--link "> 🚴‍♀ Cycling</a>
-                </li>
-                <li class="sort__section--item sort_favorites">
-                  <a href="javascript:;" class="sort__hamburger--link "> ⭐Favorites</a>
-                </li>
-              </ul>
-            </nav>
-          </div>
-          <div class="sort__section__reset--button">
-            <a href="javascript:;" class="reset">reset</a>
-          </div>
-        </div>
+        
       </div>`;
     return markup;
   };

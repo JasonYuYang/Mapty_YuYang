@@ -7,37 +7,38 @@ import { MapboxGLButtonControl } from './config';
 import workoutsView from './workoutsView';
 
 class mapView extends View {
-  #map = document.querySelector('#map');
-  #mapData;
-  #mapZoomLevel = 13;
-  #parentElemet = document.querySelector('.sidebar');
-  #clickCount = 0;
-  #accessToken;
-  #myMarker;
-  #startMarker;
-  #preserveMarker;
-  #startMarkerPop;
-  #pathData;
-  #StartPositionType = document.querySelector('.form__input--route-type');
-  #inputCadence = document.querySelector('.form__input--cadence');
+  _map = document.querySelector('#map');
+  _mapData;
+  _mapZoomLevel = 13;
+  _parentElemet = document.querySelector('.sidebar');
+  _clickCount = 0;
+  _accessToken;
+  _myMarker;
+  _startMarker;
+  _preserveMarker;
+  _preserveMarkerInMemory;
+  _startMarkerPop;
+  _pathData;
+  _StartPositionType = document.querySelector('.form__input--route-type');
+  _inputCadence = document.querySelector('.form__input--cadence');
   constructor() {
     super();
     this.markerOnClickfunctionality = this.markerOnClickfunctionality();
   }
   loadMap = async mapData => {
-    this.#mapData = mapData;
+    this._mapData = mapData;
     mapboxgl.accessToken =
       'pk.eyJ1IjoiamFzb25jb2Rpbmc3MjMiLCJhIjoiY2tvN2FlcmF6MW1raDJvbHJhN2ptMG01NCJ9.ZDZ7zl030QE1REiaDIYWnQ';
-    this.#accessToken = mapboxgl.accessToken;
-    this.#map = new mapboxgl.Map({
+    this._accessToken = mapboxgl.accessToken;
+    this._map = new mapboxgl.Map({
       container: 'map',
       style: 'mapbox://styles/jasoncoding723/ckohe0oxp2n5e17nz9i4awgix',
-      center: this.#mapData.currentPosition,
-      zoom: this.#mapZoomLevel,
+      center: this._mapData.currentPosition,
+      zoom: this._mapZoomLevel,
     });
 
     //Handle click outside map
-    this.#parentElemet.addEventListener('click', async e => {
+    this._parentElemet.addEventListener('click', async e => {
       if (model.state.edit) return;
       const form = document.querySelector('.form');
       if (
@@ -45,33 +46,33 @@ class mapView extends View {
         e.target.closest('#form') == null
       ) {
         form.classList.add('hidden');
-        this.#myMarker.remove();
-        this.#myMarker = undefined;
+        this._myMarker.remove();
+        this._myMarker = undefined;
         await this.renderPath(
-          this.#mapData.currentPosition,
-          this.#mapData.currentPosition
+          this._mapData.currentPosition,
+          this._mapData.currentPosition
         );
       }
     });
 
     //Handle click on Map
 
-    this.#map.on('click', this.showForm);
-    this.#map.on('load', async () => {
+    this._map.on('click', this.showForm);
+    this._map.on('load', async () => {
       // Add zoom and rotation controls to the map.
-      this.#map.addControl(new mapboxgl.NavigationControl());
+      this._map.addControl(new mapboxgl.NavigationControl());
       this.addButtonOnMap();
       //Disable double click zoom in
-      this.#map.doubleClickZoom.disable();
+      this._map.doubleClickZoom.disable();
       // Render Marker at current position
-      this.renderMarker(this.#mapData.currentPosition, 0);
+      this.renderMarker(this._mapData.currentPosition, 0);
       // make an initial directions request that
       // starts and ends at the same location
       await this.renderPath(
-        this.#mapData.currentPosition,
-        this.#mapData.currentPosition
+        this._mapData.currentPosition,
+        this._mapData.currentPosition
       );
-      this.#StartPositionType.addEventListener('change', this.changeFromType);
+      this._StartPositionType.addEventListener('change', this.changeFromType);
     });
   };
   addButtonOnMap = () => {
@@ -85,115 +86,109 @@ class mapView extends View {
       title: 'Delete All Markers & Workouts',
       eventHandler: workoutsView.initializeDataView,
     });
-    this.#map.addControl(ctrlZoom, 'top-left');
-    this.#map.addControl(ctrlDelete, 'top-left');
-    this.#map.addControl(new PitchToggle({ minpitchzoom: 11 }), 'top-left');
+    this._map.addControl(ctrlZoom, 'top-left');
+    this._map.addControl(ctrlDelete, 'top-left');
+    this._map.addControl(new PitchToggle({ minpitchzoom: 11 }), 'top-left');
   };
   showForm = async mapE => {
     //Prevent click before form rest
     if (model.state.sortType !== ' All') return;
     if (!model.state.edit) {
-      if (this.#inputCadence.value) return;
+      if (this._inputCadence.value) return;
     }
-    if (this.#startMarkerPop) {
-      this.#startMarkerPop.remove();
+    if (this._startMarkerPop) {
+      this._startMarkerPop.remove();
     }
     await this.showFormWithdbClick(mapE);
   };
   showFormWithdbClick = async mapE => {
     const form = document.querySelector('.form');
     let timeout = [];
-    this.#clickCount++;
-    if (this.#clickCount == 1) {
+    this._clickCount++;
+    if (this._clickCount == 1) {
       timeout = setTimeout(() => {
-        this.#clickCount = 0;
+        this._clickCount = 0;
       }, 250);
-    } else if (this.#clickCount == 2) {
+    } else if (this._clickCount == 2) {
       clearTimeout(timeout);
       form.classList.remove('hidden');
       // console.log(mapE.lngLat);
 
-      // Update DestinationCoords to #mapData
+      // Update DestinationCoords to _mapData
       const { lng, lat } = mapE.lngLat;
       const DestinationCoords = [lng, lat];
-      this.#mapData.DestinationCoords = DestinationCoords;
-      this.renderMarker(this.#mapData.DestinationCoords, 2);
-      if (this.#startMarker) {
+      this._mapData.DestinationCoords = DestinationCoords;
+      this.renderMarker(this._mapData.DestinationCoords, 2);
+      if (this._startMarker) {
         await this.renderPath(
-          this.#mapData.startPositionCoords,
-          this.#mapData.DestinationCoords
+          this._mapData.startPositionCoords,
+          this._mapData.DestinationCoords
         );
       } else {
         await this.renderPath(
-          this.#mapData.currentPosition,
-          this.#mapData.DestinationCoords
+          this._mapData.currentPosition,
+          this._mapData.DestinationCoords
         );
       }
 
       this.showDataOnInput();
-      this.#clickCount = 0;
+      this._clickCount = 0;
     }
   };
   showDataOnInput = () => {
     const inputDistance = document.querySelector('.form__input--distance');
     const inputDestinationCoords = document.querySelector('.end');
-    this.#mapData.pathDistance = this.#pathData.routes[0].distance;
+    this._mapData.pathDistance = this._pathData.routes[0].distance;
     inputDistance.placeholder = `${(
-      this.#pathData.routes[0].distance / 1000
+      this._pathData.routes[0].distance / 1000
     ).toFixed(2)}km`;
-    inputDestinationCoords.placeholder = `(${this.#mapData.pathEnd[1].toFixed(
+    inputDestinationCoords.placeholder = `(${this._mapData.pathEnd[1].toFixed(
       3
-    )} , ${this.#mapData.pathStart[0].toFixed(3)})`;
+    )} , ${this._mapData.pathStart[0].toFixed(3)})`;
   };
   editMarkerInit = workout => {
-    if (this.#startMarkerPop) {
-      this.#startMarkerPop.remove();
+    if (this._startMarkerPop) {
+      this._startMarkerPop.remove();
     }
-    const markerObject = model.markers.find(marker => marker.id === workout.id);
-    console.log(markerObject, 'marker');
-    markerObject.marker.remove();
+    model.markers.find(marker => marker.id === workout.id).marker.remove();
   };
   initializeMapRoute = async () => {
     await this.renderPath(
-      this.#mapData.currentPosition,
-      this.#mapData.currentPosition
+      this._mapData.currentPosition,
+      this._mapData.currentPosition
     );
   };
   setCenterViewToCurrentPosition = async () => {
-    this.#map.flyTo({
+    this._map.flyTo({
       center: [
-        this.#mapData.currentPosition[0],
-        this.#mapData.currentPosition[1],
+        this._mapData.currentPosition[0],
+        this._mapData.currentPosition[1],
       ],
-      zoom: this.#mapZoomLevel,
+      zoom: this._mapZoomLevel,
     });
 
     await this.renderPath(
-      this.#mapData.currentPosition,
-      this.#mapData.currentPosition
+      this._mapData.currentPosition,
+      this._mapData.currentPosition
     );
   };
   renderPath = async (start, end) => {
-    const url = `https://api.mapbox.com/directions/v5/mapbox/cycling/${
-      start[0]
-    },${start[1]};${end[0]},${end[1]}?geometries=geojson&access_token=${
-      this.#accessToken
-    }`;
-    this.#pathData = await AJAX(url, 'Failed to render Path!!');
+    const url = `https://api.mapbox.com/directions/v5/mapbox/cycling/${start[0]},${start[1]};${end[0]},${end[1]}?geometries=geojson&access_token=${this._accessToken}`;
+    this._pathData = await AJAX(url, 'Failed to render Path!!');
     const geojson = {
       type: 'Feature',
       properties: {},
       geometry: {
         type: 'LineString',
-        coordinates: this.#pathData.routes[0].geometry.coordinates,
+        coordinates: this._pathData.routes[0].geometry.coordinates,
       },
     };
     // if the route already exists on the map, reset it using setData
-    if (this.#map.getSource('route')) {
-      this.#map.getSource('route').setData(geojson);
+    if (this._map.getSource('route')) {
+      this._map.getSource('route').setData(geojson);
     } else {
       // otherwise, make a new request
-      this.#map.addLayer({
+      this._map.addLayer({
         id: 'route',
         type: 'line',
         source: {
@@ -219,8 +214,8 @@ class mapView extends View {
       });
     }
     // add turn instructions here at the end
-    this.#mapData.pathStart = start;
-    this.#mapData.pathEnd = end;
+    this._mapData.pathStart = start;
+    this._mapData.pathEnd = end;
   };
 
   renderMarker = async (coords, index) => {
@@ -228,15 +223,15 @@ class mapView extends View {
     if (index == 0) {
       const startIcon = document.createElement('div');
       startIcon.className = 'startIcon--in';
-      new mapboxgl.Marker(startIcon).setLngLat(coords).addTo(this.#map);
+      new mapboxgl.Marker(startIcon).setLngLat(coords).addTo(this._map);
     } else if (index == 1) {
       this.updateStartMarker(coords);
     } else {
-      if (!this.#myMarker) {
+      if (!this._myMarker) {
         await this.updateMyMarker(coords);
       } else {
-        this.#myMarker.remove();
-        this.#myMarker = undefined;
+        this._myMarker.remove();
+        this._myMarker = undefined;
         await this.updateMyMarker(coords);
       }
     }
@@ -244,32 +239,32 @@ class mapView extends View {
   updateStartMarker = async coords => {
     const startMarker = document.createElement('div');
     startMarker.className = 'startMarker';
-    this.#startMarker = new mapboxgl.Marker({
+    this._startMarker = new mapboxgl.Marker({
       element: startMarker,
       draggable: true,
       offset: [0, -20],
     })
       .setLngLat(coords)
       .onClick(() => {
-        this.#map.flyTo({
+        this._map.flyTo({
           center: [coords[0], coords[1]],
-          zoom: this.#mapZoomLevel,
+          zoom: this._mapZoomLevel,
         });
       })
-      .addTo(this.#map);
-    this.#mapData.startPositionCoords = coords;
-    this.#startMarker.on('dragend', async () => {
-      let lngLet = this.#startMarker.getLngLat();
-      this.#mapData.startPositionCoords = [lngLet.lng, lngLet.lat];
+      .addTo(this._map);
+    this._mapData.startPositionCoords = coords;
+    this._startMarker.on('dragend', async () => {
+      let lngLet = this._startMarker.getLngLat();
+      this._mapData.startPositionCoords = [lngLet.lng, lngLet.lat];
       if (model.state.edit) {
         await this.renderPath(
-          this.#mapData.startPositionCoords,
-          this.#mapData.pathEnd
+          this._mapData.startPositionCoords,
+          this._mapData.pathEnd
         );
       } else {
         await this.renderPath(
-          this.#mapData.startPositionCoords,
-          this.#mapData.DestinationCoords
+          this._mapData.startPositionCoords,
+          this._mapData.DestinationCoords
         );
       }
 
@@ -280,33 +275,33 @@ class mapView extends View {
     const MyIcon = document.createElement('div');
     MyIcon.className = 'myIcon';
 
-    this.#myMarker = new mapboxgl.Marker({
+    this._myMarker = new mapboxgl.Marker({
       element: MyIcon,
       draggable: true,
       offset: [0, -20],
     })
       .setLngLat(coords)
       .onClick(() => {
-        this.#map.flyTo({
+        this._map.flyTo({
           center: [coords[0], coords[1]],
-          zoom: this.#mapZoomLevel,
+          zoom: this._mapZoomLevel,
         });
       })
-      .addTo(this.#map);
+      .addTo(this._map);
 
-    this.#myMarker.on('dragend', async () => {
-      let lngLet = this.#myMarker.getLngLat();
-      this.#mapData.DestinationCoords = [lngLet.lng, lngLet.lat];
-      if (this.#StartPositionType.selectedIndex == 1) {
+    this._myMarker.on('dragend', async () => {
+      let lngLet = this._myMarker.getLngLat();
+      this._mapData.DestinationCoords = [lngLet.lng, lngLet.lat];
+      if (this._StartPositionType.selectedIndex == 1) {
         await this.renderPath(
-          this.#mapData.startPositionCoords,
-          this.#mapData.DestinationCoords
+          this._mapData.startPositionCoords,
+          this._mapData.DestinationCoords
         );
         this.showDataOnInput();
       } else {
         await this.renderPath(
-          this.#mapData.currentPosition,
-          this.#mapData.DestinationCoords
+          this._mapData.currentPosition,
+          this._mapData.DestinationCoords
         );
         this.showDataOnInput();
       }
@@ -315,32 +310,32 @@ class mapView extends View {
   preserveMarker = coords => {
     const MyIcon = document.createElement('div');
     MyIcon.className = 'myIcon';
-    this.#preserveMarker = new mapboxgl.Marker({
+    this._preserveMarker = new mapboxgl.Marker({
       element: MyIcon,
       offset: [0, -20],
     })
       .setLngLat(coords)
       .onClick(() => {
-        this.#map.flyTo({
+        this._map.flyTo({
           center: [coords[0], coords[1]],
-          zoom: this.#mapZoomLevel,
+          zoom: this._mapZoomLevel,
         });
       })
-      .addTo(this.#map);
+      .addTo(this._map);
   };
   removeSetUpMarker = async () => {
-    if (this.#startMarker) {
-      this.#startMarker.remove();
-      this.#startMarker = undefined;
+    if (this._startMarker) {
+      this._startMarker.remove();
+      this._startMarker = undefined;
     }
-    if (this.#myMarker) {
-      this.#myMarker.remove();
-      this.#myMarker = undefined;
+    if (this._myMarker) {
+      this._myMarker.remove();
+      this._myMarker = undefined;
     }
 
     await this.renderPath(
-      this.#mapData.currentPosition,
-      this.#mapData.currentPosition
+      this._mapData.currentPosition,
+      this._mapData.currentPosition
     );
   };
   addpopupToMarker = (workout, index) => {
@@ -374,80 +369,80 @@ class mapView extends View {
     })
       .setLngLat(coords)
       .setHTML(Markup)
-      .addTo(this.#map);
+      .addTo(this._map);
 
     if (index == 1) {
-      this.#preserveMarker.remove();
+      if (this._preserveMarker) this._preserveMarker.remove();
       const MyIcon = document.createElement('div');
       MyIcon.className = 'myIcon';
-      this.#preserveMarker = new mapboxgl.Marker({
+      this._preserveMarkerInMemory = new mapboxgl.Marker({
         element: MyIcon,
         offset: [0, -20],
       })
         .setLngLat(coords)
         .setPopup(popup)
         .onClick(() => {
-          this.#map.flyTo({
+          this._map.flyTo({
             center: [coords[0], coords[1]],
-            zoom: this.#mapZoomLevel,
+            zoom: this._mapZoomLevel,
           });
         })
-        .addTo(this.#map);
-      this.#preserveMarker.togglePopup();
-      return this.#preserveMarker;
+        .addTo(this._map);
+      this._preserveMarkerInMemory.togglePopup();
+      return this._preserveMarkerInMemory;
     }
     if (index == 0) {
-      // this.#startMarker.remove();
+      // this._startMarker.remove();
       const startMarker = document.createElement('div');
       startMarker.className = 'startMarker';
-      this.#startMarkerPop = new mapboxgl.Marker({
+      this._startMarkerPop = new mapboxgl.Marker({
         element: startMarker,
         offset: [0, -20],
       })
         .setLngLat(coords)
         .setPopup(popup)
         .onClick(() => {
-          this.#map.flyTo({
+          this._map.flyTo({
             center: [coords[0], coords[1]],
-            zoom: this.#mapZoomLevel,
+            zoom: this._mapZoomLevel,
           });
         })
-        .addTo(this.#map);
-      this.#startMarkerPop.togglePopup();
+        .addTo(this._map);
+      this._startMarkerPop.togglePopup();
     }
   };
   changeFromType = async () => {
-    if (this.#StartPositionType.selectedIndex == 1) {
-      this.renderMarker(this.#mapData.currentPosition, 1);
+    if (this._StartPositionType.selectedIndex == 1) {
+      this.renderMarker(this._mapData.currentPosition, 1);
     } else {
-      this.#startMarker.remove();
-      this.#startMarker = undefined;
-      delete this.#mapData.startPositionCoords;
+      this._startMarker.remove();
+      this._startMarker = undefined;
+      delete this._mapData.startPositionCoords;
       await this.renderPath(
-        this.#mapData.currentPosition,
-        this.#mapData.DestinationCoords
+        this._mapData.currentPosition,
+        this._mapData.DestinationCoords
       );
       this.showDataOnInput();
     }
   };
   moveToPopRoute = async (e, workouts) => {
-    if (!this.#map) return;
+    if (!this._map) return;
     const workoutEl = e.target.closest('.workout');
     if (!workoutEl) return;
     if (model.state.edit) return;
     const workout = workouts.find(work => work.id === workoutEl.dataset.id);
     let bound = [workout.startCoords, workout.endCoords];
-    if (this.#startMarkerPop) {
-      this.#startMarkerPop.remove();
+    if (this._startMarkerPop) {
+      this._startMarkerPop.remove();
     }
     this.addpopupToMarker(workout, 0);
     await this.renderPath(workout.startCoords, workout.endCoords);
 
-    this.#map.fitBounds(bound, {
+    this._map.fitBounds(bound, {
       padding: { top: 150, bottom: 25, left: 125, right: 125 },
     });
   };
-  zoomToSeeAllMarker = () => {
+  zoomToSeeAllMarker = async () => {
     if (model.state.edit) return;
     if (model.workouts.length <= 1) return;
     let allCoords = model.workouts.map(workout => {
@@ -456,9 +451,13 @@ class mapView extends View {
     let turf = require('@turf/turf');
     let line = turf.lineString(allCoords);
     let bbox = turf.bbox(line);
-    this.#map.fitBounds(bbox, {
+    this._map.fitBounds(bbox, {
       padding: { top: 150, bottom: 25, left: 125, right: 125 },
     });
+    if (this._startMarkerPop) {
+      this._startMarkerPop.remove();
+    }
+    await this.removeSetUpMarker();
   };
 
   markerOnClickfunctionality() {
