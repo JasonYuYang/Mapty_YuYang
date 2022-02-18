@@ -1,165 +1,123 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
-    <link rel="shortcut icon" type="image/png" href="src/img/icon.png" />
 
-    <link
-      defer
-      href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;600;700;800&display=swap"
-      rel="stylesheet"
-    />
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+  <link rel="shortcut icon" type="image/png" href="src/img/icon.png" />
 
-    <link defer rel="stylesheet" href="src/sass/main.scss" />
+  <link defer href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;600;700;800&display=swap"
+    rel="stylesheet" />
 
-    <!-- Using Mapbox -->
-    <link
-      defer
-      href="https://api.mapbox.com/mapbox-gl-js/v2.2.0/mapbox-gl.css"
-      rel="stylesheet"
-    />
+  <link defer rel="stylesheet" href="src/sass/main.scss" />
 
-    <script
-      defer
-      src="https://api.mapbox.com/mapbox-gl-js/v2.2.0/mapbox-gl.js"
-    ></script>
+  <!-- Using Mapbox -->
+  <link defer href="https://api.mapbox.com/mapbox-gl-js/v2.2.0/mapbox-gl.css" rel="stylesheet" />
 
-    <!-- <script defer src="other.js"></script> -->
-    <script defer src="src/js/controller.js"></script>
-    <title>mapty // Map your workouts</title>
-  </head>
-  <body>
-    <div class="sidebar">
-      <img src="src/img/logo.png" alt="Logo" class="logo" />
-      <div class="sort__section">
-        <div class="sort__section sort__section--state">
-          <span>Workout type : All</span>
+  <script defer src="https://api.mapbox.com/mapbox-gl-js/v2.2.0/mapbox-gl.js"></script>
+
+  <!-- <script defer src="other.js"></script> -->
+  <script defer src="src/js/controller.js"></script>
+  <title>mapty // Map your workouts</title>
+</head>
+
+<body>
+  <div class="sidebar">
+    <img src="src/img/logo.png" alt="Logo" class="logo" />
+    <div class="sort__section">
+      <div class="sort__section sort__section--state">
+        <span>Workout type : All</span>
+      </div>
+      <div class="sort__section sort__section--number">
+        <span>Number of workouts :<span class='workout__number'>0</span> </span>
+      </div>
+      <div class="sort__section sort__section--options">
+        <ul class="sort__options">
+          <li>Sort options : </li>
+          <li class='SC'><a href="javascript:;">⚡ S/C</a></li>
+          <li class='duration'><a href="javascript:;">⏱ Duration</a></li>
+          <li class='distance'><a href="javascript:;">🚵‍♀️ Distance</a></li>
+        </ul>
+        <div class="sort__hamburger">
+          <input type="checkbox" class="sort__hamburger--checkbox" id="sort-toggle" />
+          <label for="sort-toggle" class="sort__hamburger--button">
+            <span class="sort__hamburger--icon">&nbsp;</span>
+          </label>
+          <div class="sort__hamburger--background">&nbsp;</div>
+          <nav class="sort__hamburger--nav sort__hamburger--nav-active">
+            <ul class="sort__hamburger--list">
+              <li class="sort__section--item sort_all">
+                <a href="javascript:;" class="sort__hamburger--link">All types</a>
+              </li>
+              <li class="sort__section--item sort_running">
+                <a href="javascript:;" class="sort__hamburger--link">
+                  🏃‍♂️ Running</a>
+              </li>
+              <li class="sort__section--item sort_cycling">
+                <a href="javascript:;" class="sort__hamburger--link">
+                  🚴‍♀ Cycling</a>
+              </li>
+              <li class="sort__section--item sort_favorites">
+                <a href="javascript:;" class="sort__hamburger--link">
+                  ⭐Favorites</a>
+              </li>
+            </ul>
+          </nav>
         </div>
-        <div class="sort__section sort__section--number">
-          <span>Number of workouts :<span class='workout__number'>0</span> </span>
-        </div>
-        <div class="sort__section sort__section--options">
-          <ul class="sort__options">
-            <li>Sort options : </li>
-            <li class='SC'><a href="javascript:;">⚡ S/C</a></li>
-            <li class='duration'><a href="javascript:;">⏱ Duration</a></li>
-            <li class='distance'><a href="javascript:;">🚵‍♀️ Distance</a></li>
-          </ul>
-          <div class="sort__hamburger">
-            <input
-              type="checkbox"
-              class="sort__hamburger--checkbox"
-              id="sort-toggle"
-            />
-            <label for="sort-toggle" class="sort__hamburger--button">
-              <span class="sort__hamburger--icon">&nbsp;</span>
-            </label>
-            <div class="sort__hamburger--background">&nbsp;</div>
-            <nav class="sort__hamburger--nav sort__hamburger--nav-active">
-              <ul class="sort__hamburger--list">
-                <li class="sort__section--item sort_all">
-                  <a href="javascript:;" class="sort__hamburger--link"
-                    >All types</a
-                  >
-                </li>
-                <li class="sort__section--item sort_running">
-                  <a href="javascript:;" class="sort__hamburger--link">
-                    🏃‍♂️ Running</a
-                  >
-                </li>
-                <li class="sort__section--item sort_cycling">
-                  <a href="javascript:;" class="sort__hamburger--link">
-                    🚴‍♀ Cycling</a
-                  >
-                </li>
-                <li class="sort__section--item sort_favorites">
-                  <a href="javascript:;" class="sort__hamburger--link">
-                    ⭐Favorites</a
-                  >
-                </li>
-              </ul>
-            </nav>
-          </div>
-          <div class="sort__section__reset--button">
-            <a href="javascript:;" class="reset">reset</a>
-          </div>
+        <div class="sort__section__reset--button">
+          <a href="javascript:;" class="reset">reset</a>
         </div>
       </div>
-      <ul class="workouts">
-        <form class="form hidden" id="form" autocomplete="off">
-          <div class="form__row">
-            <label class="form__label--route">From</label>
-            <select
-              class="
+    </div>
+    <ul class="workouts">
+      <form class="form hidden" id="form" autocomplete="off">
+        <div class="form__row">
+          <label class="form__label--route">From</label>
+          <select class="
                 form__input form__input--route form__input--route-type
                 start
-              "
-            >
-              <option vlaue="CP">Current Position</option>
-              <option value="NP">Drag to new Start Point</option>
-            </select>
-          </div>
-          <div class="form__row">
-            <label class="form__label--route">To</label>
-            <input
-              type="text"
-              class="form__input form__input--route end"
-              placeholder="Destination"
-              readonly
-            />
-          </div>
+              ">
+            <option vlaue="CP">Current Position</option>
+            <option value="NP">Drag to new Start Point</option>
+          </select>
+        </div>
+        <div class="form__row">
+          <label class="form__label--route">To</label>
+          <input type="text" class="form__input form__input--route end" placeholder="Destination" readonly />
+        </div>
 
-          <div class="form__row">
-            <label class="form__label">Type</label>
-            <select class="form__input form__input--type">
-              <option selected="selected" value="running">Running</option>
-              <option value="cycling">Cycling</option>
-            </select>
-          </div>
-          <div class="form__row">
-            <label class="form__label">Distance</label>
-            <input
-              type="text"
-              class="form__input form__input--distance"
-              placeholder="km"
-              readonly
-            />
-          </div>
-          <div class="form__row">
-            <label class="form__label">Duration</label>
-            <input
-              id="duration"
-              type="text"
-              class="form__input form__input--duration"
-              placeholder="min"
-            />
-          </div>
-          <small class="error__message error__message--duration"></small>
-          <div class="form__row">
-            <label class="form__label">Cadence</label>
-            <input
-              id="cadence"
-              type="text"
-              class="form__input form__input--cadence"
-              placeholder="step/min"
-            />
-          </div>
-          <div class="form__row form__row--hidden">
-            <label class="form__label">Elev Gain</label>
-            <input
-              id="elevation"
-              type="text"
-              class="form__input form__input--elevation"
-              placeholder="meters"
-            />
-          </div>
-          <small class="error__message error__message--cad_ele"></small>
-          <button class="form__btn">OK</button>
-        </form>
+        <div class="form__row">
+          <label class="form__label">Type</label>
+          <select class="form__input form__input--type">
+            <option selected="selected" value="running">Running</option>
+            <option value="cycling">Cycling</option>
+          </select>
+        </div>
+        <div class="form__row">
+          <label class="form__label">Distance</label>
+          <input type="text" class="form__input form__input--distance" placeholder="km" readonly />
+        </div>
+        <div class="form__row">
+          <label class="form__label">Duration</label>
+          <input id="duration" type="text" class="form__input form__input--duration" placeholder="min" />
+        </div>
+        <small class="error__message error__message--duration"></small>
+        <div class="form__row">
+          <label class="form__label">Cadence</label>
+          <input id="cadence" type="text" class="form__input form__input--cadence" placeholder="step/min" />
+        </div>
+        <div class="form__row form__row--hidden">
+          <label class="form__label">Elev Gain</label>
+          <input id="elevation" type="text" class="form__input form__input--elevation" placeholder="meters" />
+        </div>
+        <small class="error__message error__message--cad_ele">
 
-        <!-- <li class="workout workout--cycling" data-id="1234567891">
+        </small>
+        <button class="form__btn">OK</button>
+      </form>
+
+      <!-- <li class="workout workout--cycling" data-id="1234567891">
           <h2 class="workout__title">
             <div class="workout__favorite"><span>&#9733;</span></div>
             Cycling on April 5
@@ -218,7 +176,7 @@
           </div>
         </li> -->
 
-        <!-- <ul class="dropdown" id="dropdown">
+      <!-- <ul class="dropdown" id="dropdown">
           <li class="dropdown__items">
             <svg class="dropdown__icon" id="icon_item">
               <use xlink:href="src/img/sprite.svg#icon-new-message"></use>
@@ -232,22 +190,17 @@
             <span class="dropdown__icon-name">Delete</span>
           </li>
         </ul> -->
-      </ul>
+    </ul>
 
-      <p class="copyright">
-        &copy; Copyright by
-        <a
-          class="twitter-link"
-          target="_blank"
-          href="https://twitter.com/jonasschmedtman"
-          >Jonas Schmedtmann</a
-        >. Desgined by 
-        <a href=" class="twitter-link"
-        target="_blank"
-        href="https://github.com/JasonYang840723"> Yu-Yang </a>only for demonstration may not be copied for commercial use or distribution.
-      </p>
-    </div>
-    <!-- <div class="sort__section sort__section--options">
+    <p class="copyright">
+      &copy; Copyright by
+      <a class="twitter-link" target="_blank" href="https://twitter.com/jonasschmedtman">Jonas Schmedtmann</a>. Coded
+      by
+      <a href="https://github.com/JasonYang840723"> Yu-Yang </a>only for
+      demonstration may not be copied for commercial use or distribution.
+    </p>
+  </div>
+  <!-- <div class="sort__section sort__section--options">
       <ul class="sort__options">
         <li>Sort options : </li>
         <li class='SC'><a href="javascript:;">⚡ S/C</a></li>
@@ -285,15 +238,16 @@
         <a href="javascript:;" class="reset">reset</a>
       </div>
     </div> -->
-    <div class="overlay hidden"></div>
-    <div class="error__window hidden">
-      <svg id="icon-cross">
-        <use xlink:href="src/img/sprite.svg#icon-cross"></use>
-      </svg>
-      <h2 class="error__heading">⚠️ Error ⚠️</h2>
-      <p class="error__text"></p>
-      <a class="btn btn--red btn--animated error__btn" onClick="window.location.reload();">Try Again</a>
-    </div>
-    <div id="map"></div>
-  </body>
+  <div class="overlay hidden"></div>
+  <div class="error__window hidden">
+    <svg id="icon-cross">
+      <use xlink:href="src/img/sprite.svg#icon-cross"></use>
+    </svg>
+    <h2 class="error__heading">⚠️ Error ⚠️</h2>
+    <p class="error__text"></p>
+    <a class="btn btn--red btn--animated error__btn" onClick="window.location.reload();">Try Again</a>
+  </div>
+  <div id="map"></div>
+</body>
+
 </html>

@@ -53,7 +53,7 @@ export const getLocation = async (coords, index) => {
     const [lng, lat] = coords;
     const data = await AJAX(
       `https://geocode.xyz/${lat},${lng}?geoit=json`,
-      'Please try to reload the page again. Unfortunately, this api what I am using now can not read all datas at once and I am not willing to pay for the API. Error occurs from this reason.'
+      'Please try to reload the page again. Unfortunately, this api what I am using now can not read all data at once and I am not willing to pay for the API. Error occurs from this reason.'
     );
     if (index == 0) {
       state.locationName.startLocationIn = data.osmtags.is_in;

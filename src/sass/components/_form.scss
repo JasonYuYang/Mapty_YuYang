@@ -85,7 +85,10 @@
     font-size: 1rem;
     font-family: inherit;
     font-weight: 700;
-    margin-left: 1.5rem;
+    justify-content: flex-end;
+    align-items: center;
+    right: 0;
+    width: auto;
     word-spacing: 0.1rem;
     &--duration {
       grid-column: 1/2;

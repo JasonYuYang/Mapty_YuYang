@@ -3,19 +3,7 @@
   margin: 2rem auto;
   height: 3rem;
   width: 3rem;
-  fill: $--color-brand--2;
-  transition: all 0.5s;
-  animation: rotate 2s infinite linear;
 }
 .icon-spinner8.hidden {
   display: none;
-}
-@keyframes rotate {
-  0% {
-    transform: rotate(0);
-  }
-
-  100% {
-    transform: rotate(360deg);
-  }
 }

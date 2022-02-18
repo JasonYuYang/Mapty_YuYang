@@ -1,7 +1,6 @@
 import 'core-js/stable';
 import 'regenerator-runtime/runtime';
 import img from '../../img/icon.png';
-import icons from '../../img/sprite.svg';
 
 export default class View {
   _textEl = document.querySelector('.error__text');
@@ -56,9 +55,9 @@ export default class View {
   }
   renderSpinner(parentElement) {
     const markup = `
-      <svg class="icon-spinner8">
-        <use xlink:href="${icons}#icon-spinner8"></use>
-      </svg>`;
+    <svg class="icon-spinner8" viewBox="25 25 50 50">
+      <circle class="path" cx="50" cy="50" r="20" fill="none" stroke-width="5" stroke-miterlimit="10"/>
+   `;
     parentElement.insertAdjacentHTML('afterend', markup);
   }
   renderError(errMsg) {

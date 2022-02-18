@@ -91,7 +91,7 @@
         position: relative;
         //Change for the <button> element
         font-weight: 700;
-        font-size: 0.5rem;
+        font-size: 1.25rem;
         color: $--color-dark--1;
         background-color: $--color-brand--1;
         border: none;
@@ -102,10 +102,10 @@
         transform: translateY(-3px);
         box-shadow: 0 1rem 2rem rgba(#000, 0.2);
       }
-      &:active,
-      &:focus {
+      &:active {
         outline: none;
         box-shadow: 0 0.5rem 1rem rgba(#000, 0.2);
+        transform: translateY(0px);
       }
     }
   }
