@@ -194,6 +194,7 @@ class workoutsView {
     const workoutEl = document.querySelector('.workout');
     if (!workoutEl) return;
     let Workouts = this.workoutsOnView();
+    if (Workouts.length === 0) return;
     let workoutsSortRender;
     if (option == 'SC') {
       workoutsSortRender = [...Workouts].sort((a, b) => {

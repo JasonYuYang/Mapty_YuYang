@@ -25,6 +25,7 @@
   gap: 0.75rem 1.5rem;
   // justify-content: space-between;
   transition: all 0.5s;
+  cursor: pointer;
 
   &--running {
     border-left: 5px solid $--color-brand--2;

@@ -29,7 +29,7 @@
 
 ### Screenshot
 
-![](./finished/mapty_screenshot.png)
+![](./finished/mapty__screenshot.png)
 
 ### Links
 
